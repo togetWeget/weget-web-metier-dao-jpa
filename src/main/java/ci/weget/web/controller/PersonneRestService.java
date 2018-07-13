@@ -59,7 +59,7 @@ public class PersonneRestService {
 	private Reponse<Personnes> getPersonneByLogin(String login) {
 		Personnes personne = null;
 		try {
-			personne = personneMetier.findByLogin(login);
+			personne = personneMetier.findPersonnesByLogin(login);
 		} catch (RuntimeException e) {
 			new Reponse<Personnes>(1, Static.getErreursForException(e), null);
 		}
@@ -175,18 +175,12 @@ public class PersonneRestService {
 		return personneMetier.supprimer(entites);
 	}
 
-	public Personnes findByLogin(String login) {
-		return personneMetier.findByLogin(login);
-	}
-
+	
 	public boolean existe(Long id) {
 		return personneMetier.existe(id);
 	}
 
-	public List<Personnes> findByType(String type) {
-		return personneMetier.findByType(type);
-	}
-
+	
 	public Personnes findByNom(String nom) {
 		return personneMetier.findByNom(nom);
 	}

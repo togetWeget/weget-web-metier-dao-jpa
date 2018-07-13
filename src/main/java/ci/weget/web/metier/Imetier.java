@@ -5,11 +5,6 @@ import java.util.List;
 import ci.weget.web.exception.InvalideTogetException;
 
 
-
-
-
-
-
 public interface Imetier <T,U>{
 	
 	public T creer(T entity) throws InvalideTogetException;

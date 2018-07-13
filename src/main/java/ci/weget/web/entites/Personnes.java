@@ -12,7 +12,9 @@ import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -36,22 +38,43 @@ public abstract class Personnes extends AbstractEntity {
 	private String titre;
 	private String nom;
 	private String prenom;
-
-	@Column(unique = true)
-	private String login;
-
 	private String password;
 	private String repassword;
 	private boolean actived;
 	private String nomComplet;
-
-	private String pathPhoto;
+   private String pathPhoto;
 
 	@Column(name = "TYPE_PERSONNE", insertable = false, updatable = false)
 	private String type;
 
 	@Embedded
 	private Adresses adresse;
+	@Column(unique = true)
+	private String login;
+
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_Entreprise")
+	private Entreprise entreprise;
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_Type_Statut")
+	private Type_Statut typeStratut;
+	
+	
+    @OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_cvPersonnes")
+	private CvPersonnes cvPersonnes;
+    // cles etrangres
+   /* @Column(name = "id_Entreprise",insertable = false, updatable = false)
+	private long idEntreprise;
+    @Column(name = "id_Type_Statut",insertable = false, updatable = false)
+	private long idTypeStatut;
+	@Column(name = "id_cvPersonnes",insertable = false, updatable = false)
+	private long idCvPersonnes;*/
+	
 
 	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_telephones")
@@ -90,11 +113,12 @@ public abstract class Personnes extends AbstractEntity {
 		this.password = password;
 	}
 
-	public Personnes(String login, String password, String type) {
+	
+	public Personnes(String password, String repassword, String login) {
 		super();
-		this.login = login;
 		this.password = password;
-		this.type = type;
+		this.repassword = repassword;
+		this.login = login;
 	}
 
 	public Personnes(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
@@ -110,6 +134,18 @@ public abstract class Personnes extends AbstractEntity {
 		this.adresse = adresse;
 		this.telephones = telephones;
 	}
+
+	/*public long getIdEntreprise() {
+		return idEntreprise;
+	}
+
+	public long getIdTypeStatut() {
+		return idTypeStatut;
+	}
+
+	public long getIdCvPersonnes() {
+		return idCvPersonnes;
+	}*/
 
 	public String getTitre() {
 		return titre;
@@ -189,11 +225,7 @@ public abstract class Personnes extends AbstractEntity {
 		this.nomComplet = nomComplet;
 	}
 
-	@Override
-	public String toString() {
-		return String.format("Personne[%s,%s,%s,%s]", id, titre, nomComplet, version);
-	}
-
+	
 	public String getLogin() {
 		return login;
 	}
@@ -227,5 +259,38 @@ public abstract class Personnes extends AbstractEntity {
 	public void setActived(boolean actived) {
 		this.actived = actived;
 	}
+	public Entreprise getEntreprise() {
+		return entreprise;
+	}
 
+	public void setEntreprise(Entreprise entreprise) {
+		this.entreprise = entreprise;
+	}
+
+	public Type_Statut getTypeStratut() {
+		return typeStratut;
+	}
+
+	public void setTypeStratut(Type_Statut typeStratut) {
+		this.typeStratut = typeStratut;
+	}
+
+	public CvPersonnes getCvPersonnes() {
+		return cvPersonnes;
+	}
+
+	public void setCvPersonnes(CvPersonnes cvPersonnes) {
+		this.cvPersonnes = cvPersonnes;
+	}
+
+	@Override
+	public String toString() {
+		return "Personnes [cni=" + cni + ", titre=" + titre + ", nom=" + nom + ", prenom=" + prenom + ", password="
+				+ password + ", repassword=" + repassword + ", actived=" + actived + ", nomComplet=" + nomComplet
+				+ ", pathPhoto=" + pathPhoto + ", type=" + type + ", adresse=" + adresse + ", login=" + login
+				+ ", entreprise=" + entreprise + ", typeStratut=" + typeStratut + ", cvPersonnes=" + cvPersonnes
+				+ ", telephones=" + telephones + "]";
+	}
+
+	
 }

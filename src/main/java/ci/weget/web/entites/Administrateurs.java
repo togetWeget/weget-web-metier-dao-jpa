@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "T_ENSEIGNANT")
+@Table(name = "T_Administration")
 @DiscriminatorValue("AD")
 public class Administrateurs extends Personnes {
 

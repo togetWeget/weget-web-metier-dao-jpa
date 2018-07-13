@@ -64,6 +64,4 @@ public class AbstractEntity implements Serializable {
 		this.version = version;
 	}
 
-	
-
-}
+	}

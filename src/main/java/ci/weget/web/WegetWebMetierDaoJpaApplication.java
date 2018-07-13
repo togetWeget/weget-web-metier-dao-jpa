@@ -1,7 +1,6 @@
 package ci.weget.web;
 
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -10,27 +9,25 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import ci.weget.web.dao.EspaceRepository;
 import ci.weget.web.dao.PersonnesRepository;
-import ci.weget.web.entites.Administrateurs;
-import ci.weget.web.entites.Espaces;
+import ci.weget.web.entites.Blocks;
+import ci.weget.web.entites.CvPersonnes;
 import ci.weget.web.entites.Membres;
 import ci.weget.web.entites.Personnes;
+import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IPersonneMetier;
-import ci.weget.web.security.AppRoles;
 
 @SpringBootApplication
 public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
     /*@Autowired
 	private AccountService accountService;*/
-    @Autowired
-    private EspaceRepository espaceRepository;
+    
     @Autowired
     private PersonnesRepository personnesRepository;
     @Autowired
     private IPersonneMetier personneMetier;
+    @Autowired
+    private IBlocksMetier blockMetier;
 	@Bean
 	public BCryptPasswordEncoder getBCPE() {
 		return new BCryptPasswordEncoder();
@@ -74,5 +71,29 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 		personnesRepository.findAll().forEach(D->{
 			System.out.println(D.getLogin());
 		});*/
+		
+		Personnes p1=personneMetier.creer(new Membres("12345", "12345", "Yacou"));
+		Personnes p2=personneMetier.creer(new Membres("1234", "1234", "Romeo"));
+		
+		
+		Blocks b1=blockMetier.creer(new Blocks("Agriculture"));
+		Blocks b2=blockMetier.creer(new Blocks("Ecurie"));
+		
+		personneMetier.addPersonneToBlocks(p1.getLogin(), b1.getLibelle());
+		personneMetier.addPersonneToBlocks(p2.getLogin(), b1.getLibelle());
+		personneMetier.addPersonneToBlocks(p2.getLogin(), b2.getLibelle());
+		
+		List<Personnes> personnes = personnesRepository.getPersonneParBlockLibelle(b1.getLibelle());
+		
+		System.out.println("personne p1 Creer:"+p1.getLogin());
+		System.out.println("personne p2 Creer:"+p2.getLogin());
+		System.out.println("le block b1 creer"+b1.getLibelle());
+		System.out.println("le block b2 creer"+b2.getLibelle());
+		
+		for(int i=0;i<personnes.size();i++)
+		
+			System.out.println("les personne du block b1 sont attribues"+personnes.get(i));
+		
+		
 	}
 }

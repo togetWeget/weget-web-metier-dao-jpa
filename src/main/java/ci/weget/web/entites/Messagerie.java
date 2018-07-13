@@ -17,10 +17,10 @@ public class Messagerie extends AbstractEntity {
      
      @ManyToOne(fetch= FetchType.LAZY)
      @JoinColumn(name = "id_Personne")
-     private Personnes personnes;
-     @Column(name = "id_personnes", insertable = false, updatable = false)
- 	private long idPersonnes;
-	public Messagerie() {
+     private Personnes personne;
+     @Column(name = "id_Personne", insertable = false, updatable = false)
+ 	 private long idPersonne;
+	 public Messagerie() {
 		super();
 		
 	}
@@ -37,6 +37,12 @@ public class Messagerie extends AbstractEntity {
 	@Override
 	public String toString() {
 		return "Messagerie [contenu=" + contenu + "]";
+	}
+	public Personnes getPersonne() {
+		return personne;
+	}
+	public void setPersonne(Personnes personne) {
+		this.personne = personne;
 	}
      
      

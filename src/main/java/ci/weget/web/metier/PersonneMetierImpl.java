@@ -3,16 +3,20 @@ package ci.weget.web.metier;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import ci.weget.web.dao.BlocksRepository;
+import ci.weget.web.dao.DetailBlocksRepository;
+import ci.weget.web.dao.PaiementRepository;
 import ci.weget.web.dao.PersonnesRepository;
 import ci.weget.web.dao.RoleRepository;
 import ci.weget.web.dao.UserRoleRepository;
+import ci.weget.web.entites.Blocks;
+import ci.weget.web.entites.DetailBlocks;
+import ci.weget.web.entites.Paiement;
 import ci.weget.web.entites.Personnes;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.security.AppRoles;
@@ -29,7 +33,15 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	@Autowired
 	private UserRoleRepository userRoleRepository;
 	@Autowired
+	private BlocksRepository blocksRepository;
+	@Autowired
+	private PaiementRepository paiementRepository;
+	@Autowired
+	private DetailBlocksRepository detailBlocksRepository;
+	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	
 
 	////////////////////////////////////////////////////////////////////////////
 	/////// code mis en place pour enregistrer une personne /////////////////////
@@ -79,13 +91,13 @@ public class PersonneMetierImpl implements IPersonneMetier {
 		return typePersonnes;
 
 	}
-
+//////////   enregistrer un role////////////////////////////////////////////////////////
 	@Override
 	public AppRoles saveRole(AppRoles role) {
 
 		return roleRepository.save(role);
 	}
-
+   ///////// ajouter un role aun utilisateur ////////////////////////////////////////////////
 	@Override
 	public void addRoleToUser(String login, String roleName) {
 		Personnes personne = personnesRepository.findByLogin(login);
@@ -96,17 +108,41 @@ public class PersonneMetierImpl implements IPersonneMetier {
 		roles.add(appRole);
 
 	}
+	//////////// ajouter des personnes a des blocks ou des blocks a des persnnes///////////
+	@Override
+	public void addPersonneToBlocks(String login, String libelle) {
+		
+		Personnes personne = personnesRepository.findByLogin(login);
+		
+		Blocks block = blocksRepository.findByLibelle(libelle);
+		Paiement paie = paiementRepository.getPaiementParBlockLibelle(libelle);
+		if (paie.paye=true) {
+			DetailBlocks db = new DetailBlocks(block, personne);
+			detailBlocksRepository.save(db);
+			List<Personnes> personnes=personnesRepository.getPersonneParBlockLibelle(block.getLibelle());
+			personnes.add(personne);
+		}else {
+			System.out.println("vous devez paye d'abord");
+		}
+		//paie.setBlock(block);
+	//	paiementRepository.save(paie);
+		
+		
+	    }
+	
+	///////////////// enregistrer un userRole//////////////////////////////////////////////
 	@Override
 	public UserRoles saveUserRole(UserRoles ur) {
 		
 		return userRoleRepository.save(ur);
 	}
-
-	@Override
+	
+	//////////////////ramener une personnes par son login //////////////////////////////////
+   @Override
 	public Personnes findPersonnesByLogin(String login) {
 		return personnesRepository.findByLogin(login);
 	}
-
+  //////////////// recuperer une personne par son id///////////////////////////////////////
 	@Override
 	public Personnes findById(Long id) {
 
@@ -143,53 +179,43 @@ public class PersonneMetierImpl implements IPersonneMetier {
 		return personnesRepository.getRoles(login, password);
 	}
 
-	@Override
-	public Personnes findByLogin(String login) {
-
-		return personnesRepository.findByLogin(login);
-	}
-
-	@Override
-	public List<Personnes> findByType(String type) {
-
-		return null;
-	}
+	
 
 	@Override
 	public Personnes findByNom(String nom) {
-		// TODO Auto-generated method stub
+	
 		return null;
 	}
 
 	@Override
 	public List<Personnes> findAllPersonnesParMc(String type, String mc) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public List<Personnes> findAllAdministrateurs() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public List<Personnes> findAllMembres() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public List<Personnes> findByNomCompletContainingIgnoreCase(String nomcomplet) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
 	@Override
 	public List<Personnes> findAll() {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
-
+	
 	
 }

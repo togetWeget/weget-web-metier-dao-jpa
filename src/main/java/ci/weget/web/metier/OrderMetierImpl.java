@@ -3,13 +3,15 @@ package ci.weget.web.metier;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.ValidationException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ci.weget.web.entites.Blocks;
 import ci.weget.web.entites.CartBlock;
 import ci.weget.web.entites.CreditCard;
 import ci.weget.web.entites.Order;
+import ci.weget.web.entites.OrderLine;
 import ci.weget.web.entites.Personnes;
 import ci.weget.web.exception.InvalideTogetException;
 
@@ -21,33 +23,31 @@ public class OrderMetierImpl implements IOrderMetier {
 	private IOrderMetier orderMetier;
 	@Autowired
 	private IBlocksMetier blocksMetier;
-	
+
 	@Override
-	public boolean addBlockToCart() {
-		 Blocks block = blocksMetier.findById(idBlock);
-		 boolean blockFound = false;
-		cartBlock = new ArrayList<CartBlock>();
+	public Order creer(Personnes personnes, CreditCard creditCard, List<CartBlock> cartBlocks)
+			throws InvalideTogetException {
+
+		// on sássure que cartBlock est valid
+		if (cartBlocks == null || cartBlocks.size() == 0)
+			throw new ValidationException("Shopping cart is empty");
+
+		// on creer alors une commande
+		Order order = new Order(personnes, creditCard);
+
+		// on creer alors les lignes de commande
+		List<OrderLine> orderLines = new ArrayList<OrderLine>();
+
 		for (CartBlock cartBlock : cartBlocks) {
-            // If item already exists in the shopping cart we just change the quantity
-            if (cartBlock.getTarif().getBlock().equals(item)) {
-                cartBlock.setQuantity(cartBlock.getQuantity() + 1);
-                blockFound = true;
-            }
-        }
-        if (!blockFound)
-            // Otherwise it's added to the shopping cart
-            cartBlocks.add(new CartBlock(item, 1));
+			orderLines.add(new OrderLine(cartBlock.getQuantity(), cartBlock.getTarif()));
+		}
+		order.setOrderLines(orderLines);
 
-        
-		return true;
+		return orderMetier.creer(order);
+
 	}
 
-	@Override
-	public Order creer(Personnes customer, final CreditCard creditCard, final List<CartBlock> cartItems)  {
-		
-		return null;
-	}
-
+	
 	@Override
 	public Order modifier(Order entity) throws InvalideTogetException {
 		// TODO Auto-generated method stub
@@ -90,5 +90,4 @@ public class OrderMetierImpl implements IOrderMetier {
 		return null;
 	}
 
-	
 }

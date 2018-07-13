@@ -29,6 +29,7 @@ public class Tarif extends AbstractEntity {
 		super();
 		
 	}
+	
 
 	public Tarif(Float montant, String description, Blocks block, Publicites publicite) {
 		super();

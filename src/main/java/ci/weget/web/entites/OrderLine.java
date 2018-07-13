@@ -17,6 +17,17 @@ public class OrderLine extends AbstractEntity {
 	@JoinColumn(name = "id_Tarif")
 	private Tarif tarif;
 
+	public OrderLine() {
+		super();
+		
+	}
+
+	public OrderLine(Integer quantity, Tarif tarif) {
+		super();
+		this.quantity = quantity;
+		this.tarif = tarif;
+	}
+
 	@PrePersist
 	@PreUpdate
 	private void validateData() {
@@ -27,4 +38,21 @@ public class OrderLine extends AbstractEntity {
 	public Float getSubTotal() {
 		return tarif.getMontant() * quantity;
 	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public Tarif getTarif() {
+		return tarif;
+	}
+
+	public void setTarif(Tarif tarif) {
+		this.tarif = tarif;
+	}
+	
 }

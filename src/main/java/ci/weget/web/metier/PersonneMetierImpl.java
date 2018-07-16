@@ -115,15 +115,13 @@ public class PersonneMetierImpl implements IPersonneMetier {
 		Personnes personne = personnesRepository.findByLogin(login);
 		
 		Blocks block = blocksRepository.findByLibelle(libelle);
-		Paiement paie = paiementRepository.getPaiementParBlockLibelle(libelle);
-		if (paie.paye=true) {
+	//	Paiement paie = paiementRepository.getPaiementParBlockLibelle(libelle);
+		
 			DetailBlocks db = new DetailBlocks(block, personne);
 			detailBlocksRepository.save(db);
 			List<Personnes> personnes=personnesRepository.getPersonneParBlockLibelle(block.getLibelle());
 			personnes.add(personne);
-		}else {
-			System.out.println("vous devez paye d'abord");
-		}
+		
 		//paie.setBlock(block);
 	//	paiementRepository.save(paie);
 		

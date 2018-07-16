@@ -41,7 +41,7 @@ public class OrderMetierImpl implements IOrderMetier {
 		for (CartBlock cartBlock : cartBlocks) {
 			orderLines.add(new OrderLine(cartBlock.getQuantity(), cartBlock.getTarif()));
 		}
-		order.setOrderLines(orderLines);
+	//	order.setOrderLines(orderLines);
 
 		return orderMetier.creer(order);
 

@@ -72,7 +72,7 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 			System.out.println(D.getLogin());
 		});*/
 		
-		Personnes p1=personneMetier.creer(new Membres("12345", "12345", "Yacou"));
+		/*Personnes p1=personneMetier.creer(new Membres("12345", "12345", "Yacou"));
 		Personnes p2=personneMetier.creer(new Membres("1234", "1234", "Romeo"));
 		
 		
@@ -93,7 +93,7 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 		for(int i=0;i<personnes.size();i++)
 		
 			System.out.println("les personne du block b1 sont attribues"+personnes.get(i));
-		
+		*/
 		
 	}
 }

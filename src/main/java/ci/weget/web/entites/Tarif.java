@@ -16,7 +16,7 @@ public class Tarif extends AbstractEntity {
 	private Float montant;
 	private String description;
 	@ManyToOne(fetch = FetchType.LAZY)
-	@Column(name = "id_Block")
+	@JoinColumn(name = "id_Block")
 	private Blocks block;
 
 	@ManyToOne(fetch = FetchType.LAZY)

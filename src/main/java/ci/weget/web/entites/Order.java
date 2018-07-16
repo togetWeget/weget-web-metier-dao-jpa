@@ -28,34 +28,30 @@ public class Order extends AbstractEntity {
 	private Personnes personne;
 	@Embedded
 	private CreditCard creditCard = new CreditCard();
-
+/*
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinTable(name = "t_order_order_line", joinColumns = { 
-			@JoinColumn(name = "order_fk") }, 
-	        inverseJoinColumns = {
-			@JoinColumn(name = "order_line_fk") })
 	private List<OrderLine> orderLines;
-
+*/
 	public Order(Personnes personne, CreditCard creditCard) {
 		super();
 		this.personne = personne;
 		this.creditCard = creditCard;
 	}
 
-	public Order(LocalDateTime orderDate, Personnes personne, CreditCard creditCard, List<OrderLine> orderLines) {
+	/*public Order(LocalDateTime orderDate, Personnes personne, CreditCard creditCard, List<OrderLine> orderLines) {
 		super();
 		this.orderDate = orderDate;
 		this.personne = personne;
 		this.creditCard = creditCard;
 		this.orderLines = orderLines;
 	}
-
+*/
 	@PrePersist
 	private void setDefaultData() {
 		orderDate = LocalDateTime.now();
 	}
 
-	public Float getTotal() {
+	/*public Float getTotal() {
 		if (orderLines == null || orderLines.isEmpty())
 			return 0f;
 		Float total = 0f;
@@ -64,7 +60,7 @@ public class Order extends AbstractEntity {
 		}
 		return total;
 	}
-
+*/
 	public LocalDateTime getOrderDate() {
 		return orderDate;
 	}
@@ -89,12 +85,12 @@ public class Order extends AbstractEntity {
 		this.creditCard = creditCard;
 	}
 
-	public List<OrderLine> getOrderLines() {
+/*	public List<OrderLine> getOrderLines() {
 		return orderLines;
 	}
 
 	public void setOrderLines(List<OrderLine> orderLines) {
 		this.orderLines = orderLines;
 	}
-	
+	*/
 }

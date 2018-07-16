@@ -21,8 +21,8 @@ public interface BlocksRepository extends JpaRepository<Blocks, Long>{
 	@Query("select b from Blocks b where b.id=?1")
 	Blocks getByid(Long id);
 	
-	// retrouver un paiement a partir de lídentifiant dún block
+	/*// retrouver un paiement a partir de lídentifiant dún block
 	@Query("select p from Paiement p where p.block.id=?1")
-	Blocks getPaiementParIdBlock(Long id);
+	Blocks getPaiementParIdBlock(Long id);*/
 	
 }

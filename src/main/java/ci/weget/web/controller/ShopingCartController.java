@@ -51,7 +51,7 @@ public class ShopingCartController {
 
 		cartBlocks.add(new CartBlock(tarif, 1));
 
-		return jsonMapper.writeValueAsString(reponse);
+		return null;
 	}
 
 }

@@ -1,11 +1,13 @@
 package ci.weget.web.controller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.aop.ThrowsAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -235,7 +237,7 @@ public class BlocksController {
 		Blocks b = reponseParLibelle.getBody();
 		System.out.println(b);
 
-		String path = "http://localhost:8080/getPhoto/" + b.getVersion() + "/" + libelle;
+		String path = "http://localhost:8080/getPhoto/"+ b.getVersion()+"/" + libelle;
 		System.out.println(path);
 		if (reponseParLibelle.getStatut() == 0) {
 			String dossier = togetImage + "/";
@@ -273,13 +275,15 @@ public class BlocksController {
 	@GetMapping(value = "/getPhoto/{version}/{libelle}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public byte[] getPhotos(@PathVariable String version, @PathVariable String libelle)
 			throws FileNotFoundException, IOException {
-		/*
-		 * Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); Blocks b =
-		 * personneLibelle.getBody(); System.out.println(version); String dossier =
-		 * togetImage+"/"; File f = new File(dossier+libelle); byte[] img =
-		 * IOUti.toByteArray(new FileInputStream(f));
-		 */
-		return null;
+		
+		 // Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); 
+		  //Blocks b = personneLibelle.getBody(); 
+		  System.out.println(version); 
+		  String dossier = togetImage+"/"; 
+		  File f = new File(dossier+libelle); 
+		  byte[] img = IOUtils.toByteArray(new FileInputStream(f));
+		 
+		return img;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 

@@ -6,30 +6,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ci.weget.web.dao.TarifRepository;
-import ci.weget.web.entites.Blocks;
 import ci.weget.web.entites.Tarif;
 import ci.weget.web.exception.InvalideTogetException;
 
 @Service
 public class TarifMetierImpl implements ITarifMetier {
-
+  
 	@Autowired
 	private TarifRepository tarifRepository;
-	@Override
-	public Blocks getTarifBlockId(Long id) {
-		
-		return tarifRepository.getTarifBlockId(id);
-	}
-
+	
 	@Override
 	public Tarif creer(Tarif entity) throws InvalideTogetException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return tarifRepository.save(entity);
 	}
 
 	@Override
 	public Tarif modifier(Tarif entity) throws InvalideTogetException {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 
@@ -63,5 +57,9 @@ public class TarifMetierImpl implements ITarifMetier {
 		return false;
 	}
 
-	
+	@Override
+	public List<Tarif> getTarifParBlockId(Long id) {
+		return tarifRepository.getTarifParBlockId(id);
+	}
+
 }

@@ -1,6 +1,5 @@
 package ci.weget.web.entites;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -15,28 +14,23 @@ public class Tarif extends AbstractEntity {
 
 	private Float montant;
 	private String description;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_Block")
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_block")
 	private Blocks block;
-
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_Publicite")
+	@ManyToOne(fetch=FetchType.EAGER)
+	@JoinColumn(name="id_publicite")
 	private Publicites publicite;
-	@Column(name = "id_Publicite", insertable = false, updatable = false)
-	private long idPublicite;
-
-	public Tarif() {
+    public Tarif() {
 		super();
 		
 	}
 	
 
-	public Tarif(Float montant, String description, Blocks block, Publicites publicite) {
+	public Tarif(Float montant, String description) {
 		super();
 		this.montant = montant;
 		this.description = description;
-		this.block = block;
-		this.publicite = publicite;
+		
 	}
 
 	public Float getMontant() {
@@ -47,13 +41,7 @@ public class Tarif extends AbstractEntity {
 		this.montant = montant;
 	}
 
-	public Publicites getPublicite() {
-		return publicite;
-	}
-
-	public void setPublicite(Publicites publicite) {
-		this.publicite = publicite;
-	}
+	
 
 	public String getDescription() {
 		return description;
@@ -63,17 +51,33 @@ public class Tarif extends AbstractEntity {
 		this.description = description;
 	}
 
+
+	@Override
+	public String toString() {
+		return "Tarif [montant=" + montant + ", description=" + description + "]";
+	}
+
+
 	public Blocks getBlock() {
 		return block;
 	}
+
 
 	public void setBlock(Blocks block) {
 		this.block = block;
 	}
 
-	@Override
-	public String toString() {
-		return "Tarif [montant=" + montant + ", description=" + description + ", block=" + block + "]";
+
+	public Publicites getPublicite() {
+		return publicite;
 	}
 
+
+	public void setPublicite(Publicites publicite) {
+		this.publicite = publicite;
+	}
+
+	
+
+	
 }

@@ -54,4 +54,9 @@ public interface PersonnesRepository extends JpaRepository<Personnes, Long> {
 	// recuperer une personne a partir de son identifiant
 	@Query("select p from Personnes p where p.id=?1")
 	Personnes getPersonneByid(Long id);
+	
+	///////////////// liste des abonnees dans la base//////////////
+	@Query("select p from Personnes p where p.typeStratut.libelle=Abonne")
+	List<Personnes> getAllAbonnes();
+
 }

@@ -46,6 +46,16 @@ public class DetailBlocks extends AbstractEntity {
 	}
 	
 	
+	public Personnes getPersonne() {
+		return personne;
+	}
+
+
+	public void setPersonne(Personnes personne) {
+		this.personne = personne;
+	}
+
+
 	public String getDescription() {
 		return description;
 	}

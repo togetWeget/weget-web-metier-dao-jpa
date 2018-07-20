@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.aop.ThrowsAdvice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -27,6 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ci.weget.web.entites.Blocks;
+import ci.weget.web.entites.Personnes;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.modeles.Reponse;
@@ -150,6 +150,33 @@ public class BlocksController {
 		return jsonMapper.writeValueAsString(reponse);
 
 	}
+	//////////// personnes d'un block par id
+	@GetMapping("/Personneblocks/{id}")
+	public String getPersonneBlock(@PathVariable Long id) throws JsonProcessingException, InvalideTogetException {
+		Reponse<List<Personnes>> reponse;
+		try {
+			List<Personnes> pers = blocksMetier.getPersonnes(id);
+			reponse = new Reponse<List<Personnes>>(0, null, pers);
+		} catch (Exception e) {
+			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+		}
+		return jsonMapper.writeValueAsString(reponse);
+
+	}
+	////////////////personne d'un block par libelle
+////////////personnes d'un block
+@GetMapping("/Personneblocks/{libelle}")
+public String getPersonneBlockLibelle(@PathVariable String libelle) throws JsonProcessingException, InvalideTogetException {
+Reponse<List<Personnes>> reponse;
+try {
+	List<Personnes> pers = blocksMetier.getPersonnesParBlockLibelle(libelle);
+	reponse = new Reponse<List<Personnes>>(0, null, pers);
+} catch (Exception e) {
+	reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+}
+return jsonMapper.writeValueAsString(reponse);
+
+}
 
 	/////////////////////////////////////////////////////////////////////////////////
 	// renvoie un block par son
@@ -227,7 +254,7 @@ public class BlocksController {
 	////// ajouter une photo a la base a partir du libelle d'un block
 	///////////////////////////////////////////////////////////////////////////////////////////////// //////////////////////////////
 
-	@PostMapping("/photo")
+	@PostMapping("/photoBlock")
 	public String creerPhoto(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
 		Reponse<Blocks> reponse = null;
 		Reponse<Blocks> reponseParLibelle;
@@ -237,7 +264,7 @@ public class BlocksController {
 		Blocks b = reponseParLibelle.getBody();
 		System.out.println(b);
 
-		String path = "http://localhost:8080/getPhoto/"+ b.getVersion()+"/" + libelle;
+		String path = "http://localhost:8080/getPhotoBlock/"+ b.getVersion()+"/" + libelle;
 		System.out.println(path);
 		if (reponseParLibelle.getStatut() == 0) {
 			String dossier = togetImage + "/";
@@ -269,10 +296,11 @@ public class BlocksController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
+
 	//////// recuperer une photo avec pour retour tableau de byte
 	//////// /////////////////////////////////
 
-	@GetMapping(value = "/getPhoto/{version}/{libelle}", produces = MediaType.IMAGE_JPEG_VALUE)
+	@GetMapping(value = "/getPhotoBlock/{version}/{libelle}", produces = MediaType.IMAGE_JPEG_VALUE)
 	public byte[] getPhotos(@PathVariable String version, @PathVariable String libelle)
 			throws FileNotFoundException, IOException {
 		

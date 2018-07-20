@@ -1,10 +1,14 @@
 package ci.weget.web.entites;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -15,6 +19,9 @@ public class Publicites extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 	private String libelle;
+	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_tarif")
+	private List<Tarif> tarifs;
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "id_Entreprise")
 	private Entreprise entreprise;
@@ -35,6 +42,18 @@ public class Publicites extends AbstractEntity {
 	}
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
+	}
+	public List<Tarif> getTarifs() {
+		return tarifs;
+	}
+	public void setTarifs(List<Tarif> tarifs) {
+		this.tarifs = tarifs;
+	}
+	public Entreprise getEntreprise() {
+		return entreprise;
+	}
+	public void setEntreprise(Entreprise entreprise) {
+		this.entreprise = entreprise;
 	}
 	
 	

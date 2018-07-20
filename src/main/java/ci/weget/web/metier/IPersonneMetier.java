@@ -36,4 +36,9 @@ public interface IPersonneMetier extends Imetier<Personnes, Long> {
 
 	public void addPersonneToBlocks(String login, String libelle);
 	
+	// creer un abonnee
+	public Personnes creerAbonne(Personnes personne);
+	// la liste des abonnes
+	public List<Personnes> getAllAbonnes();
+	
 	}

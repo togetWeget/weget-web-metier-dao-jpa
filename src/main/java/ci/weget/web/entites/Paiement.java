@@ -15,8 +15,7 @@ public class Paiement extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	private double montant;
-	private String description;
+	
 	public boolean paye;
 	private LocalDate date;
 
@@ -38,18 +37,14 @@ public class Paiement extends AbstractEntity {
 		super();
 	}
 
-	public Paiement(String description) {
+	
+
+	public Paiement(Personnes personne) {
 		super();
-		this.description = description;
+		this.personne = personne;
 	}
 
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
+	
 
 	public boolean isPaye() {
 		return paye;
@@ -59,13 +54,6 @@ public class Paiement extends AbstractEntity {
 		this.paye = paye;
 	}
 
-	public double getMontant() {
-		return montant;
-	}
-
-	public void setMontant(double montant) {
-		this.montant = montant;
-	}
 
 	public LocalDate getDate() {
 		return date;

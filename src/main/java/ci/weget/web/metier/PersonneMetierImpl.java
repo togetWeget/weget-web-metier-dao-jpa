@@ -144,8 +144,29 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	@Override
 	public Personnes findById(Long id) {
 
-		return personnesRepository.getOne(id);
+		return personnesRepository.getPersonneByid(id);
 	}
+	/////////creer un abonne
+	@Override 
+	public Personnes creerAbonne(Personnes personne) {
+	Personnes p1=	personnesRepository.getPersonneByid(personne.getId());
+	Paiement p =  new Paiement(p1);
+	paiementRepository.save(p);
+	Paiement paie= paiementRepository.getPaiementParPersonne(p1.getId());
+	paie.setPaye(true);
+	paiementRepository.save(paie);
+	if (paie.isPaye()==true) {
+		p1.getTypeStratut().setLibelle("Abonne");
+	}
+		return personnesRepository.save(p1);
+	}
+	@Override
+	public List<Personnes> getAllAbonnes() {
+		
+		return personnesRepository.getAllAbonnes();
+	}
+	
+	
 
 	@Override
 	public boolean supprimer(Long id) {
@@ -156,7 +177,6 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	@Override
 	public boolean supprimer(List<Personnes> entites) {
 		personnesRepository.deleteAll(entites);
-		;
 		return true;
 	}
 
@@ -214,6 +234,5 @@ public class PersonneMetierImpl implements IPersonneMetier {
 		
 		return null;
 	}
-	
 	
 }

@@ -26,16 +26,11 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	@Autowired
 	private PersonnesRepository personnesRepository;
 
+	
 	@Override
-	public Membres saveMembres(Membres membre) {
-
-		return null;
-	}
-
-	@Override
-	public DetailBlocks saveDetailBlocks(DetailBlocks db) {
-
-		return null;
+	public DetailBlocks ajoutdetailBlocks(Blocks block, Personnes personne) {
+		
+		return detailBlocksRepository.save(new DetailBlocks(block, personne));
 	}
 
 	@Override
@@ -84,5 +79,5 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	public void addMembresToBlocks(String statut, String blockName) {
 
 	}
-
+	
 }

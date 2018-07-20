@@ -12,7 +12,7 @@ public class Blocks extends AbstractEntity {
 	private String libelle;
 	private String pathPhoto;
 	private String description;
-
+	
 	public Blocks() {
 		super();
 
@@ -61,6 +61,7 @@ public class Blocks extends AbstractEntity {
 		this.description = description;
 	}
 
+	
 	@Override
 	public String toString() {
 		return "Blocks [libelle=" + libelle + ", pathPhoto=" + pathPhoto + ", description=" + description + "]";

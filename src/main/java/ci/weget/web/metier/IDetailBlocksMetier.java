@@ -1,10 +1,11 @@
 package ci.weget.web.metier;
 
+import ci.weget.web.entites.Blocks;
 import ci.weget.web.entites.DetailBlocks;
-import ci.weget.web.entites.Membres;
+import ci.weget.web.entites.Personnes;
 
 public interface IDetailBlocksMetier extends Imetier<DetailBlocks, Long> {
-	public Membres saveMembres(Membres membre);
-	public DetailBlocks saveDetailBlocks(DetailBlocks db);
+	DetailBlocks ajoutdetailBlocks(Blocks block, Personnes personne);
 	public void addMembresToBlocks(String statut, String blockName);
+	
 }

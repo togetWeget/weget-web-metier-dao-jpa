@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import ci.weget.web.dao.BlocksRepository;
 import ci.weget.web.entites.Blocks;
+import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Tarif;
 import ci.weget.web.exception.InvalideTogetException;
 
 @Service
@@ -52,7 +54,19 @@ public class BlocksMetierImpl implements IBlocksMetier {
 		return blocksRepository.chercherBlockParMc(mc);
 	}
 
+	@Override
+	public List<Personnes> getPersonnes(Long id) {
+		
+		return blocksRepository.getPersonnes(id);
+	}
+	@Override
+	public List<Personnes> getPersonnesParBlockLibelle(String libelle) {
+		
+		return blocksRepository.getPersonnesParBlockLibelle(libelle);
+	}
 
+
+	
 	@Override
 	public List<Blocks> findAll() {
 		return blocksRepository.findAll();
@@ -62,7 +76,7 @@ public class BlocksMetierImpl implements IBlocksMetier {
 	public Blocks findById(Long id) {
 		return blocksRepository.getByid(id);
 	}
-
+	
 	@Override
 	public boolean supprimer(Long id) {
 		blocksRepository.deleteById(id);

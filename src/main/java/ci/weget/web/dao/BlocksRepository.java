@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import ci.weget.web.entites.Blocks;
+import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Tarif;
 
 public interface BlocksRepository extends JpaRepository<Blocks, Long>{
 
@@ -18,11 +20,13 @@ public interface BlocksRepository extends JpaRepository<Blocks, Long>{
 	List<Blocks> chercherBlockParMc(@Param("x") String mc);
 	
 	// ramener un block a partir de son identifiant
-	@Query("select b from Blocks b where b.id=?1")
-	Blocks getByid(Long id);
-	
-	/*// retrouver un paiement a partir de lídentifiant dún block
-	@Query("select p from Paiement p where p.block.id=?1")
-	Blocks getPaiementParIdBlock(Long id);*/
-	
-}
+    	@Query("select b from Blocks b where b.id=?1")
+	  Blocks getByid(Long id);
+	// liste des personne d'un block identifié par son id 
+		@Query("select db.personne from DetailBlocks db where db.blocks.id=?1")
+		List<Personnes> getPersonnes(Long id);
+		// liste des personne d'un block identifié par son libelle 
+		@Query("select db.personne from DetailBlocks db where db.blocks.libelle=?1")
+		List<Personnes> getPersonnesParBlockLibelle(String libelle);
+
+	}

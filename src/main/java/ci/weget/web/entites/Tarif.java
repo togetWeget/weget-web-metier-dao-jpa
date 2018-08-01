@@ -12,36 +12,41 @@ public class Tarif extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	private Float montant;
+	private Double prix;
 	private String description;
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_block")
-	private Blocks block;
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="id_publicite")
-	private Publicites publicite;
-    public Tarif() {
-		super();
-		
-	}
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_block")
+	private Block block;
 	
 
-	public Tarif(Float montant, String description) {
+	public Tarif() {
 		super();
-		this.montant = montant;
+
+	}
+
+	
+
+	public Tarif(Double prix, String description, Block block) {
+		super();
+		this.prix = prix;
 		this.description = description;
-		
-	}
-
-	public Float getMontant() {
-		return montant;
-	}
-
-	public void setMontant(Float montant) {
-		this.montant = montant;
-	}
-
+		this.block = block;
 	
+	}
+
+
+
+	public Double getPrix() {
+		return prix;
+	}
+
+
+
+	public void setPrix(Double prix) {
+		this.prix = prix;
+	}
+
+
 
 	public String getDescription() {
 		return description;
@@ -51,33 +56,14 @@ public class Tarif extends AbstractEntity {
 		this.description = description;
 	}
 
-
-	@Override
-	public String toString() {
-		return "Tarif [montant=" + montant + ", description=" + description + "]";
-	}
-
-
-	public Blocks getBlock() {
+	public Block getBlock() {
 		return block;
 	}
 
-
-	public void setBlock(Blocks block) {
+	public void setBlock(Block block) {
 		this.block = block;
 	}
 
-
-	public Publicites getPublicite() {
-		return publicite;
-	}
-
-
-	public void setPublicite(Publicites publicite) {
-		this.publicite = publicite;
-	}
-
 	
 
-	
 }

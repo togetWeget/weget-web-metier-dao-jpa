@@ -2,12 +2,13 @@ package ci.weget.web.metier;
 
 import java.util.List;
 
-import ci.weget.web.entites.Blocks;
-import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Block;
+import ci.weget.web.entites.DetailBlock;
+import ci.weget.web.entites.Personne;
 
-public interface IBlocksMetier extends Imetier<Blocks, Long> {
-Blocks rechercheParLibelle(String libelle);
-List<Blocks> chercherBlockParMc(String mc);
-List<Personnes> getPersonnes(Long id);
-List<Personnes>getPersonnesParBlockLibelle(String libelle);
+public interface IBlocksMetier extends Imetier<Block, Long> {
+Block rechercheParLibelle(String libelle);
+List<Block> chercherBlockParMc(String mc);
+List<Personne> getPersonnes(Long id);
+List<DetailBlock> lesAbonneParBlock(Long id);
 }

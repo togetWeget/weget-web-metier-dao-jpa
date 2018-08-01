@@ -5,7 +5,9 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="T_Type_Paiement")
-public class Type_Paiement extends AbstractEntity{
+public class TypePaiement extends AbstractEntity{
+
+	private static final long serialVersionUID = 1L;
 private String libelle;
 private String description;
 public String getLibelle() {

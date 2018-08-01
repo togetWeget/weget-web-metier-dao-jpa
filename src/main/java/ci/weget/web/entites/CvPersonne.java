@@ -5,7 +5,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="T_CvPersonne")
-public class CvPersonnes extends AbstractEntity {
+public class CvPersonne extends AbstractEntity {
 
 	
 	private static final long serialVersionUID = 1L;
@@ -16,12 +16,12 @@ public class CvPersonnes extends AbstractEntity {
     private String anneExperience;
     private String description;
     
-	public CvPersonnes() {
+	public CvPersonne() {
 		super();
 		
 	}
 	
-	public CvPersonnes(String diplome, String specialite, String anneExperience, String description) {
+	public CvPersonne(String diplome, String specialite, String anneExperience, String description) {
 		super();
 		this.diplome = diplome;
 		this.specialite = specialite;

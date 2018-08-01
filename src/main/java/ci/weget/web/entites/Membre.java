@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "T_Membre")
 @DiscriminatorValue("ME")
-public class Membres extends Personnes {
+public class Membre extends Personne {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -21,34 +21,34 @@ public class Membres extends Personnes {
     
    
     
-	public Membres() {
+	public Membre() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 	
-public Membres(String password, String repassword, String login) {
+public Membre(String password, String repassword, String login) {
 		super(password, repassword, login);
 		// TODO Auto-generated constructor stub
 	}
 
-public Membres(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
-			String type, Adresses adresse, List<Telephones> telephones) {
+public Membre(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
+			String type, Adresse adresse, List<Telephone> telephones) {
 		super(titre, nom, prenom, cni, nomComplet, pathPhoto, type, adresse, telephones);
 		// TODO Auto-generated constructor stub
 	}
-	public Membres(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
+	public Membre(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
 			String type) {
 		super(titre, nom, prenom, cni, nomComplet, pathPhoto, type);
 		// TODO Auto-generated constructor stub
 	}
 	
 	
-	public Membres(String titre, String nom, String prenom, String cni, String nomComplet, String type) {
+	public Membre(String titre, String nom, String prenom, String cni, String nomComplet, String type) {
 		super(titre, nom, prenom, cni, nomComplet, type);
 		// TODO Auto-generated constructor stub
 	}
 
-	public Membres(String login, String password) {
+	public Membre(String login, String password) {
 		super(login, password);
 		// TODO Auto-generated constructor stub
 	}

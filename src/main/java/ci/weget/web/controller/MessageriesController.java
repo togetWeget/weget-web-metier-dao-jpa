@@ -1,23 +1,50 @@
 package ci.weget.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ci.weget.web.entites.Messagerie;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.ImessagerieMetier;
+import ci.weget.web.modeles.Reponse;
+import ci.weget.web.utilitaires.Static;
 
 @RestController
-public class Messageries {
+@CrossOrigin(origins = "http://localhost:4200")
+public class MessageriesController {
+	@Autowired
 	private ImessagerieMetier messagerieMetier;
+	@Autowired
+	private ObjectMapper jsonMapper;
+	
+	
+	@PostMapping("/messagerie")
+	public String creer(@RequestBody Messagerie msg) throws JsonProcessingException {
+		Reponse<Messagerie> reponse;
 
-	@PostMapping("/messageries")
-	public Messagerie creer(Messagerie entity) throws InvalideTogetException {
-		return messagerieMetier.creer(entity);
+		try {
+
+			Messagerie m1 = messagerieMetier.creer(msg);
+			List<String> messages = new ArrayList<>();
+			messages.add(String.format("%s  à été créer avec succes", m1.getId()));
+			reponse = new Reponse<Messagerie>(0, messages, m1);
+
+		} catch (InvalideTogetException e) {
+
+			reponse = new Reponse<Messagerie>(1, Static.getErreursForException(e), null);
+		}
+		return jsonMapper.writeValueAsString(reponse);
 	}
 
 	@PutMapping("messageries")

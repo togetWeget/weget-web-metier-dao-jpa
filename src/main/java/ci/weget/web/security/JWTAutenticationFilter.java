@@ -14,13 +14,15 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ci.weget.web.entites.Membres;
-import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Personne;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+
 
 public class JWTAutenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -35,9 +37,9 @@ public class JWTAutenticationFilter extends UsernamePasswordAuthenticationFilter
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-		Personnes pers = null;
+		Personne pers = null;
 		try {
-			pers = new ObjectMapper().readValue(request.getInputStream(), Personnes.class);
+			pers = new ObjectMapper().readValue(request.getInputStream(), Personne.class);
 		} catch (Exception e) {
 
 			throw new RuntimeException(e);

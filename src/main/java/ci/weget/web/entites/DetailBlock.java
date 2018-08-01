@@ -7,51 +7,51 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 @Entity
-@Table(name="T_Detail_Blocks")
-public class DetailBlocks extends AbstractEntity {
+@Table(name="T_Detail_Block")
+public class DetailBlock extends AbstractEntity {
 	
 	private String description;
 	
 	private static final long serialVersionUID = 1L;
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_Blocks")
-	private Blocks blocks;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "id_Block")
+	private Block block;
 	@Column(name = "id_Blocks", insertable = false, updatable = false)
 	private long idBlocks;
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_Personne")
-	private Personnes personne;
+	private Personne personne;
 	@Column(name = "id_Personne", insertable = false, updatable = false)
 	private long idPersone;
 	
 	
-	public DetailBlocks() {
+	public DetailBlock() {
 		super();
 		
 	}
 	
 	
-	public DetailBlocks(Blocks blocks, Personnes personne) {
+	public DetailBlock(Block block, Personne personne) {
 		super();
-		this.blocks = blocks;
+		this.block = block;
 		this.personne = personne;
 	}
 
 
-	public Blocks getBlocks() {
-		return blocks;
+	public Block getBlock() {
+		return block;
 	}
-	public void setBlocks(Blocks blocks) {
-		this.blocks = blocks;
+	public void setBlocks(Block block) {
+		this.block = block;
 	}
 	
 	
-	public Personnes getPersonne() {
+	public Personne getPersonne() {
 		return personne;
 	}
 
 
-	public void setPersonne(Personnes personne) {
+	public void setPersonne(Personne personne) {
 		this.personne = personne;
 	}
 

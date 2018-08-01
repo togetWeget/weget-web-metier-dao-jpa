@@ -5,7 +5,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="T_Telephone")
-public class Telephones extends AbstractEntity {
+public class Telephone extends AbstractEntity {
 	
 	private static final long serialVersionUID = 1L;
 	

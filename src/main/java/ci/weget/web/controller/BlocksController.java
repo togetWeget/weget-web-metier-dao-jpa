@@ -25,8 +25,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ci.weget.web.entites.Blocks;
-import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Block;
+import ci.weget.web.entites.DetailBlock;
+import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.modeles.Reponse;
@@ -47,8 +48,8 @@ public class BlocksController {
 
 	///////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////// recuperer un block a partir de son identifiant
-	private Reponse<Blocks> getBlockById(Long id) {
-		Blocks block = null;
+	private Reponse<Block> getBlockById(Long id) {
+		Block block = null;
 		try {
 			block = blocksMetier.findById(id);
 		} catch (RuntimeException e) {
@@ -60,26 +61,26 @@ public class BlocksController {
 			new Reponse<>(2, messages, null);
 
 		}
-		return new Reponse<Blocks>(0, null, block);
+		return new Reponse<Block>(0, null, block);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////// recuperer unn block a partir de son libelle
 	///////////////////////////////////////////////////////////////////////////////////////////// ///////////////////////////////
 
-	private Reponse<Blocks> getBlockParLibellle(String libelle) {
-		Blocks block = null;
+	private Reponse<Block> getBlockParLibellle(String libelle) {
+		Block block = null;
 		try {
 			block = blocksMetier.rechercheParLibelle(libelle);
 		} catch (RuntimeException e) {
-			new Reponse<Blocks>(1, Static.getErreursForException(e), null);
+			new Reponse<Block>(1, Static.getErreursForException(e), null);
 		}
 		if (block == null) {
 			List<String> messages = new ArrayList<>();
 			messages.add(String.format("le block n'exixte pas", libelle));
-			return new Reponse<Blocks>(2, messages, null);
+			return new Reponse<Block>(2, messages, null);
 		}
-		return new Reponse<Blocks>(0, null, block);
+		return new Reponse<Block>(0, null, block);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,19 +88,19 @@ public class BlocksController {
 	////////////////////////////////////////////////////////////////////////////////////////////// donnee////////////////////////////////
 
 	@PostMapping("/blocks")
-	public String creer(@RequestBody Blocks block) throws JsonProcessingException {
-		Reponse<Blocks> reponse;
+	public String creer(@RequestBody Block block) throws JsonProcessingException {
+		Reponse<Block> reponse;
 
 		try {
 
-			Blocks b1 = blocksMetier.creer(block);
+			Block b1 = blocksMetier.creer(block);
 			List<String> messages = new ArrayList<>();
 			messages.add(String.format("%s  à été créer avec succes", b1.getLibelle()));
-			reponse = new Reponse<Blocks>(0, messages, b1);
+			reponse = new Reponse<Block>(0, messages, b1);
 
 		} catch (InvalideTogetException e) {
 
-			reponse = new Reponse<Blocks>(1, Static.getErreursForException(e), null);
+			reponse = new Reponse<Block>(1, Static.getErreursForException(e), null);
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
@@ -108,27 +109,27 @@ public class BlocksController {
 	// modifier un block dans la base de donnee
 	///////////////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////
 	@PutMapping("/blocks")
-	public String modfierUnBlock(@RequestBody Blocks modif) throws JsonProcessingException {
-		Reponse<Blocks> reponsePersModif = null;
-		Reponse<Blocks> reponse = null;
+	public String modfierUnBlock(@RequestBody Block modif) throws JsonProcessingException {
+		Reponse<Block> reponsePersModif = null;
+		Reponse<Block> reponse = null;
 
 		// on recupere la personne a modifier
 		reponsePersModif = getBlockById(modif.getId());
 		if (reponsePersModif.getStatut() == 0) {
 			try {
-				Blocks b2 = blocksMetier.modifier(modif);
+				Block b2 = blocksMetier.modifier(modif);
 				List<String> messages = new ArrayList<>();
 				messages.add(String.format("%s %s a modifier avec succes", b2.getLibelle()));
-				reponse = new Reponse<Blocks>(0, messages, b2);
+				reponse = new Reponse<Block>(0, messages, b2);
 			} catch (InvalideTogetException e) {
 
-				reponse = new Reponse<Blocks>(1, Static.getErreursForException(e), null);
+				reponse = new Reponse<Block>(1, Static.getErreursForException(e), null);
 			}
 
 		} else {
 			List<String> messages = new ArrayList<>();
 			messages.add(String.format("La personne n'existe pas"));
-			reponse = new Reponse<Blocks>(0, messages, null);
+			reponse = new Reponse<Block>(0, messages, null);
 		}
 
 		return jsonMapper.writeValueAsString(reponse);
@@ -140,10 +141,10 @@ public class BlocksController {
 	/////////////////////////////////////////////////////////////////////////////////////////////// donnee/////////////////////////////////////////
 	@GetMapping("/blocks")
 	public String findAllBlocks() throws JsonProcessingException, InvalideTogetException {
-		Reponse<List<Blocks>> reponse;
+		Reponse<List<Block>> reponse;
 		try {
-			List<Blocks> mats = blocksMetier.findAll();
-			reponse = new Reponse<List<Blocks>>(0, null, mats);
+			List<Block> mats = blocksMetier.findAll();
+			reponse = new Reponse<List<Block>>(0, null, mats);
 		} catch (Exception e) {
 			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
 		}
@@ -153,10 +154,10 @@ public class BlocksController {
 	//////////// personnes d'un block par id
 	@GetMapping("/Personneblocks/{id}")
 	public String getPersonneBlock(@PathVariable Long id) throws JsonProcessingException, InvalideTogetException {
-		Reponse<List<Personnes>> reponse;
+		Reponse<List<Personne>> reponse;
 		try {
-			List<Personnes> pers = blocksMetier.getPersonnes(id);
-			reponse = new Reponse<List<Personnes>>(0, null, pers);
+			List<Personne> pers = blocksMetier.getPersonnes(id);
+			reponse = new Reponse<List<Personne>>(0, null, pers);
 		} catch (Exception e) {
 			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
 		}
@@ -165,12 +166,12 @@ public class BlocksController {
 	}
 	////////////////personne d'un block par libelle
 ////////////personnes d'un block
-@GetMapping("/Personneblocks/{libelle}")
-public String getPersonneBlockLibelle(@PathVariable String libelle) throws JsonProcessingException, InvalideTogetException {
-Reponse<List<Personnes>> reponse;
+@GetMapping("/abonneParblocks/{id}")
+public String getAbonneBlockLibelle(@PathVariable Long id) throws JsonProcessingException, InvalideTogetException {
+Reponse<List<DetailBlock>> reponse;
 try {
-	List<Personnes> pers = blocksMetier.getPersonnesParBlockLibelle(libelle);
-	reponse = new Reponse<List<Personnes>>(0, null, pers);
+	List<DetailBlock> db = blocksMetier.lesAbonneParBlock(id);
+	reponse = new Reponse<List<DetailBlock>>(0, null, db);
 } catch (Exception e) {
 	reponse = new Reponse<>(1, Static.getErreursForException(e), null);
 }
@@ -184,7 +185,7 @@ return jsonMapper.writeValueAsString(reponse);
 	@GetMapping("/blocks/{id}")
 	public String chercherBlockParId(@PathVariable Long id) throws JsonProcessingException {
 		// Annotation @PathVariable permet de recuperer le paremettre dans URI
-		Reponse<Blocks> reponse = null;
+		Reponse<Block> reponse = null;
 
 		reponse = getBlockById(id);
 
@@ -197,16 +198,16 @@ return jsonMapper.writeValueAsString(reponse);
 	///////////////////////////////////////////////////////////////////////////////////////////// //////////////////////////////////////////
 	@GetMapping("/rechercheBlock")
 	public String chercherBlocParMc(@RequestParam String mc) throws JsonProcessingException {
-		Reponse<List<Blocks>> reponse = null;
+		Reponse<List<Block>> reponse = null;
 
 		try {
-			List<Blocks> blocks = blocksMetier.chercherBlockParMc(mc);
+			List<Block> blocks = blocksMetier.chercherBlockParMc(mc);
 			if (!blocks.isEmpty()) {
-				reponse = new Reponse<List<Blocks>>(0, null, blocks);
+				reponse = new Reponse<List<Block>>(0, null, blocks);
 			} else {
 				List<String> messages = new ArrayList<>();
 				messages.add(String.format("pas de block enregistrer "));
-				reponse = new Reponse<List<Blocks>>(2, messages, new ArrayList<>());
+				reponse = new Reponse<List<Block>>(2, messages, new ArrayList<>());
 			}
 
 		} catch (Exception e) {
@@ -224,9 +225,9 @@ return jsonMapper.writeValueAsString(reponse);
 
 		Reponse<Boolean> reponse = null;
 		boolean erreur = false;
-		Blocks b = null;
+		Block b = null;
 		if (!erreur) {
-			Reponse<Blocks> responseSup = getBlockById(id);
+			Reponse<Block> responseSup = getBlockById(id);
 			b = responseSup.getBody();
 			if (responseSup.getStatut() != 0) {
 				reponse = new Reponse<>(responseSup.getStatut(), responseSup.getMessages(), null);
@@ -256,12 +257,12 @@ return jsonMapper.writeValueAsString(reponse);
 
 	@PostMapping("/photoBlock")
 	public String creerPhoto(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
-		Reponse<Blocks> reponse = null;
-		Reponse<Blocks> reponseParLibelle;
+		Reponse<Block> reponse = null;
+		Reponse<Block> reponseParLibelle;
 		// recuperer le libelle à partir du nom de la photo
 		String libelle = file.getOriginalFilename();
 		reponseParLibelle = getBlockParLibellle(libelle);
-		Blocks b = reponseParLibelle.getBody();
+		Block b = reponseParLibelle.getBody();
 		System.out.println(b);
 
 		String path = "http://localhost:8080/getPhotoBlock/"+ b.getVersion()+"/" + libelle;
@@ -282,17 +283,17 @@ return jsonMapper.writeValueAsString(reponse);
 				file.transferTo(new File(dossier + libelle));
 				List<String> messages = new ArrayList<>();
 				messages.add(String.format("%s (photo ajouter avec succes)", b.getLibelle()));
-				reponse = new Reponse<Blocks>(0, messages, blocksMetier.modifier(b));
+				reponse = new Reponse<Block>(0, messages, blocksMetier.modifier(b));
 
 			} catch (Exception e) {
 
-				reponse = new Reponse<Blocks>(1, Static.getErreursForException(e), null);
+				reponse = new Reponse<Block>(1, Static.getErreursForException(e), null);
 			}
 
 		} else {
 			List<String> messages = new ArrayList<>();
 			messages.add(String.format("cette personne n'existe pas"));
-			reponse = new Reponse<Blocks>(reponseParLibelle.getStatut(), reponseParLibelle.getMessages(), null);
+			reponse = new Reponse<Block>(reponseParLibelle.getStatut(), reponseParLibelle.getMessages(), null);
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}

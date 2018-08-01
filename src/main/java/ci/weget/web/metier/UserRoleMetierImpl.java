@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import ci.weget.web.dao.UserRoleRepository;
-import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.security.AppRoles;
 import ci.weget.web.security.UserRoles;
@@ -16,7 +16,7 @@ public class UserRoleMetierImpl implements IUserRoleMetier{
 	private UserRoleRepository userRoleRepository;
 	
 	@Override
-	public UserRoles ajoutUserRole(Personnes personne, AppRoles role) {
+	public UserRoles ajoutUserRole(Personne personne, AppRoles role) {
 		
     return userRoleRepository.save(new UserRoles(personne, role));
 	}

@@ -6,24 +6,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ci.weget.web.dao.BlocksRepository;
-import ci.weget.web.entites.Blocks;
-import ci.weget.web.entites.Personnes;
-import ci.weget.web.entites.Tarif;
+import ci.weget.web.dao.DetailBlocksRepository;
+import ci.weget.web.entites.Block;
+import ci.weget.web.entites.DetailBlock;
+import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 
 @Service
 public class BlocksMetierImpl implements IBlocksMetier {
-
+	@Autowired
+	private DetailBlocksRepository detailBlocksRepository;
 	@Autowired
 	private BlocksRepository blocksRepository;
 
 	@Override
-	public Blocks creer(Blocks block) throws InvalideTogetException {
+	public Block creer(Block block) throws InvalideTogetException {
 		if ((block.getLibelle() == null) || (block.getLibelle() == "")) {
 			throw new InvalideTogetException("Le libelle ne peut etre null");
 		}
 
-		Blocks blocks = null;
+		Block blocks = null;
 		try {
 			blocks = blocksRepository.findByLibelle(block.getLibelle());
 		} catch (Exception e) {
@@ -37,8 +39,8 @@ public class BlocksMetierImpl implements IBlocksMetier {
 	}
 
 	@Override
-	public Blocks modifier(Blocks block) throws InvalideTogetException {
-		Blocks b = blocksRepository.findByLibelle(block.getLibelle());
+	public Block modifier(Block block) throws InvalideTogetException {
+		Block b = blocksRepository.findByLibelle(block.getLibelle());
 
 		if (b != null && b.getId() != block.getId()) {
 
@@ -49,31 +51,29 @@ public class BlocksMetierImpl implements IBlocksMetier {
 		return blocksRepository.save(block);
 	}
 	@Override
-	public List<Blocks> chercherBlockParMc(String mc) {
+	public List<Block> chercherBlockParMc(String mc) {
 		
 		return blocksRepository.chercherBlockParMc(mc);
 	}
 
 	@Override
-	public List<Personnes> getPersonnes(Long id) {
+	public List<Personne> getPersonnes(Long id) {
 		
 		return blocksRepository.getPersonnes(id);
 	}
 	@Override
-	public List<Personnes> getPersonnesParBlockLibelle(String libelle) {
+	public List<DetailBlock> lesAbonneParBlock(Long id) {
 		
-		return blocksRepository.getPersonnesParBlockLibelle(libelle);
+		return detailBlocksRepository.findAllAbonneParBloc(id);
 	}
 
-
-	
 	@Override
-	public List<Blocks> findAll() {
+	public List<Block> findAll() {
 		return blocksRepository.findAll();
 	}
 
 	@Override
-	public Blocks findById(Long id) {
+	public Block findById(Long id) {
 		return blocksRepository.getByid(id);
 	}
 	
@@ -84,7 +84,7 @@ public class BlocksMetierImpl implements IBlocksMetier {
 	}
 
 	@Override
-	public boolean supprimer(List<Blocks> entites) {
+	public boolean supprimer(List<Block> entites) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -96,7 +96,7 @@ public class BlocksMetierImpl implements IBlocksMetier {
 	}
 
 	@Override
-	public Blocks rechercheParLibelle(String libelle) {
+	public Block rechercheParLibelle(String libelle) {
 
 		return blocksRepository.findByLibelle(libelle);
 	}

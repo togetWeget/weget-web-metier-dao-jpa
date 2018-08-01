@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Personne;
+import ci.weget.web.metier.IAdminMetier;
 import ci.weget.web.metier.IAppRoleMetier;
-import ci.weget.web.metier.IPersonneMetier;
 import ci.weget.web.metier.IUserRoleMetier;
 import ci.weget.web.modeles.PostAjoutUserRole;
 import ci.weget.web.modeles.Reponse;
@@ -30,7 +30,7 @@ public class UserRoleController {
 	@Autowired
 	private IAppRoleMetier roleMetier;
 	@Autowired
-	private IPersonneMetier personneMetier;
+	private IAdminMetier adminMetier;
 	@Autowired
 	private ObjectMapper jsonMapper;
 	
@@ -41,34 +41,34 @@ public class UserRoleController {
 		try {
 			role = roleMetier.findById(id);
 		} catch (Exception e1) {
-			return new Reponse(1, Static.getErreursForException(e1),null);
+			return new Reponse<AppRoles>(1, Static.getErreursForException(e1),null);
 		}
 		// block existant ?
 		if (role == null) {
 			List<String> messages = new ArrayList<String>();
 			messages.add(String.format("Le block n'exste pas", id));
-			return new Reponse(2, messages,null);
+			return new Reponse<AppRoles>(2, messages,null);
 		}
 		// ok
-		return new Reponse(0,null, role);
+		return new Reponse<AppRoles>(0,null, role);
 	}
 	// recuperer la personne a partir de son identifiant
-	private Reponse<Personnes> getPersonneById(final Long id) {
-		Personnes personne = null;
+	private Reponse<Personne> getPersonneById(final Long id) {
+		Personne personne = null;
 		try {
-			personne = personneMetier.findById(id);
+			personne = adminMetier.findById(id);
 		} catch (RuntimeException e) {
-			new Reponse<Personnes>(1, Static.getErreursForException(e), null);
+			new Reponse<Personne>(1, Static.getErreursForException(e), null);
 		}
 		if (personne == null) {
 			List<String> messages = new ArrayList<String>();
 			messages.add(String.format("La personne n'exste pas", id));
-			return new Reponse<Personnes>(2, messages, null);
+			return new Reponse<Personne>(2, messages, null);
 		}
-		return new Reponse<Personnes>(0, null, personne);
+		return new Reponse<Personne>(0, null, personne);
 
 	}
-	// ajouter un detail block 
+	// ajouter un role a une personne 
 	@RequestMapping(value = "/ajouterUR")
 	public String ajouterUR(@RequestBody PostAjoutUserRole post) throws JsonProcessingException {
 		// on récupère les valeurs postées
@@ -84,18 +84,18 @@ public class UserRoleController {
 		AppRoles role  = (AppRoles) reponseRole.getBody();
 		// on récupère la personne
 		
-		Reponse<Personnes> reponsePersonne = getPersonneById(idPersonne);
+		Reponse<Personne> reponsePersonne = getPersonneById(idPersonne);
 		if (reponsePersonne.getStatut()!= 0) {
 			//reponse.incrStatusBy(2);
 			return reponsePersonne.getBody().getNomComplet();
 		}
-		Personnes personne = (Personnes) reponsePersonne.getBody();
+		Personne personne = (Personne) reponsePersonne.getBody();
 		// on ajoute le Rv
 		UserRoles ur = null;
 		try {
 			ur = userRoleMetier.ajoutUserRole(personne, role);
 			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s %s  à été créer avec succes", ur.getRoles().getNom(), ur.getPersonnes().getNomComplet()));
+			messages.add(String.format("%s %s  à été créer avec succes", ur.getRoles().getNom(), ur.getPersonne().getNomComplet()));
 			reponse = new Reponse<UserRoles>(0, messages, ur);
 		} catch (Exception e1) {
 			

@@ -1,36 +1,44 @@
 package ci.weget.web.entites;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "T_Blocks")
-public class Blocks extends AbstractEntity {
+@Table(name = "T_Block")
+public class Block extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 
 	private String libelle;
 	private String pathPhoto;
 	private String description;
-	
-	public Blocks() {
+	@OneToMany()
+	@JoinColumn(name = "id_Block")
+	private  List<SousBlock> sousBlocks;
+	public Block() {
 		super();
 
 	}
 
-	public Blocks(String libelle, String pathPhoto) {
+	public Block(String libelle, String pathPhoto) {
 		super();
 		this.libelle = libelle;
 		this.pathPhoto = pathPhoto;
 	}
 
-	public Blocks(String libelle) {
+	public Block(String libelle) {
 		super();
 		this.libelle = libelle;
 	}
 	
 
-	public Blocks(String libelle, String pathPhoto, String description) {
+	public Block(String libelle, String pathPhoto, String description) {
 		super();
 		this.libelle = libelle;
 		this.pathPhoto = pathPhoto;

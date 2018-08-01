@@ -6,25 +6,23 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import ci.weget.web.dao.BlocksRepository;
 import ci.weget.web.dao.DetailBlocksRepository;
-import ci.weget.web.dao.PaiementRepository;
 import ci.weget.web.dao.PersonnesRepository;
 import ci.weget.web.dao.RoleRepository;
+import ci.weget.web.dao.TypeStatutRepository;
 import ci.weget.web.dao.UserRoleRepository;
-import ci.weget.web.entites.Blocks;
-import ci.weget.web.entites.DetailBlocks;
-import ci.weget.web.entites.Paiement;
-import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Block;
+import ci.weget.web.entites.DetailBlock;
+import ci.weget.web.entites.Personne;
+import ci.weget.web.entites.TypeStatut;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.security.AppRoles;
 import ci.weget.web.security.UserRoles;
 
 @Service
-@Transactional
-public class PersonneMetierImpl implements IPersonneMetier {
+public class AdminMetierImpl implements IAdminMetier{
 
 	@Autowired
 	private PersonnesRepository personnesRepository;
@@ -35,7 +33,7 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	@Autowired
 	private BlocksRepository blocksRepository;
 	@Autowired
-	private PaiementRepository paiementRepository;
+	private TypeStatutRepository typeStatutRepository;
 	@Autowired
 	private DetailBlocksRepository detailBlocksRepository;
 	@Autowired
@@ -46,19 +44,22 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	////////////////////////////////////////////////////////////////////////////
 	/////// code mis en place pour enregistrer une personne /////////////////////
 	@Override
-	public Personnes creer(Personnes entity) throws InvalideTogetException {
+	public Personne creer(Personne entity) throws InvalideTogetException {
 		if(!entity.getPassword().equals(entity.getRepassword())) {
 			throw new InvalideTogetException("Vous devez remplir des mots de passe identique");
 		} 
-		Personnes pers = null;
+		Personne pers = null;
+		
 		try {
-			pers = personnesRepository.findByLogin(entity.getLogin());
+			pers = personnesRepository.getPersonneByid(entity.getId());
+			
 		} catch (Exception e) {
 			throw new InvalideTogetException("probleme de connexion");
 		}
-		if (pers != null)
-			throw new InvalideTogetException("ce login  existe deja");
-
+		if (pers!=null) {
+			throw new RuntimeException("ce login est deja utilise");
+		}
+		
         String hshPW = bCryptPasswordEncoder.encode(entity.getPassword());
         String hshRPW = bCryptPasswordEncoder.encode(entity.getRepassword());
 		entity.setPassword(hshPW);
@@ -69,23 +70,24 @@ public class PersonneMetierImpl implements IPersonneMetier {
 ///////////////////////////////////////////////////////////////////////////////////////
 	////////////////code metier pour modifier une personne////////////////////////////
 	@Override
-	public Personnes modifier(Personnes entity) throws InvalideTogetException {
-		Personnes p = personnesRepository.getOne(entity.getId());
+	public Personne modifier(Personne entity) throws InvalideTogetException {
+		Personne p = personnesRepository.findById(entity.getId()).get();
 
 		if (p != null && p.getId() != entity.getId()) {
 
-			throw new InvalideTogetException("Cette personne existe déjà.");
+			throw new InvalideTogetException("cette personne est deja une autre personne");
 
 		}
+
 		return personnesRepository.save(entity);
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////
 	/////////////////////////voir la liste de toutes les personnes en fonction des types//////////////////////
 	@Override
-	public List<Personnes> personneALL(String type) {
-		List<Personnes> pers = personnesRepository.findAll();
+	public List<Personne> personneALL(String type) {
+		List<Personne> pers = personnesRepository.findAll();
 
-		List<Personnes> typePersonnes = pers.stream().filter(p -> p.getType().equals(type))
+		List<Personne> typePersonnes = pers.stream().filter(p -> p.getType().equals(type))
 				.collect(Collectors.toList());
 
 		return typePersonnes;
@@ -100,7 +102,7 @@ public class PersonneMetierImpl implements IPersonneMetier {
    ///////// ajouter un role aun utilisateur ////////////////////////////////////////////////
 	@Override
 	public void addRoleToUser(String login, String roleName) {
-		Personnes personne = personnesRepository.findByLogin(login);
+		Personne personne = personnesRepository.findByLogin(login);
 		AppRoles appRole = roleRepository.findByNom(roleName);
 		UserRoles userRole = new UserRoles(personne, appRole);
 		userRoleRepository.save(userRole);
@@ -112,14 +114,14 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	@Override
 	public void addPersonneToBlocks(String login, String libelle) {
 		
-		Personnes personne = personnesRepository.findByLogin(login);
+		Personne personne = personnesRepository.findByLogin(login);
 		
-		Blocks block = blocksRepository.findByLibelle(libelle);
+		Block block = blocksRepository.findByLibelle(libelle);
 	//	Paiement paie = paiementRepository.getPaiementParBlockLibelle(libelle);
 		
-			DetailBlocks db = new DetailBlocks(block, personne);
+			DetailBlock db = new DetailBlock(block, personne);
 			detailBlocksRepository.save(db);
-			List<Personnes> personnes=personnesRepository.getPersonneParBlockLibelle(block.getLibelle());
+			List<Personne> personnes=personnesRepository.getPersonneParBlockLibelle(block.getLibelle());
 			personnes.add(personne);
 		
 		//paie.setBlock(block);
@@ -137,31 +139,31 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	
 	//////////////////ramener une personnes par son login //////////////////////////////////
    @Override
-	public Personnes findPersonnesByLogin(String login) {
+	public Personne findPersonnesByLogin(String login) {
 		return personnesRepository.findByLogin(login);
 	}
   //////////////// recuperer une personne par son id///////////////////////////////////////
 	@Override
-	public Personnes findById(Long id) {
+	public Personne findById(Long id) {
 
-		return personnesRepository.getPersonneByid(id);
+		return personnesRepository.findById(id).get();
 	}
 	/////////creer un abonne
 	@Override 
-	public Personnes creerAbonne(Personnes personne) {
-	Personnes p1=	personnesRepository.getPersonneByid(personne.getId());
-	Paiement p =  new Paiement(p1);
-	paiementRepository.save(p);
-	Paiement paie= paiementRepository.getPaiementParPersonne(p1.getId());
-	paie.setPaye(true);
-	paiementRepository.save(paie);
-	if (paie.isPaye()==true) {
-		p1.getTypeStratut().setLibelle("Abonne");
+	public Personne creerAbonne(Personne personne) throws InvalideTogetException {
+	Personne p1=	personnesRepository.getPersonneByid(personne.getId());
+	TypeStatut t1 = new TypeStatut();
+	t1.setLibelle("Abonne");
+	typeStatutRepository.save(t1);
+	p1.setTypeStatut(t1);
+	
+	if (p1.getTypeStatut().getLibelle()!="Abonne") {
+		throw new InvalideTogetException("cette personne n'est pas abonne");
 	}
-		return personnesRepository.save(p1);
+	return personnesRepository.save(p1);
 	}
 	@Override
-	public List<Personnes> getAllAbonnes() {
+	public List<Personne> getAllAbonnes() {
 		
 		return personnesRepository.getAllAbonnes();
 	}
@@ -175,7 +177,7 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	}
 
 	@Override
-	public boolean supprimer(List<Personnes> entites) {
+	public boolean supprimer(List<Personne> entites) {
 		personnesRepository.deleteAll(entites);
 		return true;
 	}
@@ -200,37 +202,37 @@ public class PersonneMetierImpl implements IPersonneMetier {
 	
 
 	@Override
-	public Personnes findByNom(String nom) {
+	public Personne findByNom(String nom) {
 	
-		return null;
+		return personnesRepository.findByNom(nom);
 	}
 
 	@Override
-	public List<Personnes> findAllPersonnesParMc(String type, String mc) {
+	public List<Personne> findAllPersonnesParMc(String type, String mc) {
 		
 		return null;
 	}
 
 	@Override
-	public List<Personnes> findAllAdministrateurs() {
+	public List<Personne> findAllAdministrateurs() {
 		
 		return null;
 	}
 
 	@Override
-	public List<Personnes> findAllMembres() {
+	public List<Personne> findAllMembres() {
 		
 		return null;
 	}
 
 	@Override
-	public List<Personnes> findByNomCompletContainingIgnoreCase(String nomcomplet) {
+	public List<Personne> findByNomCompletContainingIgnoreCase(String nomcomplet) {
 		
 		return null;
 	}
 
 	@Override
-	public List<Personnes> findAll() {
+	public List<Personne> findAll() {
 		
 		return null;
 	}

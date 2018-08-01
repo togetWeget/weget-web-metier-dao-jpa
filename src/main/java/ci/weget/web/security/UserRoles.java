@@ -8,9 +8,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import ci.weget.web.entites.AbstractEntity;
-import ci.weget.web.entites.Administrateurs;
-import ci.weget.web.entites.Membres;
-import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Administrateur;
+import ci.weget.web.entites.Membre;
+import ci.weget.web.entites.Personne;
 
 
 
@@ -23,10 +23,10 @@ public class UserRoles extends AbstractEntity {
 	
 	
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name = "id_Personnes")
-	private Personnes personnes;
-	@Column(name = "id_personnes", insertable = false, updatable = false)
-	private long idPersonnes;
+	@JoinColumn(name = "id_Personne")
+	private Personne personne;
+	@Column(name = "id_personne", insertable = false, updatable = false)
+	private long idPersonne;
 
 	@ManyToOne(fetch= FetchType.LAZY)
 	@JoinColumn(name = "id_roles")
@@ -40,20 +40,20 @@ public class UserRoles extends AbstractEntity {
 	}
 
 	
-	public UserRoles(Personnes personnes, AppRoles roles) {
+	public UserRoles(Personne personne, AppRoles roles) {
 		super();
-		this.personnes = personnes;
+		this.personne = personne;
 		this.roles = roles;
 	}
 
 
-	public Personnes getPersonnes() {
-		return personnes;
+	public Personne getPersonne() {
+		return personne;
 	}
 
 
-	public void setPersonnes(Personnes personnes) {
-		this.personnes = personnes;
+	public void setPersonnes(Personne personnes) {
+		this.personne = personnes;
 	}
 
 

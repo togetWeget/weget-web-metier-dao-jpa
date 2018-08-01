@@ -13,22 +13,23 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import ci.weget.web.entites.Personnes;
-import ci.weget.web.metier.IPersonneMetier;
+import ci.weget.web.entites.Personne;
+import ci.weget.web.metier.IAdminMetier;
+
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
     
 	@Autowired
-	private IPersonneMetier personneMetier;
+	private IAdminMetier adminMetier;
 	@Override
 	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-		Personnes user = personneMetier.findPersonnesByLogin(login);
+		Personne user = adminMetier.findPersonnesByLogin(login);
 		if (user==null) {
 			throw new UsernameNotFoundException(login);
 		}
 		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		List<AppRoles> roles = personneMetier.getRoles(user.getId());
+		List<AppRoles> roles = adminMetier.getRoles(user.getId());
 		roles.forEach(r->{
 			authorities.add(new SimpleGrantedAuthority(r.getNom()));
 		});

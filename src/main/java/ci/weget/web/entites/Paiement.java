@@ -23,7 +23,7 @@ public class Paiement extends AbstractEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_Personne")
-	private Personnes personne;
+	private Personne personne;
 	@Column(name = "id_Personne", insertable = false, updatable = false)
 	private long idPersonne;
 
@@ -39,7 +39,7 @@ public class Paiement extends AbstractEntity {
 
 	
 
-	public Paiement(Personnes personne) {
+	public Paiement(Personne personne) {
 		super();
 		this.personne = personne;
 	}
@@ -71,11 +71,11 @@ public class Paiement extends AbstractEntity {
 		this.motif = motif;
 	}
 
-	public Personnes getPersonne() {
+	public Personne getPersonne() {
 		return personne;
 	}
 
-	public void setPersonne(Personnes personne) {
+	public void setPersonne(Personne personne) {
 		this.personne = personne;
 	}
 

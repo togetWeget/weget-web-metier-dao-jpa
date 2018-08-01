@@ -1,33 +1,22 @@
 package ci.weget.web;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import ci.weget.web.dao.PersonnesRepository;
-import ci.weget.web.entites.Blocks;
-import ci.weget.web.entites.CvPersonnes;
-import ci.weget.web.entites.Membres;
-import ci.weget.web.entites.Personnes;
-import ci.weget.web.metier.IBlocksMetier;
-import ci.weget.web.metier.IPersonneMetier;
-
 @SpringBootApplication
 public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
     /*@Autowired
 	private AccountService accountService;*/
     
-    @Autowired
+   /* @Autowired
     private PersonnesRepository personnesRepository;
     @Autowired
-    private IPersonneMetier personneMetier;
-    @Autowired
-    private IBlocksMetier blockMetier;
+    private IPersonneMetier personneMetier;*/
+    /*@Autowired
+    private IBlocksMetier blockMetier;*/
 	@Bean
 	public BCryptPasswordEncoder getBCPE() {
 		return new BCryptPasswordEncoder();
@@ -95,5 +84,11 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 			System.out.println("les personne du block b1 sont attribues"+personnes.get(i));
 		*/
 		
+		/*Personnes m1=personneMetier.creer(new Membres("12345","12345","Abonne1"));
+		Personnes m2=personneMetier.creer(new Membres("12345","12345","Abonne2"));
+		Personnes ab1 = personneMetier.creerAbonne(m1);
+		Personnes ab2 = personneMetier.creerAbonne(m2);
+		System.out.println("abonne ab1 Creer:"+ab1.getLogin());
+		System.out.println("abonne ab2 Creer:"+ab2.getLogin());*/
 	}
 }

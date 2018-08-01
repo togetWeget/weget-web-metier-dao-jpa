@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 import ci.weget.web.dao.BlocksRepository;
 import ci.weget.web.dao.DetailBlocksRepository;
 import ci.weget.web.dao.PersonnesRepository;
-import ci.weget.web.entites.Blocks;
-import ci.weget.web.entites.DetailBlocks;
-import ci.weget.web.entites.Membres;
-import ci.weget.web.entites.Personnes;
+import ci.weget.web.entites.Block;
+import ci.weget.web.entites.DetailBlock;
+import ci.weget.web.entites.Membre;
+import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.security.AppRoles;
 import ci.weget.web.security.UserRoles;
@@ -28,19 +28,19 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 
 	
 	@Override
-	public DetailBlocks ajoutdetailBlocks(Blocks block, Personnes personne) {
+	public DetailBlock ajoutdetailBlocks(Block block, Personne personne) {
 		
-		return detailBlocksRepository.save(new DetailBlocks(block, personne));
+		return detailBlocksRepository.save(new DetailBlock(block, personne));
 	}
 
 	@Override
-	public List<DetailBlocks> findAll() {
+	public List<DetailBlock> findAll() {
 
 		return null;
 	}
 
 	@Override
-	public DetailBlocks findById(Long id) {
+	public DetailBlock findById(Long id) {
 
 		return null;
 	}
@@ -52,7 +52,7 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	}
 
 	@Override
-	public boolean supprimer(List<DetailBlocks> entites) {
+	public boolean supprimer(List<DetailBlock> entites) {
 
 		return false;
 	}
@@ -64,13 +64,13 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	}
 
 	@Override
-	public DetailBlocks creer(DetailBlocks entity) throws InvalideTogetException {
+	public DetailBlock creer(DetailBlock entity) throws InvalideTogetException {
 
 		return null;
 	}
 
 	@Override
-	public DetailBlocks modifier(DetailBlocks entity) throws InvalideTogetException {
+	public DetailBlock modifier(DetailBlock entity) throws InvalideTogetException {
 
 		return null;
 	}

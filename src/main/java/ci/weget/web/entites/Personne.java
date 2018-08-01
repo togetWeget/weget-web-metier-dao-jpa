@@ -30,8 +30,8 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "TYPE_PERSONNE", discriminatorType = DiscriminatorType.STRING, length = 2)
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
-@JsonSubTypes({ @Type(name = "ME", value = Membres.class), @Type(name = "AD", value = Administrateurs.class) })
-public abstract class Personnes extends AbstractEntity {
+@JsonSubTypes({ @Type(name = "ME", value = Membre.class), @Type(name = "AD", value = Administrateur.class) })
+public abstract class Personne extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 	private String cni;
@@ -42,50 +42,49 @@ public abstract class Personnes extends AbstractEntity {
 	private String repassword;
 	private boolean actived;
 	private String nomComplet;
-   private String pathPhoto;
+	private String pathPhoto;
 
 	@Column(name = "TYPE_PERSONNE", insertable = false, updatable = false)
 	private String type;
 
 	@Embedded
-	private Adresses adresse;
+	private Adresse adresse;
 	@Column(unique = true)
 	private String login;
 
-	
-	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER,cascade= CascadeType.ALL)
 	@JoinColumn(name = "id_Entreprise")
 	private Entreprise entreprise;
-	
-	
-	@ManyToOne(fetch = FetchType.LAZY)
+
+	@ManyToOne(fetch = FetchType.EAGER,cascade= CascadeType.ALL)
 	@JoinColumn(name = "id_Type_Statut")
-	private Type_Statut typeStratut;
-	
-	
-    @OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "id_cvPersonnes")
-	private CvPersonnes cvPersonnes;
-    // cles etrangres
-   /* @Column(name = "id_Entreprise",insertable = false, updatable = false)
-	private long idEntreprise;
-    @Column(name = "id_Type_Statut",insertable = false, updatable = false)
-	private long idTypeStatut;
-	@Column(name = "id_cvPersonnes",insertable = false, updatable = false)
-	private long idCvPersonnes;*/
-	
+	private TypeStatut typeStatut;
 
-	@OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_telephones")
-	private List<Telephones> telephones;
+	@OneToOne(fetch = FetchType.EAGER,cascade= CascadeType.ALL)
+	@JoinColumn(name = "id_cvPersonne")
+	private CvPersonne cvPersonne;
+	// cles etrangres
+	/*
+	 * @Column(name = "id_Entreprise",insertable = false, updatable = false) private
+	 * long idEntreprise;
+	 * 
+	 * @Column(name = "id_Type_Statut",insertable = false, updatable = false)
+	 * private long idTypeStatut;
+	 * 
+	 * @Column(name = "id_cvPersonnes",insertable = false, updatable = false)
+	 * private long idCvPersonnes;
+	 */
 
-	public Personnes() {
+	@OneToMany()
+	@JoinColumn(name = "id_Personne")
+	private List<Telephone> telephones;
+
+	public Personne() {
 		super();
 
 	}
 
-	public Personnes(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
+	public Personne(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
 			String type) {
 		super();
 		this.titre = titre;
@@ -97,7 +96,7 @@ public abstract class Personnes extends AbstractEntity {
 		this.type = type;
 	}
 
-	public Personnes(String titre, String nom, String prenom, String cni, String nomComplet, String type) {
+	public Personne(String titre, String nom, String prenom, String cni, String nomComplet, String type) {
 		super();
 		this.titre = titre;
 		this.nom = nom;
@@ -107,22 +106,21 @@ public abstract class Personnes extends AbstractEntity {
 		this.type = type;
 	}
 
-	public Personnes(String login, String password) {
+	public Personne(String login, String password) {
 		super();
 		this.login = login;
 		this.password = password;
 	}
 
-	
-	public Personnes(String password, String repassword, String login) {
+	public Personne(String password, String repassword, String login) {
 		super();
 		this.password = password;
 		this.repassword = repassword;
 		this.login = login;
 	}
 
-	public Personnes(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
-			String type, Adresses adresse, List<Telephones> telephones) {
+	public Personne(String titre, String nom, String prenom, String cni, String nomComplet, String pathPhoto,
+			String type, Adresse adresse, List<Telephone> telephones) {
 		super();
 		this.titre = titre;
 		this.nom = nom;
@@ -135,17 +133,13 @@ public abstract class Personnes extends AbstractEntity {
 		this.telephones = telephones;
 	}
 
-	/*public long getIdEntreprise() {
-		return idEntreprise;
-	}
-
-	public long getIdTypeStatut() {
-		return idTypeStatut;
-	}
-
-	public long getIdCvPersonnes() {
-		return idCvPersonnes;
-	}*/
+	/*
+	 * public long getIdEntreprise() { return idEntreprise; }
+	 * 
+	 * public long getIdTypeStatut() { return idTypeStatut; }
+	 * 
+	 * public long getIdCvPersonnes() { return idCvPersonnes; }
+	 */
 
 	public String getTitre() {
 		return titre;
@@ -205,19 +199,19 @@ public abstract class Personnes extends AbstractEntity {
 		this.type = type;
 	}
 
-	public Adresses getAdresse() {
+	public Adresse getAdresse() {
 		return adresse;
 	}
 
-	public void setAdresse(Adresses adresse) {
+	public void setAdresse(Adresse adresse) {
 		this.adresse = adresse;
 	}
 
-	public List<Telephones> getTelephones() {
+	public List<Telephone> getTelephones() {
 		return telephones;
 	}
 
-	public void setTelephones(List<Telephones> telephones) {
+	public void setTelephones(List<Telephone> telephones) {
 		this.telephones = telephones;
 	}
 
@@ -225,7 +219,6 @@ public abstract class Personnes extends AbstractEntity {
 		this.nomComplet = nomComplet;
 	}
 
-	
 	public String getLogin() {
 		return login;
 	}
@@ -243,11 +236,13 @@ public abstract class Personnes extends AbstractEntity {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-@JsonIgnore
+
+	@JsonIgnore
 	public String getRepassword() {
 		return repassword;
 	}
-@JsonSetter
+
+	@JsonSetter
 	public void setRepassword(String repassword) {
 		this.repassword = repassword;
 	}
@@ -259,6 +254,7 @@ public abstract class Personnes extends AbstractEntity {
 	public void setActived(boolean actived) {
 		this.actived = actived;
 	}
+
 	public Entreprise getEntreprise() {
 		return entreprise;
 	}
@@ -267,20 +263,20 @@ public abstract class Personnes extends AbstractEntity {
 		this.entreprise = entreprise;
 	}
 
-	public Type_Statut getTypeStratut() {
-		return typeStratut;
+	public TypeStatut getTypeStatut() {
+		return typeStatut;
 	}
 
-	public void setTypeStratut(Type_Statut typeStratut) {
-		this.typeStratut = typeStratut;
+	public void setTypeStatut(TypeStatut typeStatut) {
+		this.typeStatut = typeStatut;
 	}
 
-	public CvPersonnes getCvPersonnes() {
-		return cvPersonnes;
+	public CvPersonne getCvPersonne() {
+		return cvPersonne;
 	}
 
-	public void setCvPersonnes(CvPersonnes cvPersonnes) {
-		this.cvPersonnes = cvPersonnes;
+	public void setCvPersonnes(CvPersonne cvPersonne) {
+		this.cvPersonne = cvPersonne;
 	}
 
 	@Override
@@ -288,9 +284,8 @@ public abstract class Personnes extends AbstractEntity {
 		return "Personnes [cni=" + cni + ", titre=" + titre + ", nom=" + nom + ", prenom=" + prenom + ", password="
 				+ password + ", repassword=" + repassword + ", actived=" + actived + ", nomComplet=" + nomComplet
 				+ ", pathPhoto=" + pathPhoto + ", type=" + type + ", adresse=" + adresse + ", login=" + login
-				+ ", entreprise=" + entreprise + ", typeStratut=" + typeStratut + ", cvPersonnes=" + cvPersonnes
+				+ ", entreprise=" + entreprise + ", typeStatut=" + typeStatut + ", cvPersonnes=" + cvPersonne
 				+ ", telephones=" + telephones + "]";
 	}
 
-	
 }

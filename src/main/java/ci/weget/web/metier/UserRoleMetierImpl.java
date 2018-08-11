@@ -2,6 +2,7 @@ package ci.weget.web.metier;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ci.weget.web.dao.UserRoleRepository;
@@ -13,6 +14,7 @@ import ci.weget.web.security.UserRoles;
 @Service
 public class UserRoleMetierImpl implements IUserRoleMetier{
 
+	@Autowired
 	private UserRoleRepository userRoleRepository;
 	
 	@Override

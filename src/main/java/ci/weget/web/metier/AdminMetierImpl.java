@@ -1,5 +1,6 @@
 package ci.weget.web.metier;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,12 +12,12 @@ import ci.weget.web.dao.BlocksRepository;
 import ci.weget.web.dao.DetailBlocksRepository;
 import ci.weget.web.dao.PersonnesRepository;
 import ci.weget.web.dao.RoleRepository;
-import ci.weget.web.dao.TypeStatutRepository;
+
 import ci.weget.web.dao.UserRoleRepository;
 import ci.weget.web.entites.Block;
 import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Personne;
-import ci.weget.web.entites.TypeStatut;
+
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.security.AppRoles;
 import ci.weget.web.security.UserRoles;
@@ -30,10 +31,8 @@ public class AdminMetierImpl implements IAdminMetier{
 	private RoleRepository roleRepository;
 	@Autowired
 	private UserRoleRepository userRoleRepository;
-	@Autowired
-	private BlocksRepository blocksRepository;
-	@Autowired
-	private TypeStatutRepository typeStatutRepository;
+	
+	
 	@Autowired
 	private DetailBlocksRepository detailBlocksRepository;
 	@Autowired
@@ -110,25 +109,6 @@ public class AdminMetierImpl implements IAdminMetier{
 		roles.add(appRole);
 
 	}
-	//////////// ajouter des personnes a des blocks ou des blocks a des persnnes///////////
-	@Override
-	public void addPersonneToBlocks(String login, String libelle) {
-		
-		Personne personne = personnesRepository.findByLogin(login);
-		
-		Block block = blocksRepository.findByLibelle(libelle);
-	//	Paiement paie = paiementRepository.getPaiementParBlockLibelle(libelle);
-		
-			DetailBlock db = new DetailBlock(block, personne);
-			detailBlocksRepository.save(db);
-			List<Personne> personnes=personnesRepository.getPersonneParBlockLibelle(block.getLibelle());
-			personnes.add(personne);
-		
-		//paie.setBlock(block);
-	//	paiementRepository.save(paie);
-		
-		
-	    }
 	
 	///////////////// enregistrer un userRole//////////////////////////////////////////////
 	@Override
@@ -148,26 +128,6 @@ public class AdminMetierImpl implements IAdminMetier{
 
 		return personnesRepository.findById(id).get();
 	}
-	/////////creer un abonne
-	@Override 
-	public Personne creerAbonne(Personne personne) throws InvalideTogetException {
-	Personne p1=	personnesRepository.getPersonneByid(personne.getId());
-	TypeStatut t1 = new TypeStatut();
-	t1.setLibelle("Abonne");
-	typeStatutRepository.save(t1);
-	p1.setTypeStatut(t1);
-	
-	if (p1.getTypeStatut().getLibelle()!="Abonne") {
-		throw new InvalideTogetException("cette personne n'est pas abonne");
-	}
-	return personnesRepository.save(p1);
-	}
-	@Override
-	public List<Personne> getAllAbonnes() {
-		
-		return personnesRepository.getAllAbonnes();
-	}
-	
 	
 
 	@Override
@@ -219,11 +179,7 @@ public class AdminMetierImpl implements IAdminMetier{
 		return null;
 	}
 
-	@Override
-	public List<Personne> findAllMembres() {
-		
-		return null;
-	}
+
 
 	@Override
 	public List<Personne> findByNomCompletContainingIgnoreCase(String nomcomplet) {
@@ -235,6 +191,12 @@ public class AdminMetierImpl implements IAdminMetier{
 	public List<Personne> findAll() {
 		
 		return null;
+	}
+	// la liste des roles d'une personne
+	@Override
+	public List<UserRoles> roleParPersonneId(Long id) {
+		
+		return userRoleRepository.roleParPersonneId(id);
 	}
 	
 }

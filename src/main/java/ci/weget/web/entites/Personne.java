@@ -43,41 +43,47 @@ public abstract class Personne extends AbstractEntity {
 	private boolean actived;
 	private String nomComplet;
 	private String pathPhoto;
+	private Double nombreVue;
 
 	@Column(name = "TYPE_PERSONNE", insertable = false, updatable = false)
 	private String type;
 
 	@Embedded
 	private Adresse adresse;
+
 	@Column(unique = true)
 	private String login;
 
-	@ManyToOne(fetch = FetchType.EAGER,cascade= CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Entreprise")
 	private Entreprise entreprise;
 
-	@ManyToOne(fetch = FetchType.EAGER,cascade= CascadeType.ALL)
-	@JoinColumn(name = "id_Type_Statut")
-	private TypeStatut typeStatut;
-
-	@OneToOne(fetch = FetchType.EAGER,cascade= CascadeType.ALL)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_cvPersonne")
 	private CvPersonne cvPersonne;
 	// cles etrangres
-	/*
-	 * @Column(name = "id_Entreprise",insertable = false, updatable = false) private
-	 * long idEntreprise;
-	 * 
-	 * @Column(name = "id_Type_Statut",insertable = false, updatable = false)
-	 * private long idTypeStatut;
-	 * 
-	 * @Column(name = "id_cvPersonnes",insertable = false, updatable = false)
-	 * private long idCvPersonnes;
-	 */
-
-	@OneToMany()
+	@OneToMany(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private List<Telephone> telephones;
+
+	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_TypeStatut")
+	private TypeStatut typestatut;
+	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_Contrat")
+	private Contrat contrat;
+
+	@Column(name = "id_Entreprise", insertable = false, updatable = false)
+	private long idEntreprise;
+
+	@Column(name = "id_cvPersonnes", insertable = false, updatable = false)
+	private long idCvPersonnes;
+
+	@Column(name = "id_TypeStatut", insertable = false, updatable = false)
+	private long idTypeStatut;
+
+	@Column(name = "id_Contrat", insertable = false, updatable = false)
+	private long idContrat;
 
 	public Personne() {
 		super();
@@ -94,6 +100,7 @@ public abstract class Personne extends AbstractEntity {
 		this.nomComplet = nomComplet;
 		this.pathPhoto = pathPhoto;
 		this.type = type;
+
 	}
 
 	public Personne(String titre, String nom, String prenom, String cni, String nomComplet, String type) {
@@ -133,13 +140,21 @@ public abstract class Personne extends AbstractEntity {
 		this.telephones = telephones;
 	}
 
-	/*
-	 * public long getIdEntreprise() { return idEntreprise; }
-	 * 
-	 * public long getIdTypeStatut() { return idTypeStatut; }
-	 * 
-	 * public long getIdCvPersonnes() { return idCvPersonnes; }
-	 */
+	public long getIdEntreprise() {
+		return idEntreprise;
+	}
+
+	public long getIdTypeStatut() {
+		return idTypeStatut;
+	}
+
+	public long getIdCvPersonnes() {
+		return idCvPersonnes;
+	}
+
+	public long getIdContrat() {
+		return idContrat;
+	}
 
 	public String getTitre() {
 		return titre;
@@ -181,6 +196,22 @@ public abstract class Personne extends AbstractEntity {
 	@PreUpdate
 	public void setNomComplet() {
 		this.nomComplet = nom + " " + prenom;
+	}
+
+	public Double getNombreVue() {
+		return nombreVue;
+	}
+
+	public void setNombreVue(Double nombreVue) {
+		this.nombreVue = nombreVue;
+	}
+
+	public TypeStatut getTypestatut() {
+		return typestatut;
+	}
+
+	public void setTypestatut(TypeStatut typestatut) {
+		this.typestatut = typestatut;
 	}
 
 	public String getPathPhoto() {
@@ -263,12 +294,8 @@ public abstract class Personne extends AbstractEntity {
 		this.entreprise = entreprise;
 	}
 
-	public TypeStatut getTypeStatut() {
-		return typeStatut;
-	}
-
-	public void setTypeStatut(TypeStatut typeStatut) {
-		this.typeStatut = typeStatut;
+	public void setCvPersonne(CvPersonne cvPersonne) {
+		this.cvPersonne = cvPersonne;
 	}
 
 	public CvPersonne getCvPersonne() {
@@ -279,13 +306,20 @@ public abstract class Personne extends AbstractEntity {
 		this.cvPersonne = cvPersonne;
 	}
 
+	public Contrat getContrat() {
+		return contrat;
+	}
+
+	public void setContrat(Contrat contrat) {
+		this.contrat = contrat;
+	}
+
 	@Override
 	public String toString() {
 		return "Personnes [cni=" + cni + ", titre=" + titre + ", nom=" + nom + ", prenom=" + prenom + ", password="
 				+ password + ", repassword=" + repassword + ", actived=" + actived + ", nomComplet=" + nomComplet
 				+ ", pathPhoto=" + pathPhoto + ", type=" + type + ", adresse=" + adresse + ", login=" + login
-				+ ", entreprise=" + entreprise + ", typeStatut=" + typeStatut + ", cvPersonnes=" + cvPersonne
-				+ ", telephones=" + telephones + "]";
+				+ ", entreprise=" + entreprise + ", cvPersonnes=" + cvPersonne + ", telephones=" + telephones + "]";
 	}
 
 }

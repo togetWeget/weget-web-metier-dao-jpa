@@ -26,8 +26,8 @@ public class Membre extends Personne {
 		// TODO Auto-generated constructor stub
 	}
 	
-public Membre(String password, String repassword, String login) {
-		super(password, repassword, login);
+public Membre(String login,String password, String repassword ) {
+		super(login,password, repassword);
 		// TODO Auto-generated constructor stub
 	}
 

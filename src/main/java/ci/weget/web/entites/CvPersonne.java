@@ -1,5 +1,9 @@
 package ci.weget.web.entites;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -15,6 +19,9 @@ public class CvPersonne extends AbstractEntity {
     private String specialite;
     private String anneExperience;
     private String description;
+    
+   @ElementCollection
+    private List<String> langues = new ArrayList<>();
     
 	public CvPersonne() {
 		super();
@@ -52,6 +59,14 @@ public class CvPersonne extends AbstractEntity {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<String> getLangues() {
+		return langues;
+	}
+
+	public void setLangues(List<String> langues) {
+		this.langues = langues;
 	}
     
     

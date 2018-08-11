@@ -28,9 +28,9 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 
 	
 	@Override
-	public DetailBlock ajoutdetailBlocks(Block block, Personne personne) {
+	public DetailBlock ajoutdetailBlocks(Personne personne,Block block) {
 		
-		return detailBlocksRepository.save(new DetailBlock(block, personne));
+		return detailBlocksRepository.save(new DetailBlock(personne, block));
 	}
 
 	@Override

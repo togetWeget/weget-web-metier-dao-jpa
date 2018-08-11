@@ -4,21 +4,25 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="T_Type_Statut")
+@Table(name = "T_TypeStatut")
 public class TypeStatut extends AbstractEntity {
 
+	
 	private static final long serialVersionUID = 1L;
+	
 	private String libelle;
-	
-	
+    private String description;
+    
+    
 	public TypeStatut() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 	
-	public TypeStatut(String libelle) {
+	public TypeStatut(String libelle, String description) {
 		super();
 		this.libelle = libelle;
+		this.description = description;
 	}
 
 	public String getLibelle() {
@@ -27,6 +31,11 @@ public class TypeStatut extends AbstractEntity {
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
 	}
-	
-
+	public String getDescription() {
+		return description;
+	}
+	public void setDescription(String description) {
+		this.description = description;
+	}
+    
 }

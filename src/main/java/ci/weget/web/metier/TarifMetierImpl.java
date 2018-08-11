@@ -26,36 +26,37 @@ public class TarifMetierImpl implements ITarifMetier {
 	@Override
 	public Tarif modifier(Tarif entity) throws InvalideTogetException {
 		
-		return null;
+		return tarifRepository.save(entity);
 	}
 
 	@Override
 	public List<Tarif> findAll() {
 		
-		return null;
+		return tarifRepository.findAll();
 	}
 
 	@Override
 	public Tarif findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return tarifRepository.getTarifParId(id);
 	}
 
 	@Override
 	public boolean supprimer(Long id) {
-		// TODO Auto-generated method stub
-		return false;
+		 tarifRepository.deleteById(id);
+		 return true;
 	}
 
 	@Override
 	public boolean supprimer(List<Tarif> entites) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		tarifRepository.deleteAll(entites);
+		return true;
 	}
 
 	@Override
 	public boolean existe(Long id) {
-		return false;
+		return tarifRepository.existsById(id);
 	}
 
 	@Override

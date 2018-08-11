@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ci.weget.web.entites.Block;
 import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Personne;
-import ci.weget.web.entites.TypeStatut;
+
 import ci.weget.web.metier.IAdminMetier;
 import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IDetailBlocksMetier;
@@ -94,14 +94,12 @@ public class DetailBlockContrller {
 		}
 		Personne personne = (Personne) reponsePersonne.getBody();
 		
-		String libelle= personne.getTypeStatut().getLibelle();
-		
-		//on verifie si la personne a un statut abonne
-		if (personne.getTypeStatut().getLibelle()==libelle) {
+	   //on verifie si la personne a un statut abonne
+		if (personne.getTypestatut().getLibelle().equals("abonne")) {
 			// on ajoute la personne au block
 			DetailBlock db = null;
 			try {
-				db = detailBlocksMetier.ajoutdetailBlocks(block, personne);
+				db = detailBlocksMetier.ajoutdetailBlocks(personne, block);
 				List<String> messages = new ArrayList<>();
 				messages.add(String.format("%s %s  à été créer avec succes", db.getBlock().getLibelle(),
 						db.getPersonne().getNomComplet()));

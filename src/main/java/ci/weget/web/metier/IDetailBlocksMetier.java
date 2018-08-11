@@ -5,7 +5,7 @@ import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Personne;
 
 public interface IDetailBlocksMetier extends Imetier<DetailBlock, Long> {
-	DetailBlock ajoutdetailBlocks(Block block, Personne personne);
+	DetailBlock ajoutdetailBlocks(Personne personne,Block block);
 	public void addMembresToBlocks(String statut, String blockName);
 	
 }

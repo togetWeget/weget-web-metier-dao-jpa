@@ -1,5 +1,6 @@
 package ci.weget.web.entites;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,17 +15,22 @@ public class Messagerie extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
 	@Column(name = "id_Personne", insertable = false, updatable = false)
 	private long idPersonne;
-	@OneToOne
+	@OneToOne(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Messages")
 	private Message messages;
-	@OneToOne
+	@Column(name = "id_Messages", insertable = false, updatable = false)
+	private long idMessages;
+	@OneToOne(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Expediteur")
 	private Expediteur expediteur;
+	@Column(name = "id_Expediteur", insertable = false, updatable = false)
+	private long idExpediteur;
+	
 
 	public Messagerie() {
 		super();
@@ -36,6 +42,18 @@ public class Messagerie extends AbstractEntity {
 		this.personne = personne;
 		this.messages = messages;
 		this.expediteur = expediteur;
+	}
+
+	public long getIdPersonne() {
+		return idPersonne;
+	}
+
+	public long getIdMessages() {
+		return idMessages;
+	}
+
+	public long getIdExpediteur() {
+		return idExpediteur;
 	}
 
 	public Personne getPersonne() {

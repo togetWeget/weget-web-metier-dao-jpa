@@ -115,7 +115,7 @@ public class BlocksController {
 
 		// on recupere la personne a modifier
 		reponsePersModif = getBlockById(modif.getId());
-		if (reponsePersModif.getStatut() == 0) {
+		if (reponsePersModif.getBody() != null) {
 			try {
 				Block b2 = blocksMetier.modifier(modif);
 				List<String> messages = new ArrayList<>();

@@ -18,7 +18,7 @@ public class Block extends AbstractEntity {
 	private String libelle;
 	private String pathPhoto;
 	private String description;
-	@OneToMany()
+	@OneToMany(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Block")
 	private  List<SousBlock> sousBlocks;
 	public Block() {

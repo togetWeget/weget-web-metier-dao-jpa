@@ -10,7 +10,7 @@ import ci.weget.web.entites.Tarif;
 
 public interface TarifRepository extends JpaRepository<Tarif, Long> {
 	// liste des tarif d'un block identifie par son id
-		@Query("select t from Tarif t where t.block.id=?1")
+		@Query("select t from Tarif t  left join fetch t.block b where b.id=?1")
 		List<Tarif> getTarifParBlock(long id);
 		// le block du tarif par son libelle
 		@Query("select t from Tarif t where t.id=?1")

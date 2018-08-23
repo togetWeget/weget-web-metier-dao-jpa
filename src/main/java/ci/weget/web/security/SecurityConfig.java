@@ -43,8 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**",
 				"/personnesparId/**","/membres/**","/blocks/**","/rechercheBlock/**",
 				"/photoBlock/**","/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**",
-				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**",
-				"/profil/**","/tousLesAbonnesParBlock/**","/panier/**",
+				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**","/profilAbonneLogin/**",
+				"/profil/**","/tousLesAbonnesParBlock/**","/panier/**","/tousLesBlockParAbonne/**","/misAjourProfil/**",
 				"/abonnes/**","/admin/**","/abonneParblocks/**").permitAll();
 		http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("ADMIN");
 		// toutes les requetes necessite une aurhentication

@@ -55,11 +55,7 @@ public class BlocksMetierImpl implements IBlocksMetier {
 		
 		return blocksRepository.getPersonnes(id);
 	}
-	@Override
-	public List<DetailBlock> lesAbonneParBlock(Long id) {
-		
-		return detailBlocksRepository.findAllAbonneParBloc(id);
-	}
+	
 
 	@Override
 	public List<Block> findAll() {

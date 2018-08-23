@@ -20,10 +20,10 @@ public class Tarif extends AbstractEntity {
 	private String description;
 
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Block")
+	@JoinColumn(name = "id_Block", insertable = false, updatable = false)
 	private Block block;
 
-	@Column(name = "id_Block", insertable = false, updatable = false)
+	@Column(name = "id_Block")
 	private long idBlock;
 
 	public Tarif() {
@@ -78,6 +78,10 @@ public class Tarif extends AbstractEntity {
 
 	public void setBlock(Block block) {
 		this.block = block;
+	}
+
+	public long getIdBlock() {
+		return idBlock;
 	}
 
 }

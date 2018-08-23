@@ -164,20 +164,6 @@ public class BlocksController {
 		return jsonMapper.writeValueAsString(reponse);
 
 	}
-	////////////////personne d'un block par libelle
-////////////personnes d'un block
-@GetMapping("/abonneParblocks/{id}")
-public String getAbonneBlockLibelle(@PathVariable Long id) throws JsonProcessingException, InvalideTogetException {
-Reponse<List<DetailBlock>> reponse;
-try {
-	List<DetailBlock> db = blocksMetier.lesAbonneParBlock(id);
-	reponse = new Reponse<List<DetailBlock>>(0, null, db);
-} catch (Exception e) {
-	reponse = new Reponse<>(1, Static.getErreursForException(e), null);
-}
-return jsonMapper.writeValueAsString(reponse);
-
-}
 
 	/////////////////////////////////////////////////////////////////////////////////
 	// renvoie un block par son

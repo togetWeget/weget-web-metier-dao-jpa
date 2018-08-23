@@ -27,5 +27,4 @@ public interface BlocksRepository extends JpaRepository<Block, Long> {
 	@Query("select db.personne from DetailBlock db where db.personne.id=?1 AND db.personne.typestatut='abonne'")
 	List<Personne> getPersonnes(Long id);
 
-	
 }

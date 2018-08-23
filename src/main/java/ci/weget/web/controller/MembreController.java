@@ -144,34 +144,7 @@ public class MembreController {
 		return jsonMapper.writeValueAsString(reponse);
 	}
 
-	// faire la mise a jour du profil d'un membre
-	@PutMapping("/membres")
-	public String modifier(Personne modif) throws JsonProcessingException {
-		Reponse<Personne> reponsePersModif = null;
-		Reponse<Personne> reponse = null;
-
-		// on recupere la personne a modifier
-		reponsePersModif = getMembreById(modif.getId());
-		if (reponsePersModif.getStatut() == 0) {
-			try {
-				Personne p2 = membreMetier.modifier(modif);
-				List<String> messages = new ArrayList<>();
-				messages.add(String.format("%s %s a modifier avec succes", p2.getNom(), p2.getPrenom()));
-				reponse = new Reponse<Personne>(0, messages, p2);
-			} catch (InvalideTogetException e) {
-
-				reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
-			}
-
-		} else {
-			List<String> messages = new ArrayList<>();
-			messages.add(String.format("La personne n'existe pas"));
-			reponse = new Reponse<Personne>(0, messages, null);
-		}
-
-		return jsonMapper.writeValueAsString(reponse);
-	}
-
+	
 	// obtenir la liste des memmbres
 	@GetMapping("/typePersonnes/{type}")
 	public String findAllTypePersonne(@PathVariable("type") String type) throws JsonProcessingException {
@@ -194,70 +167,13 @@ public class MembreController {
 		return jsonMapper.writeValueAsString(reponse);
 	}
 
-	// recherche les Abonnes par competence
-	// tous les membres qui ont leur statut a abonne et ont paye le block
-	@GetMapping("/abonnes/{competence}")
-	public String chercherPersonneParCompetence(@PathVariable String competence) throws JsonProcessingException {
-		Reponse<List<Personne>> reponse;
-		try {
-			List<Personne> db = membreMetier.chercherPersonneParCompetence(competence);
-			reponse = new Reponse<List<Personne>>(0, null, db);
-		} catch (Exception e) {
-			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
-		}
-		return jsonMapper.writeValueAsString(reponse);
-
-	}
-
+	
 	// recherche les membres par login
 	@GetMapping("/membresLogin/{login}")
 	public String chercherMembresParLogin(@PathVariable String login) throws JsonProcessingException {
 		// Annotation @PathVariable permet de recuperer le paremettre dans URI
 		Reponse<Personne> reponse = null;
 		reponse = getMembreByLogin(login);
-		return jsonMapper.writeValueAsString(reponse);
-
-	}
-
-	//////////////// creer un abonne
-	// creer un abonne revient a dire quún membre a paye le bloc donc son statut
-	// est abonne
-	@PostMapping("/abonnes")
-	public String creerAbonne(@RequestBody PostAjoutDetailBlock post) throws JsonProcessingException {
-		Reponse<Personne> reponse;
-		long idBlock = post.getIdBlock();
-		long idPersonne = post.getIdPersonne();
-
-		// on récupère le block reponse block
-		Reponse<Block> reponseBlock = getBlock(idBlock);
-		// on recupere le block
-		Block block = (Block) reponseBlock.getBody();
-		// on récupère la personne
-		Reponse<Personne> reponsePersonne = getMembreById(idPersonne);
-
-		Personne personne = (Personne) reponsePersonne.getBody();
-		try {
-			Personne p1 = membreMetier.creerAbonne(personne.getLogin(), block.getLibelle());
-			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s à été créer avec succes", personne.getNomComplet()));
-			reponse = new Reponse<Personne>(0, messages, p1);
-
-		} catch (Exception e) {
-
-			reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
-		}
-		return jsonMapper.writeValueAsString(reponse);
-	}
-	// obtenir tous les abonnes
-	@GetMapping("/abonnes")
-	public String findAllAbonne() throws JsonProcessingException {
-		Reponse<List<Personne>> reponse;
-		try {
-			List<Personne> pers =membreMetier.getAllAbonnes();
-			reponse = new Reponse<List<Personne>>(0, null, pers);
-		} catch (Exception e) {
-			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
-		}
 		return jsonMapper.writeValueAsString(reponse);
 
 	}

@@ -74,7 +74,7 @@ public abstract class Personne extends AbstractEntity {
 	@JoinColumn(name = "id_Contrat")
 	private Contrat contrat;
 
-	@Column(name = "id_Entreprise", insertable = false, updatable = false)
+	/*@Column(name = "id_Entreprise", insertable = false, updatable = false)
 	private long idEntreprise;
 
 	@Column(name = "id_cvPersonnes", insertable = false, updatable = false)
@@ -84,7 +84,7 @@ public abstract class Personne extends AbstractEntity {
 	private long idTypeStatut;
 
 	@Column(name = "id_Contrat", insertable = false, updatable = false)
-	private long idContrat;
+	private long idContrat;*/
 
 	public Personne() {
 		super();
@@ -141,7 +141,7 @@ public abstract class Personne extends AbstractEntity {
 		this.telephones = telephones;
 	}
 
-	public long getIdEntreprise() {
+	/*public long getIdEntreprise() {
 		return idEntreprise;
 	}
 
@@ -156,7 +156,7 @@ public abstract class Personne extends AbstractEntity {
 	public long getIdContrat() {
 		return idContrat;
 	}
-
+*/
 	public String getTitre() {
 		return titre;
 	}
@@ -313,6 +313,14 @@ public abstract class Personne extends AbstractEntity {
 
 	public void setContrat(Contrat contrat) {
 		this.contrat = contrat;
+	}
+
+	public String getGroupSanguin() {
+		return groupSanguin;
+	}
+
+	public void setGroupSanguin(String groupSanguin) {
+		this.groupSanguin = groupSanguin;
 	}
 
 	@Override

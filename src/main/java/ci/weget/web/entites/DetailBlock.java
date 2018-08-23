@@ -22,8 +22,8 @@ public class DetailBlock extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Block")
 	private Block block;
-	@Column(name = "id_Blocks", insertable = false, updatable = false)
-	private long idBlocks;
+	@Column(name = "id_Block", insertable = false, updatable = false)
+	private long idBlock;
 
 	@Column(name = "id_Personne", insertable = false, updatable = false)
 	private long idPersone;

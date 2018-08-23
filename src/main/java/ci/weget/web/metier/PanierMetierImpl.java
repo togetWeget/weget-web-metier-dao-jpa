@@ -59,32 +59,34 @@ public class PanierMetierImpl implements IPanierMetier {
 
 	@Override
 	public Panier modifier(Panier entity) throws InvalideTogetException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return panierRepository.save(entity);
 	}
 
 	@Override
 	public List<Panier> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return panierRepository.findAllPanier();
 	}
 
 	@Override
 	public Panier findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return panierRepository.findPanierById(id);
 	}
 
 	@Override
 	public boolean supprimer(Long id) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		 panierRepository.supprimerPanierById(id);
+		 return true;
 	}
 
 	@Override
 	public boolean supprimer(List<Panier> entites) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		 panierRepository.deleteAll(entites);
+		 return true;
 	}
 
 	@Override

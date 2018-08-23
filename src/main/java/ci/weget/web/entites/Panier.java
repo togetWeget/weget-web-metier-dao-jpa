@@ -16,19 +16,20 @@ import javax.persistence.Table;
 public class Panier extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
+	private LocalDateTime date;
+	private Double quantite;
+	private Double total;
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_Block")
 	private Block block;
-	private LocalDateTime date;
+
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
-	private Double quantite;
+
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_Tarif")
 	private Tarif tarif;
-
-	private Double total;
 
 	public Panier() {
 		super();
@@ -76,17 +77,6 @@ public class Panier extends AbstractEntity {
 		this.quantite = quantite;
 	}
 
-	
-	public LocalDateTime getDate() {
-		return date;
-	}
-
-	@PrePersist
-	@PreUpdate
-	public void setDate() {
-		this.date = LocalDateTime.now();
-	}
-
 	public Block getBlock() {
 		return block;
 	}
@@ -97,6 +87,18 @@ public class Panier extends AbstractEntity {
 
 	public Double getTotal() {
 		return total;
+	}
+
+	
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	@PrePersist
+	@PreUpdate
+	public void setDate() {
+		this.date = LocalDateTime.now();
 	}
 
 	public void setTotal(Double total) {

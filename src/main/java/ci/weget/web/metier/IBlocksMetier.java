@@ -10,5 +10,5 @@ public interface IBlocksMetier extends Imetier<Block, Long> {
 Block rechercheParLibelle(String libelle);
 List<Block> chercherBlockParMc(String mc);
 List<Personne> getPersonnes(Long id);
-List<DetailBlock> lesAbonneParBlock(Long id);
+
 }

@@ -1,6 +1,7 @@
 package ci.weget.web.metier;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,12 +26,11 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	private BlocksRepository blocksRepository;
 	@Autowired
 	private PersonnesRepository personnesRepository;
-
 	
 	@Override
-	public DetailBlock ajoutdetailBlocks(Block block, Personne personne) {
+	public DetailBlock ajoutdetailBlocks(Personne personne,Block block) {
 		
-		return detailBlocksRepository.save(new DetailBlock(block, personne));
+		return detailBlocksRepository.save(new DetailBlock(personne, block));
 	}
 
 	@Override
@@ -42,9 +42,18 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	@Override
 	public DetailBlock findById(Long id) {
 
-		return null;
+		return detailBlocksRepository.findDtailBlocksParId(id);
 	}
+	// la liste des personne par block
+		@Override
+		public List<DetailBlock> personneALLBlock(long id) {
+			List<DetailBlock> pers = detailBlocksRepository.findAll();
 
+			List<DetailBlock> db = pers.stream().filter(x->x.getId().equals(id)).limit(3).collect(Collectors.toList());
+
+			return db;
+
+		}
 	@Override
 	public boolean supprimer(Long id) {
 

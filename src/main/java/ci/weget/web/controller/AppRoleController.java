@@ -13,16 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ci.weget.web.entites.Block;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IAppRoleMetier;
-import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.modeles.Reponse;
 import ci.weget.web.security.AppRoles;
 import ci.weget.web.utilitaires.Static;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class AppRoleController {
 	@Autowired
 	private IAppRoleMetier roleMetier;

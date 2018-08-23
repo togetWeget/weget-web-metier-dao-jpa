@@ -1,5 +1,9 @@
 package ci.weget.web.entites;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -10,11 +14,16 @@ public class CvPersonne extends AbstractEntity {
 	
 	private static final long serialVersionUID = 1L;
 	
-   
-    private String  diplome;
+	private String  diplome;
     private String specialite;
     private String anneExperience;
+    private String dateNaissance;
+    private String genre;
+    
     private String description;
+    
+   @ElementCollection
+    private List<String> langues = new ArrayList<>();
     
 	public CvPersonne() {
 		super();
@@ -52,6 +61,32 @@ public class CvPersonne extends AbstractEntity {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public List<String> getLangues() {
+		return langues;
+	}
+
+	public void setLangues(List<String> langues) {
+		this.langues = langues;
+	}
+
+	
+
+	public String getDateNaissance() {
+		return dateNaissance;
+	}
+
+	public void setDateNaissance(String dateNaissance) {
+		this.dateNaissance = dateNaissance;
+	}
+
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
 	}
     
     

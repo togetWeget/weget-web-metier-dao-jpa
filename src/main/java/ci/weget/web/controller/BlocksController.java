@@ -34,7 +34,7 @@ import ci.weget.web.modeles.Reponse;
 import ci.weget.web.utilitaires.Static;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class BlocksController {
 
 	@Autowired
@@ -115,7 +115,7 @@ public class BlocksController {
 
 		// on recupere la personne a modifier
 		reponsePersModif = getBlockById(modif.getId());
-		if (reponsePersModif.getStatut() == 0) {
+		if (reponsePersModif.getBody() != null) {
 			try {
 				Block b2 = blocksMetier.modifier(modif);
 				List<String> messages = new ArrayList<>();
@@ -265,7 +265,7 @@ return jsonMapper.writeValueAsString(reponse);
 		Block b = reponseParLibelle.getBody();
 		System.out.println(b);
 
-		String path = "http://localhost:8080/getPhotoBlock/"+ b.getVersion()+"/" + libelle;
+		String path = "http://localhost:8080/getPhotoBlock/"+ b.getVersion()+"/" + b.getId();
 		System.out.println(path);
 		if (reponseParLibelle.getStatut() == 0) {
 			String dossier = togetImage + "/";
@@ -280,7 +280,7 @@ return jsonMapper.writeValueAsString(reponse);
 				// enregistrer le chemin dans la photo
 				b.setPathPhoto(path);
 				System.out.println(path);
-				file.transferTo(new File(dossier + libelle));
+				file.transferTo(new File(dossier + b.getId()));
 				List<String> messages = new ArrayList<>();
 				messages.add(String.format("%s (photo ajouter avec succes)", b.getLibelle()));
 				reponse = new Reponse<Block>(0, messages, blocksMetier.modifier(b));
@@ -301,15 +301,15 @@ return jsonMapper.writeValueAsString(reponse);
 	//////// recuperer une photo avec pour retour tableau de byte
 	//////// /////////////////////////////////
 
-	@GetMapping(value = "/getPhotoBlock/{version}/{libelle}", produces = MediaType.IMAGE_JPEG_VALUE)
-	public byte[] getPhotos(@PathVariable String version, @PathVariable String libelle)
+	@GetMapping(value = "/getPhotoBlock/{version}/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] getPhotos(@PathVariable String version, @PathVariable Long id)
 			throws FileNotFoundException, IOException {
 		
 		 // Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); 
 		  //Blocks b = personneLibelle.getBody(); 
 		  System.out.println(version); 
 		  String dossier = togetImage+"/"; 
-		  File f = new File(dossier+libelle); 
+		  File f = new File(dossier+id); 
 		  byte[] img = IOUtils.toByteArray(new FileInputStream(f));
 		 
 		return img;

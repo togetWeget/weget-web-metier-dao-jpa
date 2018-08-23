@@ -21,7 +21,7 @@ import ci.weget.web.modeles.Reponse;
 import ci.weget.web.utilitaires.Static;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class MessageriesController {
 	@Autowired
 	private ImessagerieMetier messagerieMetier;
@@ -29,7 +29,7 @@ public class MessageriesController {
 	private ObjectMapper jsonMapper;
 	
 	
-	@PostMapping("/messagerie")
+	@PostMapping("/messageries")
 	public String creer(@RequestBody Messagerie msg) throws JsonProcessingException {
 		Reponse<Messagerie> reponse;
 
@@ -46,7 +46,6 @@ public class MessageriesController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
-
 	@PutMapping("messageries")
 	public Messagerie modifier(Messagerie entity) throws InvalideTogetException {
 		return messagerieMetier.modifier(entity);

@@ -26,7 +26,7 @@ public class TarifMetierImpl implements ITarifMetier {
 	@Override
 	public Tarif modifier(Tarif entity) throws InvalideTogetException {
 		
-		return null;
+		return tarifRepository.save(entity);
 	}
 
 	@Override
@@ -37,13 +37,13 @@ public class TarifMetierImpl implements ITarifMetier {
 
 	@Override
 	public Tarif findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return tarifRepository.getTarifParId(id);
 	}
 
 	@Override
 	public boolean supprimer(Long id) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 

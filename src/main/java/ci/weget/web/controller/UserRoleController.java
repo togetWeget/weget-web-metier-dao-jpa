@@ -23,7 +23,7 @@ import ci.weget.web.security.UserRoles;
 import ci.weget.web.utilitaires.Static;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class UserRoleController {
 	@Autowired
 	private IUserRoleMetier userRoleMetier;
@@ -76,19 +76,14 @@ public class UserRoleController {
 		long idRole = post.getIdRole();
 		long idPersonne = post.getIdPersonne();
 		
-		// on récupère le block
+		// on récupère le role
 		Reponse<AppRoles> reponseRole = getRole(idRole);
-		if (reponseRole.getStatut() != 0) {
-			return reponseRole.getBody().getNom();
-		}
+		
 		AppRoles role  = (AppRoles) reponseRole.getBody();
 		// on récupère la personne
 		
 		Reponse<Personne> reponsePersonne = getPersonneById(idPersonne);
-		if (reponsePersonne.getStatut()!= 0) {
-			//reponse.incrStatusBy(2);
-			return reponsePersonne.getBody().getNomComplet();
-		}
+		
 		Personne personne = (Personne) reponsePersonne.getBody();
 		// on ajoute le Rv
 		UserRoles ur = null;

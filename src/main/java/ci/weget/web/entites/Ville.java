@@ -8,18 +8,25 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "T_Sous_Block")
-public class SousBlock extends AbstractEntity {
+@Table(name = "T_VILLE")
+public class Ville extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 	private String libelle;
-	private String type;
-	private String presentation;
 	private String description;
-
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Block")
-	private Block block;
+	@JoinColumn(name = "id_Pays")
+	private Pays pays;
+	public Ville() {
+		super();
+
+	}
+
+	public Ville(String libelle, String description) {
+		super();
+		this.libelle = libelle;
+		this.description = description;
+	}
 
 	public String getLibelle() {
 		return libelle;
@@ -27,22 +34,6 @@ public class SousBlock extends AbstractEntity {
 
 	public void setLibelle(String libelle) {
 		this.libelle = libelle;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public String getPresentation() {
-		return presentation;
-	}
-
-	public void setPresentation(String presentation) {
-		this.presentation = presentation;
 	}
 
 	public String getDescription() {

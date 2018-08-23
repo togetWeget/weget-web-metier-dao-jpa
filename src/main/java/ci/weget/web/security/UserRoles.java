@@ -1,5 +1,6 @@
 package ci.weget.web.security;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,13 +23,13 @@ public class UserRoles extends AbstractEntity {
 
 	
 	
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
 	@Column(name = "id_personne", insertable = false, updatable = false)
 	private long idPersonne;
 
-	@ManyToOne(fetch= FetchType.LAZY)
+	@ManyToOne(fetch= FetchType.LAZY,cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_roles")
 	private AppRoles roles;
 	@Column(name = "id_Roles", insertable = false, updatable = false)
@@ -44,6 +45,16 @@ public class UserRoles extends AbstractEntity {
 		super();
 		this.personne = personne;
 		this.roles = roles;
+	}
+
+
+	public long getIdPersonne() {
+		return idPersonne;
+	}
+
+
+	public long getIdRoles() {
+		return idRoles;
 	}
 
 

@@ -2,6 +2,7 @@ package ci.weget.web.metier;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import ci.weget.web.dao.RoleRepository;
@@ -10,7 +11,9 @@ import ci.weget.web.security.AppRoles;
 
 @Service
 public class AppRoleMetierImpl implements IAppRoleMetier{
-private RoleRepository roleRepository;
+   
+	@Autowired
+	private RoleRepository roleRepository;
 	@Override
 	public AppRoles creer(AppRoles entity) throws InvalideTogetException {
 		// TODO Auto-generated method stub
@@ -51,6 +54,12 @@ private RoleRepository roleRepository;
 	public boolean existe(Long id) {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public AppRoles findRoleByNom(String nom) {
+		
+		return roleRepository.findByNom(nom);
 	}
 
 	

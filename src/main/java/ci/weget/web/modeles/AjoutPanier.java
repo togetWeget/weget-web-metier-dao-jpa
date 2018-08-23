@@ -1,9 +1,11 @@
 package ci.weget.web.modeles;
 
+import java.time.LocalDateTime;
+
 public class AjoutPanier {
 	
 	private long idBlock;
-	private String date;
+	private LocalDateTime date;
 	private long idMembre;
 	private Double quantite;
 	private long idTarif;
@@ -29,10 +31,11 @@ public class AjoutPanier {
 		this.idTarif = idTarif;
 	}
 	
-	public String getDate() {
+	
+	public LocalDateTime getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 	public Double getQuantite() {

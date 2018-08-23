@@ -1,10 +1,14 @@
 package ci.weget.web.entites;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
@@ -15,7 +19,7 @@ public class Panier extends AbstractEntity {
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_Block")
 	private Block block;
-	private String date;
+	private LocalDateTime date;
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
@@ -38,7 +42,7 @@ public class Panier extends AbstractEntity {
 		this.block = block;
 	}
 
-	public Panier(Block block, Tarif tarif, Personne personne, String date, Double quantite, Double total) {
+	public Panier(Block block, Tarif tarif, Personne personne, LocalDateTime date, Double quantite, Double total) {
 		super();
 		this.tarif = tarif;
 		this.personne = personne;
@@ -72,12 +76,15 @@ public class Panier extends AbstractEntity {
 		this.quantite = quantite;
 	}
 
-	public String getDate() {
+	
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
+	@PrePersist
+	@PreUpdate
+	public void setDate() {
+		this.date = LocalDateTime.now();
 	}
 
 	public Block getBlock() {

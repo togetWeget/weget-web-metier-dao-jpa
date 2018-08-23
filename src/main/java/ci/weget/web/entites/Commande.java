@@ -20,20 +20,20 @@ public class Commande extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 	private LocalDateTime dateCommande;
-	@ManyToOne(fetch = FetchType.LAZY)
+	private Panier panier;
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
 	@Embedded
 	private CreditCard creditCard = new CreditCard();
 
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private Collection<LigneCommande> orderLines;
+	private Collection<Panier> orderLines;
 
 	public Commande() {
 		super();
-		
-	}
 
+	}
 
 	public Commande(Personne personne, CreditCard creditCard) {
 		super();
@@ -41,21 +41,10 @@ public class Commande extends AbstractEntity {
 		this.creditCard = creditCard;
 	}
 
-	
 	@PrePersist
 	private void setDefaultData() {
 		dateCommande = LocalDateTime.now();
 	}
-
-	public Collection<LigneCommande> getOrderLines() {
-		return orderLines;
-	}
-
-
-	public void setOrderLines(Collection<LigneCommande> orderLines) {
-		this.orderLines = orderLines;
-	}
-
 
 	public Personne getPersonne() {
 		return personne;
@@ -73,20 +62,12 @@ public class Commande extends AbstractEntity {
 		this.creditCard = creditCard;
 	}
 
-	
-
-	public void setOrderLines(List<LigneCommande> orderLines) {
-		this.orderLines = orderLines;
-	}
-
-
 	public LocalDateTime getDateCommande() {
 		return dateCommande;
 	}
 
-
 	public void setDateCommande(LocalDateTime dateCommande) {
 		this.dateCommande = dateCommande;
 	}
-	
+
 }

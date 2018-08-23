@@ -1,12 +1,6 @@
 package ci.weget.web.entites;
 
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -16,11 +10,10 @@ public class Block extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 
 	private String libelle;
+	private String refBlock;
 	private String pathPhoto;
 	private String description;
-	@OneToMany()
-	@JoinColumn(name = "id_Block")
-	private  List<SousBlock> sousBlocks;
+
 	public Block() {
 		super();
 
@@ -36,7 +29,6 @@ public class Block extends AbstractEntity {
 		super();
 		this.libelle = libelle;
 	}
-	
 
 	public Block(String libelle, String pathPhoto, String description) {
 		super();
@@ -69,7 +61,14 @@ public class Block extends AbstractEntity {
 		this.description = description;
 	}
 
-	
+	public String getRefBlock() {
+		return refBlock;
+	}
+
+	public void setRefBlock(String refBlock) {
+		this.refBlock = refBlock;
+	}
+
 	@Override
 	public String toString() {
 		return "Blocks [libelle=" + libelle + ", pathPhoto=" + pathPhoto + ", description=" + description + "]";

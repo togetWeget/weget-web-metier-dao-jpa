@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ci.weget.web.entites.Block;
 import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Personne;
-import ci.weget.web.entites.TypeStatut;
+
 import ci.weget.web.metier.IAdminMetier;
 import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IDetailBlocksMetier;
@@ -24,7 +26,7 @@ import ci.weget.web.modeles.Reponse;
 import ci.weget.web.utilitaires.Static;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin
 public class DetailBlockContrller {
 	@Autowired
 	private IDetailBlocksMetier detailBlocksMetier;
@@ -70,6 +72,35 @@ public class DetailBlockContrller {
 		return new Reponse<Personne>(0, null, personne);
 
 	}
+	
+	private Reponse<DetailBlock> getdetailBlock(long id) {
+		// on récupère le block
+		DetailBlock detailBlock = null;
+		try {
+			detailBlock = detailBlocksMetier.findById(id);
+		} catch (Exception e1) {
+			return new Reponse<DetailBlock>(1, Static.getErreursForException(e1), null);
+		}
+		// block existant ?
+		if (detailBlock == null) {
+			List<String> messages = new ArrayList<String>();
+			messages.add(String.format("Le block n'exste pas", id));
+			return new Reponse<DetailBlock>(2, messages, null);
+		}
+		// ok
+		return new Reponse<DetailBlock>(0, null, detailBlock);
+	}
+	
+	@GetMapping("/profil/{id}")
+	public String chercherBlockParId(@PathVariable Long id) throws JsonProcessingException {
+		// Annotation @PathVariable permet de recuperer le paremettre dans URI
+		Reponse<DetailBlock> reponse = null;
+
+		reponse = getdetailBlock(id);
+
+		return jsonMapper.writeValueAsString(reponse);
+
+	}
 
 	// ajouter un block a un abonne block
 	@RequestMapping(value = "/ajouterDb")
@@ -94,14 +125,12 @@ public class DetailBlockContrller {
 		}
 		Personne personne = (Personne) reponsePersonne.getBody();
 		
-		String libelle= personne.getTypeStatut().getLibelle();
-		
-		//on verifie si la personne a un statut abonne
-		if (personne.getTypeStatut().getLibelle()==libelle) {
+	   //on verifie si la personne a un statut abonne
+		if (personne.getTypestatut().getLibelle().equals("abonne")) {
 			// on ajoute la personne au block
 			DetailBlock db = null;
 			try {
-				db = detailBlocksMetier.ajoutdetailBlocks(block, personne);
+				db = detailBlocksMetier.ajoutdetailBlocks(personne, block);
 				List<String> messages = new ArrayList<>();
 				messages.add(String.format("%s %s  à été créer avec succes", db.getBlock().getLibelle(),
 						db.getPersonne().getNomComplet()));
@@ -116,4 +145,26 @@ public class DetailBlockContrller {
 		return jsonMapper.writeValueAsString(reponse);
 
 	}
+	// obtenir la liste des memmbres
+		@GetMapping("/tousLesAbonnesParBlock/{id}")
+		public String findAllTypePersonne(@PathVariable("id") Long id) throws JsonProcessingException {
+			Reponse<List<DetailBlock>> reponse;
+
+			try {
+				List<DetailBlock> personneTous = detailBlocksMetier.personneALLBlock(id);
+				if (!personneTous.isEmpty()) {
+					reponse = new Reponse<List<DetailBlock>>(0, null, personneTous);
+				} else {
+					List<String> messages = new ArrayList<>();
+					messages.add("Pas de personnes enregistrées");
+					reponse = new Reponse<List<DetailBlock>>(1, messages, new ArrayList<>());
+				}
+
+			} catch (Exception e) {
+
+				reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+			}
+			return jsonMapper.writeValueAsString(reponse);
+		}
+
 }

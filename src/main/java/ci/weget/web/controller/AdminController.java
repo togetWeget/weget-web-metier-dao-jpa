@@ -21,7 +21,7 @@ import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IAdminMetier;
 import ci.weget.web.modeles.Reponse;
-import ci.weget.web.security.AppRoles;
+import ci.weget.web.security.UserRoles;
 import ci.weget.web.utilitaires.Static;
 
 @RestController
@@ -96,23 +96,7 @@ public class AdminController {
 		return jsonMapper.writeValueAsString(reponse);
 	}
 
-	//////////////// creer un abonne
-	@PostMapping("/Abonnes")
-	public String creerAbonne(@RequestBody Personne personne) throws JsonProcessingException {
-		Reponse<Personne> reponse;
-		try {
-			Personne p1 = adminMetier.creerAbonne(personne);
-			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s à été créer avec succes", p1.getNomComplet()));
-			reponse = new Reponse<Personne>(0, messages, p1);
-
-		} catch (Exception e) {
-
-			reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
-		}
-		return jsonMapper.writeValueAsString(reponse);
-	}
-	// obtenir une personne personne par son type
+	
 
 	@GetMapping("/admin/{type}")
 	public String findAllTypePersonne(@PathVariable("type") String type) throws JsonProcessingException {
@@ -191,5 +175,17 @@ public class AdminController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
+////////////les roles dúne personne par id////////////////////////////////////
+@GetMapping("/roleParPersonne/{id}")
+public String getRoleParPersonneId(@PathVariable Long id) throws JsonProcessingException, InvalideTogetException {
+Reponse<List<UserRoles>> reponse;
+try {
+	List<UserRoles> ur = adminMetier.roleParPersonneId(id);
+	reponse = new Reponse<List<UserRoles>>(0, null, ur);
+} catch (Exception e) {
+	reponse = new Reponse<List<UserRoles>>(1, Static.getErreursForException(e), null);
+}
+return jsonMapper.writeValueAsString(reponse);
 
+}
 }

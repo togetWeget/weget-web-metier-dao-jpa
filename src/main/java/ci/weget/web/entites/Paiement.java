@@ -1,7 +1,6 @@
 package ci.weget.web.entites;
 
-import java.time.LocalDate;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -15,19 +14,19 @@ public class Paiement extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	
-	public boolean paye;
-	private LocalDate date;
+	private String paye;
+	private String date;
 
 	private String motif;
+	private Double montant;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
 	@Column(name = "id_Personne", insertable = false, updatable = false)
 	private long idPersonne;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_Tarif")
 	private Tarif tarif;
 	@Column(name = "id_Tarif", insertable = false, updatable = false)
@@ -37,29 +36,26 @@ public class Paiement extends AbstractEntity {
 		super();
 	}
 
-	
-
 	public Paiement(Personne personne) {
 		super();
 		this.personne = personne;
 	}
 
-	
-
-	public boolean isPaye() {
-		return paye;
-	}
-
-	public void setPaye(boolean paye) {
+	public Paiement(String paye, String date, String motif, Personne personne, Tarif tarif) {
+		super();
 		this.paye = paye;
+		this.date = date;
+		this.motif = motif;
+		this.personne = personne;
+		this.tarif = tarif;
 	}
-
-
-	public LocalDate getDate() {
+	
+	
+	public String getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 
@@ -93,6 +89,22 @@ public class Paiement extends AbstractEntity {
 
 	public long getIdTarif() {
 		return idTarif;
+	}
+
+	public Double getMontant() {
+		return montant;
+	}
+
+	public void setMontant(Double montant) {
+		this.montant = montant;
+	}
+
+	public String getPaye() {
+		return paye;
+	}
+
+	public void setPaye(String paye) {
+		this.paye = paye;
 	}
 
 }

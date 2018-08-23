@@ -28,26 +28,20 @@ public class BlocksMetierImpl implements IBlocksMetier {
 		Block blocks = null;
 		try {
 			blocks = blocksRepository.findByLibelle(block.getLibelle());
+			if (blocks != null)
+				throw new InvalideTogetException("ce libelle  existe deja");
+
+			return blocksRepository.save(block);
+
 		} catch (Exception e) {
 			throw new InvalideTogetException("probleme de connexion");
 		}
-		if (blocks != null)
-			throw new InvalideTogetException("ce libelle  existe deja");
-
-		return blocksRepository.save(block);
-
+		
 	}
 
 	@Override
 	public Block modifier(Block block) throws InvalideTogetException {
-		Block b = blocksRepository.findByLibelle(block.getLibelle());
-
-		if (b != null && b.getId() != block.getId()) {
-
-			throw new InvalideTogetException("ce block est deja utilise");
-
-		}
-
+		
 		return blocksRepository.save(block);
 	}
 	@Override

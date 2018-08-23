@@ -12,6 +12,7 @@ import ci.weget.web.entites.Personne;
 public interface BlocksRepository extends JpaRepository<Block, Long> {
 
 	// retrouver un block a partir de son libelle
+	@Query("select b from Block b where b.libelle=?1")
 	Block findByLibelle(String libelle);
 
 	// rechercher un bloc a partir de son libelle
@@ -22,8 +23,8 @@ public interface BlocksRepository extends JpaRepository<Block, Long> {
 	@Query("select b from Block b where b.id=?1")
 	Block getByid(Long id);
 
-	// liste des personne d'un block identifié par son id
-	@Query("select db.personne from DetailBlock db where db.block.id=?1")
+	// liste des abonnes d'un block identifié par son id
+	@Query("select db.personne from DetailBlock db where db.personne.id=?1 AND db.personne.typestatut='abonne'")
 	List<Personne> getPersonnes(Long id);
 
 	

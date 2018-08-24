@@ -114,4 +114,10 @@ public class PanierMetierImpl implements IPanierMetier {
 		return items.size();
 	}
 
+	@Override
+	public List<Panier> LesPanierDeLaPersonne(Long id) {
+		
+		return panierRepository.findAllPanierParPersonneId(id);
+	}
+
 }

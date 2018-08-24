@@ -212,7 +212,18 @@ public class PanierController {
 		return jsonMapper.writeValueAsString(reponse);
 
 	}
-
+	// renvoie les  paniers d'une personne par son identifiant
+		@GetMapping("/panierParPersonne/{id}")
+		public String panierPanierParPrersonneId(@PathVariable Long id) throws JsonProcessingException {
+			Reponse<List<Panier>> reponse;
+			try {
+				List<Panier> paniers = panierMetier.LesPanierDeLaPersonne(id);
+				reponse = new Reponse<List<Panier>>(0, null, paniers);
+			} catch (Exception e) {
+				reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+			}
+			return jsonMapper.writeValueAsString(reponse);
+		}
 	// renvoie un panier par son identifiant
 	@GetMapping("/panier/{id}")
 	public String chercherPanierParId(@PathVariable Long id) throws JsonProcessingException {

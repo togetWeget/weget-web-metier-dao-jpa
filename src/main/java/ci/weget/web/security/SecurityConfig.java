@@ -41,7 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// http.formLogin();
 
 		http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**",
-				"/personnesparId/**","/membres/**","/blocks/**","/rechercheBlock/**",
+				"/personnesparId/**","/membres/**","/blocks/**","/rechercheBlock/**","/panierParPersonne/**",
 				"/photoBlock/**","/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**",
 				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**","/profilAbonneLogin/**",
 				"/profil/**","/tousLesAbonnesParBlock/**","/panier/**","/tousLesBlockParAbonne/**","/misAjourProfil/**",

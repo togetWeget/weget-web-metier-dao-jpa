@@ -76,6 +76,11 @@ public class MembreMetierImpl implements IMembreMetier {
 	@Override
 	public Personne modifier(Personne modif) throws InvalideTogetException {
 
+		String hshPW = bCryptPasswordEncoder.encode(modif.getPassword());
+		String hshRPW = bCryptPasswordEncoder.encode(modif.getRepassword());
+		modif.setPassword(hshPW);
+		modif.setRepassword(hshRPW);
+
 		return personnesRepository.save(modif);
 	}
 

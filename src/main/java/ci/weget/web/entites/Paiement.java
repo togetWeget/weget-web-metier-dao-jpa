@@ -20,13 +20,13 @@ public class Paiement extends AbstractEntity {
 	private String motif;
 	private Double montant;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
 	@Column(name = "id_Personne", insertable = false, updatable = false)
 	private long idPersonne;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_Tarif")
 	private Tarif tarif;
 	@Column(name = "id_Tarif", insertable = false, updatable = false)

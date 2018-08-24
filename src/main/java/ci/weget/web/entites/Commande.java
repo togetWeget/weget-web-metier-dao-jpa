@@ -12,6 +12,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 
 @Entity
@@ -21,13 +22,13 @@ public class Commande extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 	private LocalDateTime dateCommande;
 	private Panier panier;
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
 	@Embedded
 	private CreditCard creditCard = new CreditCard();
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private Collection<Panier> orderLines;
 
 	public Commande() {
@@ -42,6 +43,7 @@ public class Commande extends AbstractEntity {
 	}
 
 	@PrePersist
+	@PreUpdate
 	private void setDefaultData() {
 		dateCommande = LocalDateTime.now();
 	}

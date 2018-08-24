@@ -115,9 +115,9 @@ public class PanierMetierImpl implements IPanierMetier {
 	}
 
 	@Override
-	public List<Panier> LesPanierDeLaPersonne(Long id) {
+	public List<Panier> LesPanierDeLaPersonne(long idPersonne) {
 		
-		return panierRepository.findAllPanierParPersonneId(id);
+		return panierRepository.findAllPanierParPersonneId(idPersonne);
 	}
 
 }

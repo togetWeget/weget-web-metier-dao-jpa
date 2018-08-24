@@ -15,11 +15,11 @@ public class DetailBlock extends AbstractEntity {
 	private String description;
 
 	private static final long serialVersionUID = 1L;
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Block")
 	private Block block;
 	@Column(name = "id_Block", insertable = false, updatable = false)
@@ -61,6 +61,18 @@ public class DetailBlock extends AbstractEntity {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public long getIdBlock() {
+		return idBlock;
+	}
+
+	public long getIdPersone() {
+		return idPersone;
+	}
+
+	public void setBlock(Block block) {
+		this.block = block;
 	}
 
 }

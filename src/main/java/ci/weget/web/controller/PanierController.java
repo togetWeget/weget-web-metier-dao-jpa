@@ -60,7 +60,7 @@ public class PanierController {
 
 	}
 
-	private Reponse<Personne> getMembreById(final Long id) {
+	private Reponse<Personne> getMembreById(final long id) {
 		Personne personne = null;
 		try {
 			personne = membreMetier.findById(id);
@@ -95,7 +95,7 @@ public class PanierController {
 	}
 
 	// recuprer le block a partir de son identifiant
-	private Reponse<Block> getBlock(final Long id) {
+	private Reponse<Block> getBlock(final long id) {
 		// on récupère le block
 		Block block = null;
 		try {
@@ -114,7 +114,7 @@ public class PanierController {
 	}
 
 	// recuprer le Tarif a partir de son identifiant
-	private Reponse<Tarif> getTarif(final Long id) {
+	private Reponse<Tarif> getTarif(final long id) {
 		// on récupère le tarif
 		Tarif tarif = null;
 		try {
@@ -213,11 +213,11 @@ public class PanierController {
 
 	}
 	// renvoie les  paniers d'une personne par son identifiant
-		@GetMapping("/panierParPersonne/{id}")
-		public String panierPanierParPrersonneId(@PathVariable Long id) throws JsonProcessingException {
+		@GetMapping("/panierParPersonne/{idPersonne}")
+		public String panierPanierParPrersonneId(@PathVariable("idPersonne") long idPersonne) throws JsonProcessingException {
 			Reponse<List<Panier>> reponse;
 			try {
-				List<Panier> paniers = panierMetier.LesPanierDeLaPersonne(id);
+				List<Panier> paniers = panierMetier.LesPanierDeLaPersonne(idPersonne);
 				reponse = new Reponse<List<Panier>>(0, null, paniers);
 			} catch (Exception e) {
 				reponse = new Reponse<>(1, Static.getErreursForException(e), null);

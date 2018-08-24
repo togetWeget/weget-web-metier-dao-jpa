@@ -217,7 +217,7 @@ public class DetailBlockContrller {
 
 	}
 
-	// obtenir la liste des memmbres
+	// obtenir la liste des membres
 	@GetMapping("/tousLesAbonnesParBlock/{id}")
 	public String findAllTypePersonne(@PathVariable("id") Long id) throws JsonProcessingException {
 		Reponse<List<DetailBlock>> reponse;

@@ -55,26 +55,26 @@ public abstract class Personne extends AbstractEntity {
 	@Column(unique = true)
 	private String login;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Entreprise")
 	private Entreprise entreprise;
 
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_cvPersonne")
 	private CvPersonne cvPersonne;
 	// cles etrangres
-	@OneToMany(fetch=FetchType.LAZY,cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Telephone")
 	private List<Telephone> telephones;
 
-	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_TypeStatut")
 	private TypeStatut typestatut;
-	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Contrat")
 	private Contrat contrat;
 
-	/*@Column(name = "id_Entreprise", insertable = false, updatable = false)
+	@Column(name = "id_Entreprise", insertable = false, updatable = false)
 	private long idEntreprise;
 
 	@Column(name = "id_cvPersonnes", insertable = false, updatable = false)
@@ -84,7 +84,7 @@ public abstract class Personne extends AbstractEntity {
 	private long idTypeStatut;
 
 	@Column(name = "id_Contrat", insertable = false, updatable = false)
-	private long idContrat;*/
+	private long idContrat;
 
 	public Personne() {
 		super();
@@ -141,22 +141,15 @@ public abstract class Personne extends AbstractEntity {
 		this.telephones = telephones;
 	}
 
-	/*public long getIdEntreprise() {
-		return idEntreprise;
-	}
-
-	public long getIdTypeStatut() {
-		return idTypeStatut;
-	}
-
-	public long getIdCvPersonnes() {
-		return idCvPersonnes;
-	}
-
-	public long getIdContrat() {
-		return idContrat;
-	}
-*/
+	/*
+	 * public long getIdEntreprise() { return idEntreprise; }
+	 * 
+	 * public long getIdTypeStatut() { return idTypeStatut; }
+	 * 
+	 * public long getIdCvPersonnes() { return idCvPersonnes; }
+	 * 
+	 * public long getIdContrat() { return idContrat; }
+	 */
 	public String getTitre() {
 		return titre;
 	}

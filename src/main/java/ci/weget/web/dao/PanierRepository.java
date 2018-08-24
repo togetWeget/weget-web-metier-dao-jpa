@@ -24,6 +24,6 @@ public interface PanierRepository extends JpaRepository<Panier, Long> {
 
 	// ramener les panier d'une personne par id
 	@Query("select p from Panier p  where p.personne.id=?1")
-	List<Panier> findAllPanierParPersonneId(Long id);
+	List<Panier> findAllPanierParPersonneId(long idPersonne);
 
 }

@@ -21,7 +21,7 @@ public class Formation extends AbstractEntity {
 	private String diplome;
 	private String formation_prix;
 
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_SousBlock")
 	private SousBlock sousBlock;
 

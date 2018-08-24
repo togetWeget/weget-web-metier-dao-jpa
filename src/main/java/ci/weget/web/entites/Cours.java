@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -23,7 +24,7 @@ public class Cours extends AbstractEntity {
 	private LocalDate dureeCours;
 	private String description;
 
-	@ManyToOne(cascade = CascadeType.PERSIST)
+	@ManyToOne(cascade = CascadeType.PERSIST, fetch=FetchType.LAZY)
 	private Formation id_formation;
 	@Column(name = "id_formation", insertable = false, updatable = false)
 	private long idformation;
@@ -39,6 +40,22 @@ public class Cours extends AbstractEntity {
 		this.dateCours = dateCours;
 		this.dureeCours = dureeCours;
 		this.description = description;
+	}
+
+	public String getTitre() {
+		return titre;
+	}
+
+	public void setTitre(String titre) {
+		this.titre = titre;
+	}
+
+	public LocalDate getDureeCours() {
+		return dureeCours;
+	}
+
+	public void setDureeCours(LocalDate dureeCours) {
+		this.dureeCours = dureeCours;
 	}
 
 	public LocalDate getDateCours() {

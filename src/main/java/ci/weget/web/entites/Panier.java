@@ -20,7 +20,7 @@ public class Panier extends AbstractEntity {
 	private LocalDateTime date;
 	private Double quantite;
 	private Double total;
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_Block")
 	private Block block;
 
@@ -30,7 +30,7 @@ public class Panier extends AbstractEntity {
 	@Column(name = "id_Personne",insertable=false,updatable=false)
 	private long idPersonne;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_Tarif")
 	private Tarif tarif;
 

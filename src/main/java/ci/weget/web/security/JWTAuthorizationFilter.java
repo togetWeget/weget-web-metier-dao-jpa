@@ -25,6 +25,8 @@ public class JWTAuthorizationFilter  extends OncePerRequestFilter{
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Methods","HEAD,GET,POST,PUT,PATCH,DELETE,OPTIONS");
+
 		response.addHeader("Access-Control-Allow-Headers",
 				"Origin, Accept, X-Requested-With, Content-Type, "
 				+ "Access-Control-Request-Method,"
@@ -45,8 +47,6 @@ public class JWTAuthorizationFilter  extends OncePerRequestFilter{
 					.setSigningKey(SecurityConstants.SECRET)
 					.parseClaimsJws(jwt.replace(SecurityConstants.TOKEN_PREFIX, ""))
 					.getBody();
-			
-			
 			String login = claims.getSubject();
 			ArrayList<Map<String, String>> roles = (ArrayList<Map<String, String>>) claims.get("roles");
 			Collection<GrantedAuthority> authorities = new  ArrayList<>();

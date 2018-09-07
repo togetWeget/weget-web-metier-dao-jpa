@@ -63,11 +63,7 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	// la liste des personne par block
 	@Override
 	public List<DetailBlock> personneALLBlock(long id) {
-		List<DetailBlock> pers = detailBlocksRepository.findAll();
-
-		List<DetailBlock> db = pers.stream().filter(x -> x.getId().equals(id)).limit(3).collect(Collectors.toList());
-
-		return db;
+		return detailBlocksRepository.personneALLBlock(id);
 
 	}
 
@@ -126,12 +122,12 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	}
 	// ramener les abonne a afficher sur la page d'accueil
 			@Override
-			public List<DetailBlock> abonneSpecial(DetailBlock p) {
+			public List<DetailBlock> abonneSpecial(DetailBlock d) {
 				List<DetailBlock> pers = detailBlocksRepository.findAll();
 
-				List<DetailBlock> typePersonnes = pers.stream().filter(x -> p.getPersonne().isActived()).collect(Collectors.toList());
+				List<DetailBlock> db = pers.stream().filter(x -> d.getPersonne().isActived()).collect(Collectors.toList());
 
-				return typePersonnes;
+				return db;
 
 			}
 

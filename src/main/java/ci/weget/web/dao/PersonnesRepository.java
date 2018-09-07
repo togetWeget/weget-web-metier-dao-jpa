@@ -47,7 +47,7 @@ public interface PersonnesRepository extends JpaRepository<Personne, Long> {
 
 	// recuperer une personne a partir de son identifiant
 	@Query("select p from Personne p where p.id=?1")
-	Personne getPersonneByid(Long id);
+	Personne getPersonneByid(long id);
 
 	///////////////// liste des abonnees dans la base//////////////
 	@Query("select p from Personne p left join fetch p.typestatut t where t.libelle='abonne'")
@@ -59,7 +59,7 @@ public interface PersonnesRepository extends JpaRepository<Personne, Long> {
 
 	// rechercher une abonne par id
 	@Query("select p from Personne p where p.id=?1")
-	public List<Personne> chercherAbonneParId(Long id);
+	public List<Personne> chercherAbonneParId(long id);
 	// liste des personne d'un block identifie par son libelle
 		@Query("select db.personne from DetailBlock db where db.block.libelle=?1")
 		List<Personne> getPersonneParBlockLibelle(String libelle);

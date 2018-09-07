@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import ci.weget.web.entites.DetailBlock;
-import ci.weget.web.entites.Personne;
 
 public interface DetailBlocksRepository extends JpaRepository<DetailBlock, Long> {
 
@@ -17,8 +16,8 @@ public interface DetailBlocksRepository extends JpaRepository<DetailBlock, Long>
 	// ramener les abonnes d'un block par libelle
 	@Query("select db from DetailBlock db  where db.block.libelle=?1")
 	List<DetailBlock> findAllPersonnesParBlock(String libelle);
-    
-	// ramener une liste de  detail block quand on connait l'id du block
+
+	// ramener une liste de detail block quand on connait l'id du block
 	@Query("select db from DetailBlock db  where db.block.id=?1")
 	List<DetailBlock> findAllBlocksParPersonne(Long id);
 
@@ -30,10 +29,15 @@ public interface DetailBlocksRepository extends JpaRepository<DetailBlock, Long>
 	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.personne p where p.id=?1")
 	List<DetailBlock> findDtailBlocksParPersonneId(Long id);
 
-	// ramener tous les blocks d'une  personnes par login
+	// ramener tous les blocks d'une personnes par login
 	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.personne p where p.login=?1")
 	List<DetailBlock> findDtailBlocksParPersonneLogin(String login);
+
 	// ramener une personne a partir de detail block
 	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.personne p where p.id=?1")
 	DetailBlock findPersonneParId(Long id);
+
+	// ramener les abonnes d'un block par id
+	@Query("select db from DetailBlock db  where db.block.id=?1")
+	List<DetailBlock> personneALLBlock(Long id);
 }

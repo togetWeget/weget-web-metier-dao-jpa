@@ -26,6 +26,7 @@ import ci.weget.web.metier.IMembreMetier;
 import ci.weget.web.metier.IPanierMetier;
 import ci.weget.web.metier.ITarifMetier;
 import ci.weget.web.modeles.AjoutPanier;
+import ci.weget.web.modeles.ModifPanier;
 import ci.weget.web.modeles.Reponse;
 import ci.weget.web.utilitaires.Static;
 
@@ -168,34 +169,45 @@ public class PanierController {
 		return jsonMapper.writeValueAsString(reponse);
 	}
 
-	// ajout d'une matiere dans la base de donnee
+	// modif d'un panier dans la base de donnee
 	@PutMapping("/panier")
-	public String modfierUnPanier(@RequestBody Panier p) throws JsonProcessingException {
+	public String modfierUnPanier(@RequestBody ModifPanier modif) throws JsonProcessingException {
+		Reponse<Boolean> reponse;
+		Reponse<Panier> reponsePanier;
 
-		Reponse<Panier> reponse = null;
-		// on recupere le libelle de l'objet a modifier
-		Panier panier = panierMetier.findById(p.getId());
-		// on verifie si le panier existe
-		if (panier != null) {
+		long idTarif = modif.getIdTarif();
+		long idMembre = modif.getIdMembre();
+		// on récupère le tarif reponse tarif
+		Reponse<Tarif> reponseTarif = getTarif(idTarif);
+		// on recupere le tarif
+		Tarif tarif = (Tarif) reponseTarif.getBody();
+		// on récupère le block reponse block
+		Reponse<Block> reponseBlock = getBlock(tarif.getBlock().getId());
+		// on recupere le block
+		Block block = (Block) reponseBlock.getBody();
 
-			// modfier l'element
-			Panier pan1 = null;
-			try {
-				pan1 = panierMetier.modifier(p);
-			} catch (Exception e) {
+		// on récupère la personne reponse personne
+		Reponse<Personne> reponsePersonne = getMembreById(idMembre);
+		// on recupere le block
+		Personne personne = (Personne) reponsePersonne.getBody();
+		Double quantite = modif.getQuantite();
+		Double total = tarif.getPrix() * modif.getQuantite();
 
-				e.printStackTrace();
-			}
-			// creation d'une liste de String appele message
+		try {
+			reponsePanier=	getPanierById(modif.getId());
+			Panier pa=reponsePanier.getBody();
+			Long id=pa.getId();
+			Long version = pa.getVersion();
+			pa.getVersion();
+			boolean boo = panierMetier.modifLignePanier(id,version,tarif, block, personne, quantite, total);
 			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s a ete modifie avec succes ", pan1.getTarif()));
-			// on recupere le message et le corps dans un objet reponse qui sera retourne
-			reponse = new Reponse<Panier>(0, messages, pan1);
-		} else {
-			List<String> messages1 = new ArrayList<>();
-			messages1.add(String.format("%s n'a pu etre modifie "));
-		}
+			messages.add(String.format("element modifier avec succes", true));
+			reponse = new Reponse<Boolean>(0, messages, true);
 
+		} catch (Exception e) {
+
+			reponse = new Reponse<Boolean>(1, Static.getErreursForException(e), null);
+		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
 

@@ -13,6 +13,8 @@ import javax.persistence.Table;
 public class DetailBlock extends AbstractEntity {
 
 	private String description;
+	private String pathPhoto;
+	private String pathPhotoCouveture;
 
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -22,11 +24,12 @@ public class DetailBlock extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Block")
 	private Block block;
-	@Column(name = "id_Block", insertable = false, updatable = false)
+	
+	/*@Column(name = "id_Block", insertable = false, updatable = false)
 	private long idBlock;
 
 	@Column(name = "id_Personne", insertable = false, updatable = false)
-	private long idPersone;
+	private long idPersone;*/
 
 	public DetailBlock() {
 		super();
@@ -63,16 +66,32 @@ public class DetailBlock extends AbstractEntity {
 		this.description = description;
 	}
 
-	public long getIdBlock() {
+	/*public long getIdBlock() {
 		return idBlock;
 	}
 
 	public long getIdPersone() {
 		return idPersone;
-	}
+	}*/
 
 	public void setBlock(Block block) {
 		this.block = block;
+	}
+
+	public String getPathPhoto() {
+		return pathPhoto;
+	}
+
+	public void setPathPhoto(String pathPhoto) {
+		this.pathPhoto = pathPhoto;
+	}
+
+	public String getPathPhotoCouveture() {
+		return pathPhotoCouveture;
+	}
+
+	public void setPathPhotoCouveture(String pathPhotoCouveture) {
+		this.pathPhotoCouveture = pathPhotoCouveture;
 	}
 
 }

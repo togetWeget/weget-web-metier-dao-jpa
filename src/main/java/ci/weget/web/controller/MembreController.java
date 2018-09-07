@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ci.weget.web.entites.Block;
 import ci.weget.web.entites.Commande;
+import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Panier;
 import ci.weget.web.entites.Personne;
 import ci.weget.web.entites.TypeStatut;
@@ -33,14 +36,12 @@ import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IAppRoleMetier;
 import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IMembreMetier;
-
-import ci.weget.web.modeles.PostAjoutDetailBlock;
 import ci.weget.web.modeles.Reponse;
 import ci.weget.web.security.AppRoles;
 import ci.weget.web.utilitaires.Static;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "*")
 public class MembreController {
 
 	@Autowired
@@ -49,6 +50,7 @@ public class MembreController {
 	private IAppRoleMetier roleMetier;
 	@Autowired
 	private IBlocksMetier blocksMetier;
+	
 
 	@Autowired
 	private ObjectMapper jsonMapper;
@@ -61,7 +63,7 @@ public class MembreController {
 	////////////////////////////////////////////////////////////////
 	//////////////// Rechercher une personne a partir de son identifiant///////////
 
-	private Reponse<Personne> getMembreById(final Long id) {
+	private Reponse<Personne> getMembreById(final long id) {
 		Personne personne = null;
 		try {
 			personne = membreMetier.findById(id);
@@ -120,8 +122,7 @@ public class MembreController {
 		Reponse<Personne> reponse;
 		Reponse<Personne> reponse2;
 		try {
-			TypeStatut abonne= new TypeStatut("membre", "");
-			entite.setTypestatut(abonne);
+			
 			Personne p1 = membreMetier.creer(entite);
 			// mettre le statut a membre
 			reponse2 = getMembreById(p1.getId());
@@ -143,8 +144,34 @@ public class MembreController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
+    // mettre a jour un membre
+	@PutMapping("/membres")
+	public String modifier(@RequestBody Personne modif) throws JsonProcessingException {
+		Reponse<Personne> reponsePersModif = null;
+		Reponse<Personne> reponse = null;
+		
+		// on recupere la personne a modifier
+        reponsePersModif = getMembreById(modif.getId());
+		if (reponsePersModif.getStatus() == 0) {
+			try {
+				Personne p2 = membreMetier.modifier(modif);
+				List<String> messages = new ArrayList<>();
+				messages.add(String.format("%s %s a modifier avec succes", p2.getNom(), p2.getPrenom()));
+				reponse = new Reponse<Personne>(0, messages, p2);
+			} catch (InvalideTogetException e) {
 
-	
+				reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
+			}
+
+		} else {
+			List<String> messages = new ArrayList<>();
+			messages.add(String.format("La personne n'existe pas"));
+			reponse = new Reponse<Personne>(0, messages, null);
+		}
+
+		return jsonMapper.writeValueAsString(reponse);
+	}
+
 	// obtenir la liste des memmbres
 	@GetMapping("/typePersonnes/{type}")
 	public String findAllTypePersonne(@PathVariable("type") String type) throws JsonProcessingException {
@@ -167,7 +194,6 @@ public class MembreController {
 		return jsonMapper.writeValueAsString(reponse);
 	}
 
-	
 	// recherche les membres par login
 	@GetMapping("/membresLogin/{login}")
 	public String chercherMembresParLogin(@PathVariable String login) throws JsonProcessingException {
@@ -177,6 +203,15 @@ public class MembreController {
 		return jsonMapper.writeValueAsString(reponse);
 
 	}
+	// recherche les membres par login
+		@GetMapping("/membres/{id}")
+		public String chercherMembresParId(@PathVariable Long id) throws JsonProcessingException {
+			// Annotation @PathVariable permet de recuperer le paremettre dans URI
+			Reponse<Personne> reponse = null;
+			reponse = getMembreById(id);
+			return jsonMapper.writeValueAsString(reponse);
+
+		}
 
 	// enregistrer une commande
 	@PostMapping("/commande")
@@ -195,20 +230,21 @@ public class MembreController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
-
-	@PostMapping("/photoAbonnes")
+	//////////////////////////////////////////////////////////////////////////////////////
+	// enregistrer la phorto d'un membre dans la base/////////////////////////////////////
+	@PostMapping("/photoMembre")
 	public String creerPhoto(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
 		Reponse<Personne> reponse = null;
-		Reponse<Personne> reponseParLogin;
+		Reponse<Personne> reponseParLibelle;
 		// recuperer le libelle à partir du nom de la photo
-		String login = file.getOriginalFilename();
-		reponseParLogin = getMembreByLogin(login);
-		Personne p = reponseParLogin.getBody();
+		String libelle = file.getOriginalFilename();
+		reponseParLibelle = getMembreByLogin(libelle);
+		Personne p = reponseParLibelle.getBody();
 		System.out.println(p);
 
-		String path = "http://localhost:8080/getPhotoMembre/" + p.getVersion() + "/" + login;
+		String path = "http://wegetback:8080/getPhotoMembre/"+ p.getVersion()+"/" + p.getId();
 		System.out.println(path);
-		if (reponseParLogin.getStatut() == 0) {
+		if (reponseParLibelle.getStatus() == 0) {
 			String dossier = togetImage + "/";
 			File rep = new File(dossier);
 
@@ -221,7 +257,7 @@ public class MembreController {
 				// enregistrer le chemin dans la photo
 				p.setPathPhoto(path);
 				System.out.println(path);
-				file.transferTo(new File(dossier + login));
+				file.transferTo(new File(dossier + p.getId()));
 				List<String> messages = new ArrayList<>();
 				messages.add(String.format("%s (photo ajouter avec succes)", p.getLogin()));
 				reponse = new Reponse<Personne>(0, messages, membreMetier.modifier(p));
@@ -234,26 +270,139 @@ public class MembreController {
 		} else {
 			List<String> messages = new ArrayList<>();
 			messages.add(String.format("cette personne n'existe pas"));
-			reponse = new Reponse<Personne>(reponseParLogin.getStatut(), reponseParLogin.getMessages(), null);
+			reponse = new Reponse<Personne>(reponseParLibelle.getStatus(), reponseParLibelle.getMessages(), null);
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
+	/////////////////////////////////////////////////////////////////////////////////////////////
+	/////////enregistrer la photo de couverure dans la base/////////////////////////////
+	@PostMapping("/photoCouvertureMembre")
+	public String creerPhotoCouverture(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
+		Reponse<Personne> reponse = null;
+		Reponse<Personne> reponseParLibelle;
+		// recuperer le libelle à partir du nom de la photo
+		String libelle = file.getOriginalFilename();
+		reponseParLibelle = getMembreByLogin(libelle);
+		Personne p = reponseParLibelle.getBody();
+		System.out.println(p);
 
-	//////// recuperer une photo avec pour retour tableau de byte
-	//////// /////////////////////////////////
+		String path = "http://wegetback:8080/getPhotoCouvertureMembre/"+ p.getVersion()+"/" + p.getId();
+		System.out.println(path);
+		if (reponseParLibelle.getStatus() == 0) {
+			String dossier = togetImage + "/"+"CouvertureMembre"+"/";
+			File rep = new File(dossier);
 
-	@GetMapping(value = "/getPhotoMembre/{version}/{libelle}", produces = MediaType.IMAGE_JPEG_VALUE)
-	public byte[] getPhotos(@PathVariable String version, @PathVariable String libelle)
+			if (!file.isEmpty()) {
+				if (!rep.exists() && !rep.isDirectory()) {
+					rep.mkdir();
+				}
+			}
+			try {
+				// enregistrer le chemin dans la photo
+				p.setPathPhotoCouveture(path);
+				System.out.println(path);
+				file.transferTo(new File(dossier + p.getId()));
+				List<String> messages = new ArrayList<>();
+				messages.add(String.format("%s (photo ajouter avec succes)", p.getLogin()));
+				reponse = new Reponse<Personne>(0, messages, membreMetier.modifier(p));
+
+			} catch (Exception e) {
+
+				reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
+			}
+
+		} else {
+			List<String> messages = new ArrayList<>();
+			messages.add(String.format("cette personne n'existe pas"));
+			reponse = new Reponse<Personne>(reponseParLibelle.getStatus(), reponseParLibelle.getMessages(), null);
+		}
+		return jsonMapper.writeValueAsString(reponse);
+	}
+	///////////////////////////////////////////////////////////////////////////////
+	//// recuperer photo d' membre dans la base  /////////////////////////////////
+	@GetMapping(value = "/getPhotoMembre/{version}/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] getPhotosMembre(@PathVariable String version, @PathVariable Long id)
 			throws FileNotFoundException, IOException {
-
-		// Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle);
-		// Blocks b = personneLibelle.getBody();
-		System.out.println(version);
-		String dossier = togetImage + "/";
-		File f = new File(dossier + libelle);
-		byte[] img = IOUtils.toByteArray(new FileInputStream(f));
-
+		
+		 // Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); 
+		  //Blocks b = personneLibelle.getBody(); 
+		  System.out.println(version); 
+		  String dossier = togetImage+"/"; 
+		  File f = new File(dossier+id); 
+		  byte[] img = IOUtils.toByteArray(new FileInputStream(f));
+		 
 		return img;
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//////// recuperer la  photo de couverture pour retour tableau de byte
+	//////// /////////////////////////////////
+
+	@GetMapping(value = "/getPhotoCouvertureMembre/{version}/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] getPhotos(@PathVariable String version, @PathVariable Long id)
+			throws FileNotFoundException, IOException {
+		
+		 // Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); 
+		  //Blocks b = personneLibelle.getBody(); 
+		  System.out.println(version); 
+		  String dossier = togetImage+"/"+ "/"+"CouvertureMembre"+"/"; 
+		  File f = new File(dossier+id); 
+		  byte[] img = IOUtils.toByteArray(new FileInputStream(f));
+		 
+		return img;
+	}
+	@PostMapping("/fichierCv")
+	public String creerFichierCv(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
+		Reponse<Personne> reponse = null;
+		Reponse<Personne> reponseParLibelle;
+		// recuperer le libelle à partir du nom de la photo
+		String libelle = file.getOriginalFilename();
+		reponseParLibelle = getMembreByLogin(libelle);
+		Personne p = reponseParLibelle.getBody();
+		System.out.println(p);
+
+		String path = "http://wegetback:8080/getFichierCv/"+ p.getVersion()+"/" + p.getId();
+		System.out.println(path);
+		if (reponseParLibelle.getStatus() == 0) {
+			String dossier = togetImage + "/";
+			File rep = new File(dossier);
+
+			if (!file.isEmpty()) {
+				if (!rep.exists() && !rep.isDirectory()) {
+					rep.mkdir();
+				}
+			}
+			try {
+				// enregistrer le chemin dans la photo
+				p.setPathPhoto(path);
+				System.out.println(path);
+				file.transferTo(new File(dossier + p.getId()));
+				List<String> messages = new ArrayList<>();
+				messages.add(String.format("%s (photo ajouter avec succes)", p.getLogin()));
+				reponse = new Reponse<Personne>(0, messages, membreMetier.modifier(p));
+
+			} catch (Exception e) {
+
+				reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
+			}
+
+		} else {
+			List<String> messages = new ArrayList<>();
+			messages.add(String.format("cette personne n'existe pas"));
+			reponse = new Reponse<Personne>(reponseParLibelle.getStatus(), reponseParLibelle.getMessages(), null);
+		}
+		return jsonMapper.writeValueAsString(reponse);
+	}
+	//// enregistrer le cv d'une personne dans la base 
+	@GetMapping(value = "/getFichierCv/{version}/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] getCvAbonne(@PathVariable String version, @PathVariable Long id)
+			throws FileNotFoundException, IOException {
+		
+		 // Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); 
+		  //Blocks b = personneLibelle.getBody(); 
+		  System.out.println(version); 
+		  String dossier = togetImage+"/"; 
+		  File f = new File(dossier+id); 
+		  byte[] img = IOUtils.toByteArray(new FileInputStream(f));
+		 
+		return img;
+	}
 }

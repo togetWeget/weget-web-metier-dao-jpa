@@ -15,22 +15,24 @@ public class Messagerie extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
 
-	@ManyToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
-	@Column(name = "id_Personne", insertable = false, updatable = false)
-	private long idPersonne;
-	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Messages")
 	private Message messages;
-	@Column(name = "id_Messages", insertable = false, updatable = false)
-	private long idMessages;
-	@OneToOne(fetch=FetchType.EAGER,cascade = CascadeType.ALL)
+
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Expediteur")
 	private Expediteur expediteur;
-	@Column(name = "id_Expediteur", insertable = false, updatable = false)
-	private long idExpediteur;
 	
+	/*@Column(name = "id_Personne", insertable = false, updatable = false)
+	private long idPersonne;
+	@Column(name = "id_Messages", insertable = false, updatable = false)
+	private long idMessages;
+	@Column(name = "id_Expediteur", insertable = false, updatable = false)
+	private long idExpediteur;*/
 
 	public Messagerie() {
 		super();
@@ -44,7 +46,7 @@ public class Messagerie extends AbstractEntity {
 		this.expediteur = expediteur;
 	}
 
-	public long getIdPersonne() {
+	/*public long getIdPersonne() {
 		return idPersonne;
 	}
 
@@ -55,7 +57,7 @@ public class Messagerie extends AbstractEntity {
 	public long getIdExpediteur() {
 		return idExpediteur;
 	}
-
+*/
 	public Personne getPersonne() {
 		return personne;
 	}

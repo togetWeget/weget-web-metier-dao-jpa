@@ -23,14 +23,16 @@ public class Paiement extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
-	@Column(name = "id_Personne", insertable = false, updatable = false)
-	private long idPersonne;
+	
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name = "id_Tarif")
 	private Tarif tarif;
+	
+	/*@Column(name = "id_Personne", insertable = false, updatable = false)
+	private long idPersonne;
 	@Column(name = "id_Tarif", insertable = false, updatable = false)
-	private long idTarif;
+	private long idTarif;*/
 
 	public Paiement() {
 		super();
@@ -83,14 +85,14 @@ public class Paiement extends AbstractEntity {
 		this.tarif = tarif;
 	}
 
-	public long getIdPersonne() {
+	/*public long getIdPersonne() {
 		return idPersonne;
 	}
 
 	public long getIdTarif() {
 		return idTarif;
 	}
-
+*/
 	public Double getMontant() {
 		return montant;
 	}

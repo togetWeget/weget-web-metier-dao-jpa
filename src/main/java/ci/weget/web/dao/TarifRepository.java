@@ -18,6 +18,6 @@ public interface TarifRepository extends JpaRepository<Tarif, Long> {
 
 	// le block du tarif par son id
 	@Query("select t from Tarif t where t.id=?1")
-	Tarif getTarifParId(long id);
+	Tarif getTarifParId(Long id);
 
 }

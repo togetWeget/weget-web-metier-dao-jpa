@@ -40,13 +40,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// http.formLogin();
 
-		http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**",
-				"/personnesparId/**","/membres/**","/blocks/**","/rechercheBlock/**","/panierParPersonne/**",
-				"/photoBlock/**","/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**",
-				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**","/profilAbonneLogin/**",
+		http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**","/fichierCv/**",
+				"/personnesparId/**","/rechercheBlock/**","/panierParPersonne/**","/blocks/**","/photoCouvertureMembre/**",
+				"/photoBlock/**","/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**","/detailBlock/**","/getPhotoMembre/**",
+				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**","/profilAbonneLogin/**","/messageries/**",
 				"/profil/**","/tousLesAbonnesParBlock/**","/panier/**","/tousLesBlockParAbonne/**","/misAjourProfil/**",
-				"/abonnes/**","/admin/**","/abonneParblocks/**").permitAll();
-		http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("ADMIN");
+				"/abonnes/**","/admin/**","/abonneParblocks/**","/membres/**","/photoMembre/**","/getPhotoCouvertureMembre/**").permitAll();
+		  http.authorizeRequests().antMatchers("/membres/**").permitAll();
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("ADMIN");
+
+		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/blocks/**").hasAuthority("ADMIN");
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("MEMBRE");
+
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/membres/**").hasAuthority("ADMIN");
+		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/membres/**").hasAuthority("ADMIN");
+
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/membres/**").hasAuthority("MEMBRE");
+		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/membres/**").hasAuthority("MEMBRE");
+		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/messageries/**").hasAuthority("ADMIN");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/messageries/**").hasAuthority("MEMBRE");
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/panier/**").hasAuthority("MEMBRE");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/misAjourProfil/**").hasAuthority("MEMBRE");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/membresLogin/**").hasAuthority("MEMBRE");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/membresLogin/**").hasAuthority("ADMIN");
+
 		// toutes les requetes necessite une aurhentication
 		http.authorizeRequests().anyRequest().authenticated();
 		http.addFilter(new JWTAutenticationFilter(authenticationManager()));

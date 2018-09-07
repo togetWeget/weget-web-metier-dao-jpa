@@ -26,8 +26,8 @@ public class Cours extends AbstractEntity {
 
 	@ManyToOne(cascade = CascadeType.PERSIST, fetch=FetchType.LAZY)
 	private Formation id_formation;
-	@Column(name = "id_formation", insertable = false, updatable = false)
-	private long idformation;
+	/*@Column(name = "id_formation", insertable = false, updatable = false)
+	private long idformation;*/
 
 	public Cours() {
 		super();
@@ -69,11 +69,11 @@ public class Cours extends AbstractEntity {
 	public Formation getId_formation() {
 		return id_formation;
 	}
-
+/*
 	public long getIdformation() {
 		return idformation;
 	}
-
+*/
 	public String getDescription() {
 		return description;
 	}

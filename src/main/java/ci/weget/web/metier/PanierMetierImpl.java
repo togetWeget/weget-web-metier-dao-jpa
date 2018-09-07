@@ -22,7 +22,6 @@ import ci.weget.web.exception.InvalideTogetException;
 @Service
 public class PanierMetierImpl implements IPanierMetier {
 
-	private static final long serialVersionUID = 1L;
 	private Map<Long, Panier> items = new HashMap<>();
 	@Autowired
 	private TarifRepository tarifRepository;
@@ -38,8 +37,8 @@ public class PanierMetierImpl implements IPanierMetier {
 		Tarif t = tarifRepository.getTarifParId(tarif.getId());
 		Block b = blocksRepository.getByid(t.getBlock().getId());
 		Personne pers = personnesRepository.getPersonneByid(personne.getId());
-
 		Panier p = new Panier();
+
 		p.setBlock(b);
 		p.setTarif(tarif);
 		p.setPersonne(pers);
@@ -58,35 +57,47 @@ public class PanierMetierImpl implements IPanierMetier {
 	}
 
 	@Override
-	public Panier modifier(Panier entity) throws InvalideTogetException {
-		
-		return panierRepository.save(entity);
+	public boolean modifLignePanier(Long id,Long version,Tarif tarif, Block block, Personne personne, Double quantite, Double total) {
+		Tarif t = tarifRepository.getTarifParId(tarif.getId());
+		Block b = blocksRepository.getByid(t.getBlock().getId());
+		Personne pers = personnesRepository.getPersonneByid(personne.getId());
+		 Panier p = panierRepository.findPanierById(id);
+
+		p.setBlock(b);
+		p.setTarif(tarif);
+		p.setPersonne(pers);
+		p.setQuantite(quantite);
+		p.setTotal(total);
+
+		System.out.println("le panier" + p);
+		panierRepository.save(p);
+		return true;
 	}
 
 	@Override
 	public List<Panier> findAll() {
-		
+
 		return panierRepository.findAllPanier();
 	}
 
 	@Override
 	public Panier findById(Long id) {
-		
+
 		return panierRepository.findPanierById(id);
 	}
 
 	@Override
 	public boolean supprimer(Long id) {
-		
-		 panierRepository.supprimerPanierById(id);
-		 return true;
+
+		panierRepository.deleteById(id);
+		return true;
 	}
 
 	@Override
 	public boolean supprimer(List<Panier> entites) {
-		
-		 panierRepository.deleteAll(entites);
-		 return true;
+
+		panierRepository.deleteAll(entites);
+		return true;
 	}
 
 	@Override
@@ -116,8 +127,14 @@ public class PanierMetierImpl implements IPanierMetier {
 
 	@Override
 	public List<Panier> LesPanierDeLaPersonne(long idPersonne) {
-		
+
 		return panierRepository.findAllPanierParPersonneId(idPersonne);
+	}
+
+	@Override
+	public Panier modifier(Panier entity) throws InvalideTogetException {
+		
+		return null;
 	}
 
 }

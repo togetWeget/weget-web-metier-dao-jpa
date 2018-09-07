@@ -44,6 +44,17 @@ public class MembreMetierImpl implements IMembreMetier {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	// données de configuration
+	private boolean CORSneeded = true;
+
+	public boolean isCORSneeded() {
+		return CORSneeded;
+	}
+
+	public void setCORSneeded(boolean cORSneeded) {
+		CORSneeded = cORSneeded;
+	}
+
 	@Override
 	public Personne findById(final Long id) {
 
@@ -57,14 +68,9 @@ public class MembreMetierImpl implements IMembreMetier {
 		}
 		Personne pers = null;
 
-		try {
-			pers = personnesRepository.findByLogin(p.getLogin());
-			if (pers != null) {
-				throw new InvalideTogetException("ce login est deja utilise");
-			}
-		} catch (Exception e) {
-			throw new InvalideTogetException("probleme de connexion");
-		}
+		pers = personnesRepository.findByLogin(p.getLogin());
+		if (pers != null)
+			throw new InvalideTogetException("ce login est deja utilise");
 
 		String hshPW = bCryptPasswordEncoder.encode(p.getPassword());
 		String hshRPW = bCryptPasswordEncoder.encode(p.getRepassword());
@@ -76,11 +82,20 @@ public class MembreMetierImpl implements IMembreMetier {
 	@Override
 	public Personne modifier(Personne modif) throws InvalideTogetException {
 
-		String hshPW = bCryptPasswordEncoder.encode(modif.getPassword());
-		String hshRPW = bCryptPasswordEncoder.encode(modif.getRepassword());
+		if (modif != null) {
+			Personne pers = personnesRepository.findByLogin(modif.getLogin());
+			if (pers.getVersion() != modif.getVersion()) {
+				throw new InvalideTogetException("ce libelle a deja ete modifier");
+			}
+
+		} else {
+			throw new InvalideTogetException("modif est un objet null");
+		}
+		Personne pers1 = personnesRepository.findByLogin(modif.getLogin());
+		String hshPW = pers1.getPassword();
+		String hshRPW = pers1.getRepassword();
 		modif.setPassword(hshPW);
 		modif.setRepassword(hshRPW);
-
 		return personnesRepository.save(modif);
 	}
 

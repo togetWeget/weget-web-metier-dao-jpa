@@ -113,7 +113,7 @@ public class AdminController {
 
 		// on recupere la personne a modifier
 		reponsePersModif = getPersonneById(modif.getId());
-		if (reponsePersModif.getStatut() == 0) {
+		if (reponsePersModif.getStatus() == 0) {
 			try {
 				Personne p2 = adminMetier.modifier(modif);
 				List<String> messages = new ArrayList<>();
@@ -154,8 +154,8 @@ public class AdminController {
 		if (!erreur) {
 			Reponse<Personne> responseSup = getPersonneById(id);
 			p = responseSup.getBody();
-			if (responseSup.getStatut() != 0) {
-				reponse = new Reponse<>(responseSup.getStatut(), responseSup.getMessages(), null);
+			if (responseSup.getStatus() != 0) {
+				reponse = new Reponse<>(responseSup.getStatus(), responseSup.getMessages(), null);
 				erreur = true;
 
 			}

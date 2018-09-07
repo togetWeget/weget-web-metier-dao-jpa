@@ -1,5 +1,6 @@
 package ci.weget.web.entites;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -15,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -43,9 +45,11 @@ public abstract class Personne extends AbstractEntity {
 	private boolean actived;
 	private String nomComplet;
 	private String pathPhoto;
+	private String pathPhotoCouveture;
 	private Double nombreVue;
 	private String groupSanguin;
-
+	private LocalDate dateNaissance;
+	private String genre;
 	@Column(name = "TYPE_PERSONNE", insertable = false, updatable = false)
 	private String type;
 
@@ -63,29 +67,33 @@ public abstract class Personne extends AbstractEntity {
 	@JoinColumn(name = "id_cvPersonne")
 	private CvPersonne cvPersonne;
 	// cles etrangres
-	@OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Telephone")
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_Personne")
 	private List<Telephone> telephones;
-
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_Langue")
+	private List<LangueParle> langues;
+	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_TypeStatut")
 	private TypeStatut typestatut;
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Contrat")
 	private Contrat contrat;
+	private String couleur;
 
-	@Column(name = "id_Entreprise", insertable = false, updatable = false)
+
+	/*@Column(name = "id_Entreprise", insertable = false, updatable = false)
 	private long idEntreprise;
 
-	@Column(name = "id_cvPersonnes", insertable = false, updatable = false)
-	private long idCvPersonnes;
+	@Column(name = "id_cvPersonne", insertable = false, updatable = false)
+	private long idCvPersonne;
 
 	@Column(name = "id_TypeStatut", insertable = false, updatable = false)
 	private long idTypeStatut;
 
 	@Column(name = "id_Contrat", insertable = false, updatable = false)
 	private long idContrat;
-
+*/
 	public Personne() {
 		super();
 
@@ -141,15 +149,31 @@ public abstract class Personne extends AbstractEntity {
 		this.telephones = telephones;
 	}
 
-	/*
-	 * public long getIdEntreprise() { return idEntreprise; }
-	 * 
-	 * public long getIdTypeStatut() { return idTypeStatut; }
-	 * 
-	 * public long getIdCvPersonnes() { return idCvPersonnes; }
-	 * 
-	 * public long getIdContrat() { return idContrat; }
-	 */
+	
+	public LocalDate getDateNaissance() {
+		return dateNaissance;
+	}
+
+	public void setDateNaissance(LocalDate dateNaissance) {
+		this.dateNaissance = dateNaissance;
+	}
+
+	/*public long getIdEntreprise() {
+		return idEntreprise;
+	}
+
+	public long getIdCvPersonne() {
+		return idCvPersonne;
+	}
+
+	public long getIdTypeStatut() {
+		return idTypeStatut;
+	}
+
+	public long getIdContrat() {
+		return idContrat;
+	}
+*/
 	public String getTitre() {
 		return titre;
 	}
@@ -191,7 +215,7 @@ public abstract class Personne extends AbstractEntity {
 	public void setNomComplet() {
 		this.nomComplet = nom + " " + prenom;
 	}
-
+	
 	public Double getNombreVue() {
 		return nombreVue;
 	}
@@ -296,10 +320,7 @@ public abstract class Personne extends AbstractEntity {
 		return cvPersonne;
 	}
 
-	public void setCvPersonnes(CvPersonne cvPersonne) {
-		this.cvPersonne = cvPersonne;
-	}
-
+	
 	public Contrat getContrat() {
 		return contrat;
 	}
@@ -314,6 +335,38 @@ public abstract class Personne extends AbstractEntity {
 
 	public void setGroupSanguin(String groupSanguin) {
 		this.groupSanguin = groupSanguin;
+	}
+
+	public String getGenre() {
+		return genre;
+	}
+
+	public void setGenre(String genre) {
+		this.genre = genre;
+	}
+
+	public List<LangueParle> getLangues() {
+		return langues;
+	}
+
+	public void setLangues(List<LangueParle> langues) {
+		this.langues = langues;
+	}
+
+	public String getCouleur() {
+		return couleur;
+	}
+
+	public void setCouleur(String couleur) {
+		this.couleur = couleur;
+	}
+
+	public String getPathPhotoCouveture() {
+		return pathPhotoCouveture;
+	}
+
+	public void setPathPhotoCouveture(String pathPhotoCouveture) {
+		this.pathPhotoCouveture = pathPhotoCouveture;
 	}
 
 	@Override

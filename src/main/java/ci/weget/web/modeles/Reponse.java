@@ -3,7 +3,7 @@ package ci.weget.web.modeles;
 import java.util.List;
 
 public class Reponse<T> {
-	private int statut;
+	private int status;
 	
 	private List<String> messages;
 	private T body;
@@ -11,17 +11,18 @@ public class Reponse<T> {
 		super();
 		
 	}
-	public Reponse(int statut, List<String> messages, T body) {
+	public Reponse(int status, List<String> messages, T body) {
 		super();
-		this.statut = statut;
+		this.status = status;
 		this.messages = messages;
 		this.body = body;
 	}
-	public int getStatut() {
-		return statut;
+	
+	public int getStatus() {
+		return status;
 	}
-	public void setStatut(int statut) {
-		this.statut = statut;
+	public void setStatus(int status) {
+		this.status = status;
 	}
 	public List<String> getMessages() {
 		return messages;

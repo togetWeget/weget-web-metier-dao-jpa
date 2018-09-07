@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import ci.weget.web.dao.BlocksRepository;
 import ci.weget.web.dao.DetailBlocksRepository;
 import ci.weget.web.entites.Block;
-import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 
@@ -26,36 +25,35 @@ public class BlocksMetierImpl implements IBlocksMetier {
 		}
 
 		Block blocks = null;
-		try {
-			blocks = blocksRepository.findByLibelle(block.getLibelle());
-			if (blocks != null)
-				throw new InvalideTogetException("ce libelle  existe deja");
 
-			return blocksRepository.save(block);
+		blocks = blocksRepository.findByLibelle(block.getLibelle());
+		if (blocks != null)
+			throw new InvalideTogetException("ce libelle existe deja");
 
-		} catch (Exception e) {
-			throw new InvalideTogetException("probleme de connexion");
-		}
-		
+		return blocksRepository.save(block);
 	}
 
 	@Override
 	public Block modifier(Block block) throws InvalideTogetException {
 		
+		/*Block blocks = blocksRepository.findByLibelle(block.getLibelle());
+		if (blocks.getVersion() != block.getVersion())
+			throw new InvalideTogetException("ce libelle a deja ete modifier");*/
+		
 		return blocksRepository.save(block);
 	}
+
 	@Override
 	public List<Block> chercherBlockParMc(String mc) {
-		
+
 		return blocksRepository.chercherBlockParMc(mc);
 	}
 
 	@Override
 	public List<Personne> getPersonnes(Long id) {
-		
+
 		return blocksRepository.getPersonnes(id);
 	}
-	
 
 	@Override
 	public List<Block> findAll() {
@@ -66,7 +64,7 @@ public class BlocksMetierImpl implements IBlocksMetier {
 	public Block findById(Long id) {
 		return blocksRepository.getByid(id);
 	}
-	
+
 	@Override
 	public boolean supprimer(Long id) {
 		blocksRepository.deleteById(id);
@@ -91,5 +89,4 @@ public class BlocksMetierImpl implements IBlocksMetier {
 		return blocksRepository.findByLibelle(libelle);
 	}
 
-	
 }

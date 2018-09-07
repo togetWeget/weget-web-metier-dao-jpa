@@ -19,6 +19,7 @@ public class Membre extends Personne {
 	
     private String description;
     
+  
    
     
 	public Membre() {

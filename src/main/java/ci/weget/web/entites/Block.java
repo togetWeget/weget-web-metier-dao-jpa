@@ -10,9 +10,11 @@ public class Block extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 
 	private String libelle;
-	private String refBlock;
+
 	private String pathPhoto;
+
 	private String description;
+	private String typeBlock;
 
 	public Block() {
 		super();
@@ -61,12 +63,12 @@ public class Block extends AbstractEntity {
 		this.description = description;
 	}
 
-	public String getRefBlock() {
-		return refBlock;
+	public String getTypeBlock() {
+		return typeBlock;
 	}
 
-	public void setRefBlock(String refBlock) {
-		this.refBlock = refBlock;
+	public void setTypeBlock(String typeBlock) {
+		this.typeBlock = typeBlock;
 	}
 
 	@Override

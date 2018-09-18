@@ -58,15 +58,21 @@ private SousBlocksRepository sousBlocksRepository;
 	}
 
 	@Override
-	public SousBlock rechercheSousBlockParLibelle(String libelle) {
+	public SousBlock rechercheSousBlockParId(Long id) {
 		
-		return sousBlocksRepository.findByLibelle(libelle);
+		return sousBlocksRepository.findSoublockById(id);
 	}
 
 	@Override
 	public List<SousBlock> chercherSousBlockParMc(String mc) {
 		
 		return sousBlocksRepository.chercherSousBlockParMc(mc);
+	}
+
+	@Override
+	public List<SousBlock> findSousBlockParIdBlock(Long id) {
+		
+		return sousBlocksRepository.findSousBlockParIdBlock(id);
 	}
 
 }

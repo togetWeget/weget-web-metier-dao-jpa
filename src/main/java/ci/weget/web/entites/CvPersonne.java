@@ -27,8 +27,19 @@ public class CvPersonne extends AbstractEntity {
 	private List<String> autreSpecialite = new ArrayList<String>();
 	private String description;
 	private String pathCv;
-	
-	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_cvPersonne")
+	private List<Experience> experience;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_cvPersonne")
+	private List<CursusColaire> cursus;
+	@ElementCollection
+	private List<String> dureeContrat = new ArrayList<>();
+
+	@ElementCollection
+	private List<String> periodeContrat = new ArrayList<>();
+	@ElementCollection
+	private List<String> disponibilite = new ArrayList<>();
 
 	public CvPersonne() {
 		super();
@@ -115,10 +126,6 @@ public class CvPersonne extends AbstractEntity {
 		this.autreSpecialite = autreSpecialite;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
 	public String getPathCv() {
 		return pathCv;
 	}
@@ -127,5 +134,44 @@ public class CvPersonne extends AbstractEntity {
 		this.pathCv = pathCv;
 	}
 
+	public List<Experience> getExperience() {
+		return experience;
+	}
+
+	public void setExperience(List<Experience> experience) {
+		this.experience = experience;
+	}
+
+	public List<CursusColaire> getCursus() {
+		return cursus;
+	}
+
+	public void setCursus(List<CursusColaire> cursus) {
+		this.cursus = cursus;
+	}
+
+	public List<String> getDureeContrat() {
+		return dureeContrat;
+	}
+
+	public void setDureeContrat(List<String> dureeContrat) {
+		this.dureeContrat = dureeContrat;
+	}
+
+	public List<String> getPeriodeContrat() {
+		return periodeContrat;
+	}
+
+	public void setPeriodeContrat(List<String> periodeContrat) {
+		this.periodeContrat = periodeContrat;
+	}
+
+	public List<String> getDisponibilite() {
+		return disponibilite;
+	}
+
+	public void setDisponibilite(List<String> disponibilite) {
+		this.disponibilite = disponibilite;
+	}
 
 }

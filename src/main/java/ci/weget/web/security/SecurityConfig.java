@@ -40,11 +40,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		// http.formLogin();
 
-		http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**","/fichierCv/**",
-				"/personnesparId/**","/rechercheBlock/**","/panierParPersonne/**","/blocks/**","/photoCouvertureMembre/**",
-				"/photoBlock/**","/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**","/detailBlock/**","/getPhotoMembre/**",
-				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**","/profilAbonneLogin/**","/messageries/**",
-				"/profil/**","/tousLesAbonnesParBlock/**","/panier/**","/tousLesBlockParAbonne/**","/misAjourProfil/**",
+		http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**","/fichierCv/**","/sousBlocks/**","/SousBlocksParBlock/**",
+				"/personnesparId/**","/rechercheBlock/**","/panierParPersonne/**","/blocks/**","/photoCouvertureMembre/**","/gallery/**","/nombreVue/**",
+				"/photoBlock/**","/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**","/detailBlock/**","/getPhotoMembre/**","/photoGallery/**",
+				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**","/profilAbonneLogin/**","/messageries/**","/cursus/**","/messages/**",
+				"/profil/**","/tousLesAbonnesParBlock/**","/panier/**","/tousLesBlockParAbonne/**","/misAjourProfil/**","/message/**","/experience/**",
 				"/abonnes/**","/admin/**","/abonneParblocks/**","/membres/**","/photoMembre/**","/getPhotoCouvertureMembre/**").permitAll();
 		  http.authorizeRequests().antMatchers("/membres/**").permitAll();
 		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("ADMIN");

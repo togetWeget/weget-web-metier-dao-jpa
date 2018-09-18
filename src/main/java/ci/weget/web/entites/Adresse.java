@@ -16,6 +16,8 @@ public class Adresse implements Serializable {
 	private String pays;
 	private String ville;
 	private String quartier;
+	private String adresseGeographique;
+	private String siteWeb;
 	public String getBoitePostal() {
 		return boitePostal;
 	}
@@ -46,7 +48,18 @@ public class Adresse implements Serializable {
 	public void setQuartier(String quartier) {
 		this.quartier = quartier;
 	}
-	
-	
-	
+	public String getAdresseGeographique() {
+		return adresseGeographique;
 	}
+	public void setAdresseGeographique(String adresseGeographique) {
+		this.adresseGeographique = adresseGeographique;
+	}
+	public String getSiteWeb() {
+		return siteWeb;
+	}
+	public void setSiteWeb(String siteWeb) {
+		this.siteWeb = siteWeb;
+	}
+	
+	
+}

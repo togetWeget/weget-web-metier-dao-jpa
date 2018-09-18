@@ -1,37 +1,34 @@
 package ci.weget.web.entites;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "T_Gallery")
 public class Gallery extends AbstractEntity {
-	
+
 	private static final long serialVersionUID = 1L;
 	private String libelle;
-	@ElementCollection
-	private List<String> pathPhotoGallery;
+	private String description;
+	private LocalDateTime date;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_Gallery")
+	private List<PhotoGallery> pathPhotoGallery;
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Membre")
+	@JoinColumn(name = "id_DetailBlock")
 	private Membre membre;
 
 	public Gallery() {
 		super();
 
-	}
-
-	public Gallery(String libelle, List<String> pathPhotoGallery, Membre membre) {
-		super();
-		this.libelle = libelle;
-		this.pathPhotoGallery = pathPhotoGallery;
-		this.membre = membre;
 	}
 
 	public String getLibelle() {
@@ -42,12 +39,28 @@ public class Gallery extends AbstractEntity {
 		this.libelle = libelle;
 	}
 
-	public List<String> getPathPhotoGallery() {
+	public List<PhotoGallery> getPathPhotoGallery() {
 		return pathPhotoGallery;
 	}
 
-	public void setPathPhotoGallery(List<String> pathPhotoGallery) {
+	public void setPathPhotoGallery(List<PhotoGallery> pathPhotoGallery) {
 		this.pathPhotoGallery = pathPhotoGallery;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public LocalDateTime getDate() {
+		return date;
+	}
+
+	public void setDate(LocalDateTime date) {
+		this.date = date;
 	}
 
 	public Membre getMembre() {
@@ -58,5 +71,4 @@ public class Gallery extends AbstractEntity {
 		this.membre = membre;
 	}
 
-	
 }

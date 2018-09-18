@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.PostUpdate;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -62,23 +61,17 @@ public abstract class Personne extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Entreprise")
 	private Entreprise entreprise;
-
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_cvPersonne")
-	private CvPersonne cvPersonne;
-	// cles etrangres
+// cles etrangres
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
 	private List<Telephone> telephones;
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Langue")
+	@JoinColumn(name = "id_Personne")
 	private List<LangueParle> langues;
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_TypeStatut")
 	private TypeStatut typestatut;
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Contrat")
-	private Contrat contrat;
+	
 	private String couleur;
 
 
@@ -312,24 +305,7 @@ public abstract class Personne extends AbstractEntity {
 		this.entreprise = entreprise;
 	}
 
-	public void setCvPersonne(CvPersonne cvPersonne) {
-		this.cvPersonne = cvPersonne;
-	}
-
-	public CvPersonne getCvPersonne() {
-		return cvPersonne;
-	}
-
-	
-	public Contrat getContrat() {
-		return contrat;
-	}
-
-	public void setContrat(Contrat contrat) {
-		this.contrat = contrat;
-	}
-
-	public String getGroupSanguin() {
+public String getGroupSanguin() {
 		return groupSanguin;
 	}
 
@@ -374,7 +350,7 @@ public abstract class Personne extends AbstractEntity {
 		return "Personnes [cni=" + cni + ", titre=" + titre + ", nom=" + nom + ", prenom=" + prenom + ", password="
 				+ password + ", repassword=" + repassword + ", actived=" + actived + ", nomComplet=" + nomComplet
 				+ ", pathPhoto=" + pathPhoto + ", type=" + type + ", adresse=" + adresse + ", login=" + login
-				+ ", entreprise=" + entreprise + ", cvPersonnes=" + cvPersonne + ", telephones=" + telephones + "]";
+				+ ", entreprise=" + entreprise + ", telephones=" + telephones + "]";
 	}
 
 }

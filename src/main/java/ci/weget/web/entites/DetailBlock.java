@@ -1,7 +1,6 @@
 package ci.weget.web.entites;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -19,26 +18,39 @@ public class DetailBlock extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Personne")
-	private Personne personne;
+	private Membre membre;
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Block")
 	private Block block;
 	
-	/*@Column(name = "id_Block", insertable = false, updatable = false)
-	private long idBlock;
+	private int nombreVue;
 
-	@Column(name = "id_Personne", insertable = false, updatable = false)
-	private long idPersone;*/
+	/*
+	 * @Column(name = "id_Block", insertable = false, updatable = false) private
+	 * long idBlock;
+	 * 
+	 * @Column(name = "id_Personne", insertable = false, updatable = false) private
+	 * long idPersone;
+	 */
 
 	public DetailBlock() {
 		super();
 
 	}
 
-	public DetailBlock(Personne personne, Block block) {
+	public DetailBlock(Membre membre, Block block) {
 		super();
-		this.personne = personne;
+		this.membre = membre;
+		this.block = block;
+	}
+
+	public DetailBlock(String description, String pathPhoto, String pathPhotoCouveture, Membre membre, Block block) {
+		super();
+		this.description = description;
+		this.pathPhoto = pathPhoto;
+		this.pathPhotoCouveture = pathPhotoCouveture;
+		this.membre = membre;
 		this.block = block;
 	}
 
@@ -50,14 +62,6 @@ public class DetailBlock extends AbstractEntity {
 		this.block = block;
 	}
 
-	public Personne getPersonne() {
-		return personne;
-	}
-
-	public void setPersonne(Personne personne) {
-		this.personne = personne;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -66,13 +70,11 @@ public class DetailBlock extends AbstractEntity {
 		this.description = description;
 	}
 
-	/*public long getIdBlock() {
-		return idBlock;
-	}
-
-	public long getIdPersone() {
-		return idPersone;
-	}*/
+	/*
+	 * public long getIdBlock() { return idBlock; }
+	 * 
+	 * public long getIdPersone() { return idPersone; }
+	 */
 
 	public void setBlock(Block block) {
 		this.block = block;
@@ -94,4 +96,21 @@ public class DetailBlock extends AbstractEntity {
 		this.pathPhotoCouveture = pathPhotoCouveture;
 	}
 
+	public Membre getMembre() {
+		return membre;
+	}
+
+	public void setMembre(Membre membre) {
+		this.membre = membre;
+	}
+
+	public int getNombreVue() {
+		return nombreVue;
+	}
+
+	public void setNombreVue(int nombreVue) {
+		this.nombreVue = nombreVue;
+	}
+
+	
 }

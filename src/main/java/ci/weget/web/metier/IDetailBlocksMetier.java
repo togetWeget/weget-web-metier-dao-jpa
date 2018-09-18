@@ -8,7 +8,6 @@ import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 
 public interface IDetailBlocksMetier extends Imetier<DetailBlock, Long> {
-	
 
 	public List<DetailBlock> personneALLBlock(long id);
 
@@ -24,6 +23,7 @@ public interface IDetailBlocksMetier extends Imetier<DetailBlock, Long> {
 
 	public List<DetailBlock> abonneSpecial(DetailBlock p);
 
-	public void addPersonneToBlocks(String login, String libelle)throws InvalideTogetException;
-     
+	public void addPersonneToBlocks(String login, String libelle) throws InvalideTogetException;
+
+	public DetailBlock modifierVue(Long idPersonne, Long idBlock) throws InvalideTogetException;
 }

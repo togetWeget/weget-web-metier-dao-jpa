@@ -176,31 +176,22 @@ public class DetailBlockContrller {
 
 	// faire la mise a jour du profil d'un abonne
 	@PutMapping("/misAjourProfil")
-	public String modifier(@RequestBody Personne modif) throws JsonProcessingException {
-		Reponse<Personne> reponse;
+	public String modifier(@RequestBody DetailBlock modif) throws JsonProcessingException {
+		Reponse<DetailBlock> reponsePersModif = null;
+		Reponse<DetailBlock> reponse = null;
 
-		// on récupère la personne
-		Reponse<Personne> reponsePersonne = getMembreById(modif.getId());
+		try {
+			DetailBlock db = detailBlocksMetier.modifier(modif);
+			List<String> messages = new ArrayList<>();
+			messages.add(String.format("%s a modifier avec succes", db.getId()));
+			reponse = new Reponse<DetailBlock>(0, messages, db);
+		} catch (InvalideTogetException e) {
 
-		Personne personne = (Personne) reponsePersonne.getBody();
-		// on verifie si la personne existe dans detail block ou si il est abonne
-		List<DetailBlock> db = detailBlocksMetier.detailBlocksPersonneParId(personne.getId());
-		if (db.isEmpty()) {
-			throw new RuntimeException("cette personne n'est pas abonne");
-		} else {
-			try {
-				Personne p1 = membreMetier.modifier(modif);
-				List<String> messages = new ArrayList<>();
-				messages.add(String.format("%s personne modifier avec succes", p1.getNomComplet()));
-				reponse = new Reponse<Personne>(0, messages, p1);
-
-			} catch (Exception e) {
-
-				reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
-			}
+			reponse = new Reponse<DetailBlock>(1, Static.getErreursForException(e), null);
 		}
 
 		return jsonMapper.writeValueAsString(reponse);
+
 	}
 
 	@GetMapping("/profilAbonneId/{id}")
@@ -301,24 +292,25 @@ public class DetailBlockContrller {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
+
 	// obtenir des blocks d'un abonne
-		@GetMapping("/abonneSpecial")
-		public String findAllAbonneSpecial(@RequestBody DetailBlock db) throws JsonProcessingException {
-			Reponse<List<DetailBlock>> reponse;
+	@GetMapping("/abonneSpecial")
+	public String findAllAbonneSpecial(@RequestBody DetailBlock db) throws JsonProcessingException {
+		Reponse<List<DetailBlock>> reponse;
 
-			try {
-				List<DetailBlock> db1 = detailBlocksMetier.abonneSpecial((DetailBlock) db);
+		try {
+			List<DetailBlock> db1 = detailBlocksMetier.abonneSpecial((DetailBlock) db);
 
-				List<String> messages = new ArrayList<>();
-				messages.add("les blocks de la personne");
-				reponse = new Reponse<List<DetailBlock>>(1, messages, db1);
+			List<String> messages = new ArrayList<>();
+			messages.add("les blocks de la personne");
+			reponse = new Reponse<List<DetailBlock>>(1, messages, db1);
 
-			} catch (Exception e) {
+		} catch (Exception e) {
 
-				reponse = new Reponse<List<DetailBlock>>(1, Static.getErreursForException(e), null);
-			}
-			return jsonMapper.writeValueAsString(reponse);
+			reponse = new Reponse<List<DetailBlock>>(1, Static.getErreursForException(e), null);
 		}
+		return jsonMapper.writeValueAsString(reponse);
+	}
 
 	// recherche les Abonnes par competence
 	// tous les membres qui ont leur statut a abonne et ont paye le block
@@ -333,6 +325,36 @@ public class DetailBlockContrller {
 		return null;
 
 	}
+
+	// mettre a jour le nombre de vue d'un membre
+	@PutMapping("/nombreVue")
+	public String modifierVue(@RequestBody PostAjoutDetailBlock modifVue) throws JsonProcessingException {
+		Reponse<DetailBlock> reponse;
+		long idBlock = modifVue.getIdBlock();
+		long idPersonne = modifVue.getIdPersonne();
+
+		// on récupère le block reponse block
+		Reponse<Block> reponseBlock = getBlock(idBlock);
+		// on recupere le block
+		Block block = (Block) reponseBlock.getBody();
+		// on récupère la personne
+		Reponse<Personne> reponsePersonne = getMembreById(idPersonne);
+
+		Personne personne = (Personne) reponsePersonne.getBody();
+		try {
+			DetailBlock db = detailBlocksMetier.modifierVue(personne.getId(), block.getId());
+			List<String> messages = new ArrayList<>();
+			messages.add(String.format("detail block à été modifier avec succes"));
+			reponse = new Reponse<DetailBlock>(0, messages, db);
+
+		} catch (Exception e) {
+
+			reponse = new Reponse<DetailBlock>(1, Static.getErreursForException(e), null);
+		}
+		return jsonMapper.writeValueAsString(reponse);
+	}
+
+	
 
 	@PostMapping("/photoAbonnes")
 	public String creerPhoto(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {

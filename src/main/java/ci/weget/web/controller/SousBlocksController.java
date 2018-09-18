@@ -70,7 +70,7 @@ public class SousBlocksController {
 	///////////////// recuperer unn block a partir de son libelle
 	///////////////////////////////////////////////////////////////////////////////////////////// ///////////////////////////////
 
-	private Reponse<SousBlock> getSousBlockParLibellle(String libelle) {
+	/*private Reponse<SousBlock> getSousBlockParLibellle(String libelle) {
 		SousBlock sousBlock = null;
 		try {
 			sousBlock = sousBlocksMetier.rechercheSousBlockParLibelle(libelle);
@@ -84,7 +84,7 @@ public class SousBlocksController {
 		}
 		return new Reponse<SousBlock>(0, null, sousBlock);
 	}
-
+*/
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////// enregistrer un block dans la base de donnee
 	////////////////////////////////////////////////////////////////////////////////////////////// donnee////////////////////////////////
@@ -97,7 +97,7 @@ public class SousBlocksController {
 
 			SousBlock sb1 = sousBlocksMetier.creer(sousBlock);
 			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s  à été créer avec succes", sb1.getLibelle()));
+			messages.add(String.format("%s  à été créer avec succes", sb1.getId()));
 			reponse = new Reponse<SousBlock>(0, messages, sb1);
 
 		} catch (InvalideTogetException e) {
@@ -116,23 +116,19 @@ public class SousBlocksController {
 		Reponse<SousBlock> reponse = null;
 
 		// on recupere la personne a modifier
-		reponsePersModif = getSousBlockById(modif.getId());
-		if (reponsePersModif.getBody() != null) {
+		
+		
 			try {
 				SousBlock sb2 = sousBlocksMetier.modifier(modif);
 				List<String> messages = new ArrayList<>();
-				messages.add(String.format("%s a modifier avec succes", sb2.getLibelle()));
+				messages.add(String.format("%s a modifier avec succes", sb2.getId()));
 				reponse = new Reponse<SousBlock>(0, messages, sb2);
 			} catch (InvalideTogetException e) {
 
 				reponse = new Reponse<SousBlock>(1, Static.getErreursForException(e), null);
 			}
 
-		} else {
-			List<String> messages = new ArrayList<>();
-			messages.add(String.format("Le block n'existe pas"));
-			reponse = new Reponse<SousBlock>(0, messages, null);
-		}
+		
 
 		return jsonMapper.writeValueAsString(reponse);
 
@@ -154,18 +150,18 @@ public class SousBlocksController {
 
 	}
 	//////////// personnes d'un block par id
-	/*@GetMapping("/Personneblocks/{id}")
+	@GetMapping("/SousBlocksParBlock/{id}")
 	public String getPersonneBlock(@PathVariable Long id) throws JsonProcessingException, InvalideTogetException {
-		Reponse<List<Personne>> reponse;
+		Reponse<List<SousBlock>> reponse;
 		try {
-			List<Personne> pers = sousBlocksMetier.getPersonnes(id);
-			reponse = new Reponse<List<Personne>>(0, null, pers);
+			List<SousBlock> sb = sousBlocksMetier.findSousBlockParIdBlock(id);
+			reponse = new Reponse<List<SousBlock>>(0, null, sb);
 		} catch (Exception e) {
 			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
 		}
 		return jsonMapper.writeValueAsString(reponse);
 
-	}*/
+	}
 
 	/////////////////////////////////////////////////////////////////////////////////
 	// renvoie un block par son
@@ -228,7 +224,7 @@ public class SousBlocksController {
 			try {
 
 				List<String> messages = new ArrayList<>();
-				messages.add(String.format(" %s a ete supprime", b.getLibelle()));
+				messages.add(String.format(" %s a ete supprime", b.getId()));
 
 				reponse = new Reponse<Boolean>(0, messages, sousBlocksMetier.supprimer(id));
 
@@ -243,7 +239,7 @@ public class SousBlocksController {
 	////// ajouter une photo a la base a partir du libelle d'un block
 	///////////////////////////////////////////////////////////////////////////////////////////////// //////////////////////////////
 
-	@PostMapping("/sousBlockphoto")
+	/*@PostMapping("/sousBlockphoto")
 	public String creerPhoto(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
 		Reponse<SousBlock> reponse = null;
 		Reponse<SousBlock> reponseParLibelle;
@@ -270,7 +266,7 @@ public class SousBlocksController {
 				System.out.println(path);
 				file.transferTo(new File(dossier + sb.getId()));
 				List<String> messages = new ArrayList<>();
-				messages.add(String.format("%s (photo ajouter avec succes)", sb.getLibelle()));
+				messages.add(String.format("%s (photo ajouter avec succes)", sb.getId()));
 				reponse = new Reponse<SousBlock>(0, messages, sousBlocksMetier.modifier(sb));
 
 			} catch (Exception e) {
@@ -284,7 +280,7 @@ public class SousBlocksController {
 			reponse = new Reponse<SousBlock>(reponseParLibelle.getStatus(), reponseParLibelle.getMessages(), null);
 		}
 		return jsonMapper.writeValueAsString(reponse);
-	}
+	}*/
 
 	//////// recuperer une photo avec pour retour tableau de byte
 	//////// /////////////////////////////////
@@ -306,7 +302,7 @@ public class SousBlocksController {
 
 	// photo de couverture du sous block
 
-	@PostMapping("/sousBlockphotoCouverture")
+	/*@PostMapping("/sousBlockphotoCouverture")
 	public String creerPhotoCouverture(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
 		Reponse<SousBlock> reponse = null;
 		Reponse<SousBlock> reponseParLibelle;
@@ -333,7 +329,7 @@ public class SousBlocksController {
 				System.out.println(path);
 				file.transferTo(new File(dossier + sb.getId()));
 				List<String> messages = new ArrayList<>();
-				messages.add(String.format("%s (photo ajouter avec succes)", sb.getLibelle()));
+				messages.add(String.format("%s (photo ajouter avec succes)", sb.getId()));
 				reponse = new Reponse<SousBlock>(0, messages, sousBlocksMetier.modifier(sb));
 
 			} catch (Exception e) {
@@ -348,7 +344,7 @@ public class SousBlocksController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
-
+*/
 	//////// recuperer une photo de couverture avec pour retour tableau de byte
 	//////// /////////////////////////////////
 

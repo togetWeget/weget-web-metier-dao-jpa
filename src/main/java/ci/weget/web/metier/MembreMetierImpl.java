@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ci.weget.web.dao.BlocksRepository;
 import ci.weget.web.dao.CommandeRepository;
@@ -22,6 +23,7 @@ import ci.weget.web.security.AppRoles;
 import ci.weget.web.security.UserRoles;
 
 @Service
+@Transactional
 public class MembreMetierImpl implements IMembreMetier {
 
 	@Autowired
@@ -98,7 +100,7 @@ public class MembreMetierImpl implements IMembreMetier {
 		modif.setRepassword(hshRPW);
 		return personnesRepository.save(modif);
 	}
-
+	
 	// la liste de tous les membres
 	@Override
 	public List<Personne> personneALL(String type) {

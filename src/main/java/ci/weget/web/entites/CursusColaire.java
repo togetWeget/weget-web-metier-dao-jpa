@@ -1,10 +1,6 @@
 package ci.weget.web.entites;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -16,11 +12,9 @@ public class CursusColaire extends AbstractEntity  {
     private String etablissement;
     private String diplome;
     private String formation;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Membre")
-	private Membre membre;
-    
-	public CursusColaire() {
+    private String description;
+   
+  public CursusColaire() {
 		super();
 		
 	}
@@ -56,6 +50,14 @@ public class CursusColaire extends AbstractEntity  {
 	}
 	public void setFormation(String formation) {
 		this.formation = formation;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
     
     

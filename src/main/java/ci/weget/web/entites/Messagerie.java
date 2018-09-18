@@ -21,7 +21,7 @@ public class Messagerie extends AbstractEntity {
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Messages")
-	private Message messages;
+	private Message message;
 
 	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Expediteur")
@@ -39,10 +39,10 @@ public class Messagerie extends AbstractEntity {
 
 	}
 
-	public Messagerie(Personne personne, Message messages, Expediteur expediteur) {
+	public Messagerie(Personne personne, Message message, Expediteur expediteur) {
 		super();
 		this.personne = personne;
-		this.messages = messages;
+		this.message = message;
 		this.expediteur = expediteur;
 	}
 
@@ -66,12 +66,12 @@ public class Messagerie extends AbstractEntity {
 		this.personne = personne;
 	}
 
-	public Message getMessages() {
-		return messages;
+	public Message getMessage() {
+		return message;
 	}
 
-	public void setMessages(Message messages) {
-		this.messages = messages;
+	public void setMessage(Message message) {
+		this.message = message;
 	}
 
 	public Expediteur getExpediteur() {

@@ -12,6 +12,8 @@ public class Expediteur extends AbstractEntity {
     private String nom;
     private String prenom;
     private String email;
+    private String telephone;
+    private String entreprise;
 	public Expediteur() {
 		super();
 		
@@ -39,6 +41,18 @@ public class Expediteur extends AbstractEntity {
 	}
 	public void setEmail(String email) {
 		this.email = email;
+	}
+	public String getTelephone() {
+		return telephone;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
+	public String getEntreprise() {
+		return entreprise;
+	}
+	public void setEntreprise(String entreprise) {
+		this.entreprise = entreprise;
 	}
     
 }

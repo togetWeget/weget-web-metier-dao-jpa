@@ -5,7 +5,9 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import ci.weget.web.entites.Administrateur;
 import ci.weget.web.entites.Block;
+import ci.weget.web.entites.Membre;
 import ci.weget.web.entites.Personne;
 import ci.weget.web.security.AppRoles;
 import ci.weget.web.security.UserRoles;
@@ -22,10 +24,14 @@ public interface PersonnesRepository extends JpaRepository<Personne, Long> {
 
 	// recherche d'un utilisateur via son login
 	@Query("select p from Personne p where p.login=?1")
-	Personne findByLogin(String login);
+	Membre findByLogin(String login);
 
 	// recuperer une personne par son type
 	List<Personne> findByType(String type);
+
+	// recherche d'un utilisateur via son login
+	@Query("select p from Personne p where p.login=?1")
+	Administrateur findAdminByLogin(String login);
 
 	// recupere une personne par son nom
 	Personne findByNom(String nom);
@@ -60,13 +66,13 @@ public interface PersonnesRepository extends JpaRepository<Personne, Long> {
 	// rechercher une abonne par id
 	@Query("select p from Personne p where p.id=?1")
 	public List<Personne> chercherAbonneParId(long id);
+
 	// liste des personne d'un block identifie par son libelle
-		@Query("select db.personne from DetailBlock db where db.block.libelle=?1")
-		List<Personne> getPersonneParBlockLibelle(String libelle);
+	@Query("select db.membre from DetailBlock db where db.block.libelle=?1")
+	List<Personne> getPersonneParBlockLibelle(String libelle);
 
-
-		// liste des personnes d'un block identifie par son id
-		@Query("select db.personne from DetailBlock db where db.block.id=?1")
-		List<Personne> getPersonnesParBlock(long id);
+	// liste des personnes d'un block identifie par son id
+	@Query("select db.membre from DetailBlock db where db.block.id=?1")
+	List<Personne> getPersonnesParBlock(long id);
 
 }

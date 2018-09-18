@@ -1,10 +1,16 @@
 package ci.weget.web.entites;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.CascadeType;
+import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -12,32 +18,22 @@ import javax.persistence.Table;
 public class SousBlock extends AbstractEntity {
 
 	private static final long serialVersionUID = 1L;
-	private String libelle;
-	private String type;
-	private String refBlock;
+	private String nom;
+	private String typeEtablissement;
+	private String refSousBlock;
 	private String presentation;
 	private String description;
-	private String pathPhoto;
-
+	@ElementCollection
+	private List<String> pathPhoto = new ArrayList<>();
+	private String pathLogo;
+	@Embedded
+	private Adresse adresse;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_SousBlock")
+	private List<Telephone> telephones;
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Block")
-	private Block block;
-
-	public String getLibelle() {
-		return libelle;
-	}
-
-	public void setLibelle(String libelle) {
-		this.libelle = libelle;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+	@JoinColumn(name = "id_detailBlock")
+	private DetailBlock detailBlock;
 
 	public String getPresentation() {
 		return presentation;
@@ -55,28 +51,68 @@ public class SousBlock extends AbstractEntity {
 		this.description = description;
 	}
 
-	public String getRefBlock() {
-		return refBlock;
+	public String getRefSousBlock() {
+		return refSousBlock;
 	}
 
-	public void setRefBlock(String refBlock) {
-		this.refBlock = refBlock;
+	public void setRefSousBlock(String refSousBlock) {
+		this.refSousBlock = refSousBlock;
 	}
 
-	public Block getBlock() {
-		return block;
+	public DetailBlock getDetailBlock() {
+		return detailBlock;
 	}
 
-	public void setBlock(Block block) {
-		this.block = block;
+	public void setDetailBlock(DetailBlock detailBlock) {
+		this.detailBlock = detailBlock;
 	}
 
-	public String getPathPhoto() {
+	public List<String> getPathPhoto() {
 		return pathPhoto;
 	}
 
-	public void setPathPhoto(String pathPhoto) {
+	public void setPathPhoto(List<String> pathPhoto) {
 		this.pathPhoto = pathPhoto;
+	}
+
+	public String getNom() {
+		return nom;
+	}
+
+	public void setNom(String nom) {
+		this.nom = nom;
+	}
+
+	public String getTypeEtablissement() {
+		return typeEtablissement;
+	}
+
+	public void setTypeEtablissement(String typeEtablissement) {
+		this.typeEtablissement = typeEtablissement;
+	}
+
+	public Adresse getAdresse() {
+		return adresse;
+	}
+
+	public void setAdresse(Adresse adresse) {
+		this.adresse = adresse;
+	}
+
+	public List<Telephone> getTelephones() {
+		return telephones;
+	}
+
+	public void setTelephones(List<Telephone> telephones) {
+		this.telephones = telephones;
+	}
+
+	public String getPathLogo() {
+		return pathLogo;
+	}
+
+	public void setPathLogo(String pathLogo) {
+		this.pathLogo = pathLogo;
 	}
 
 }

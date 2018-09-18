@@ -14,6 +14,7 @@ import ci.weget.web.dao.PersonnesRepository;
 import ci.weget.web.dao.RoleRepository;
 
 import ci.weget.web.dao.UserRoleRepository;
+import ci.weget.web.entites.Administrateur;
 import ci.weget.web.entites.Block;
 import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Personne;
@@ -44,8 +45,8 @@ public class AdminMetierImpl implements IAdminMetier {
 		if (!entity.getPassword().equals(entity.getRepassword())) {
 			throw new InvalideTogetException("Vous devez remplir des mots de passe identique");
 		}
-		Personne pers = null;
-		pers = personnesRepository.findByLogin(entity.getLogin());
+		Administrateur pers = null;
+		pers = personnesRepository.findAdminByLogin(entity.getLogin());
 		if (pers != null)
 			throw new InvalideTogetException("ce login est deja utilise");
 

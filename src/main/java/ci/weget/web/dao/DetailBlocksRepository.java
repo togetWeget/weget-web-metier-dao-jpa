@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import ci.weget.web.entites.DetailBlock;
+import ci.weget.web.entites.Personne;
 
 public interface DetailBlocksRepository extends JpaRepository<DetailBlock, Long> {
 
@@ -21,21 +22,26 @@ public interface DetailBlocksRepository extends JpaRepository<DetailBlock, Long>
 	@Query("select db from DetailBlock db  where db.block.id=?1")
 	List<DetailBlock> findAllBlocksParPersonne(Long id);
 
-	// ramener le detail block d'un block a partir de son block
-	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.personne p where db.id=?1")
+	// ramener le detail block d'un block a partir de son id
+	@Query("select db from DetailBlock db where db.id=?1")
 	DetailBlock findDtailBlocksParId(Long id);
 
-	// ramener les blocks d'une personne a partir de son identifianr
-	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.personne p where p.id=?1")
+	// ramener les details blocks d'une personne a partir de son identifianr
+	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.membre p where p.id=?1")
 	List<DetailBlock> findDtailBlocksParPersonneId(Long id);
 
 	// ramener tous les blocks d'une personnes par login
-	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.personne p where p.login=?1")
+	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.membre p where p.login=?1")
 	List<DetailBlock> findDtailBlocksParPersonneLogin(String login);
 
 	// ramener une personne a partir de detail block
-	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.personne p where p.id=?1")
+	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.membre p where p.id=?1")
 	DetailBlock findPersonneParId(Long id);
+	
+
+	// ramener le detail block  a partir de block et de personne
+	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.membre p where p.id=?1 AND  b.id=?2")
+	DetailBlock findDetailBlockIdPerAndIdBlock(Long idPersonne, Long idBlock);
 
 	// ramener les abonnes d'un block par id
 	@Query("select db from DetailBlock db  where db.block.id=?1")

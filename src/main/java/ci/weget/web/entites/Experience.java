@@ -14,11 +14,11 @@ public class Experience extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
 	private String postOccupe;
 	private String entreprise;
-	private String periode;
+	private String dateDebut;
+	private String dateFin;
 	private String tache;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_Membre")
-	private Membre membre;
+	private String lieu;
+	
 	
 	
 	public String getPostOccupe() {
@@ -33,11 +33,18 @@ public class Experience extends AbstractEntity {
 	public void setEntreprise(String entreprise) {
 		this.entreprise = entreprise;
 	}
-	public String getPeriode() {
-		return periode;
+	
+	public String getDateDebut() {
+		return dateDebut;
 	}
-	public void setPeriode(String periode) {
-		this.periode = periode;
+	public void setDateDebut(String dateDebut) {
+		this.dateDebut = dateDebut;
+	}
+	public String getDateFin() {
+		return dateFin;
+	}
+	public void setDateFin(String dateFin) {
+		this.dateFin = dateFin;
 	}
 	public String getTache() {
 		return tache;
@@ -45,7 +52,12 @@ public class Experience extends AbstractEntity {
 	public void setTache(String tache) {
 		this.tache = tache;
 	}
-	
+	public String getLieu() {
+		return lieu;
+	}
+	public void setLieu(String lieu) {
+		this.lieu = lieu;
+	}
 	
 	
 }

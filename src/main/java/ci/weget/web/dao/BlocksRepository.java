@@ -24,7 +24,7 @@ public interface BlocksRepository extends JpaRepository<Block, Long> {
 	Block getByid(Long id);
 
 	// liste des abonnes d'un block identifié par son id
-	@Query("select db.personne from DetailBlock db where db.personne.id=?1 AND db.personne.typestatut='abonne'")
+	@Query("select db.membre from DetailBlock db where db.membre.id=?1 AND db.membre.typestatut='abonne'")
 	List<Personne> getPersonnes(Long id);
 
 }

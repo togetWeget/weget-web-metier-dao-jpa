@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,10 +26,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import ci.weget.web.entites.Block;
 import ci.weget.web.entites.Commande;
-import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Panier;
 import ci.weget.web.entites.Personne;
-import ci.weget.web.entites.TypeStatut;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IAppRoleMetier;
 import ci.weget.web.metier.IBlocksMetier;
@@ -193,7 +189,7 @@ public class MembreController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
-
+	 
 	// recherche les membres par login
 	@GetMapping("/membresLogin/{login}")
 	public String chercherMembresParLogin(@PathVariable String login) throws JsonProcessingException {
@@ -245,7 +241,7 @@ public class MembreController {
 		String path = "http://wegetback:8080/getPhotoMembre/"+ p.getVersion()+"/" + p.getId();
 		System.out.println(path);
 		if (reponseParLibelle.getStatus() == 0) {
-			String dossier = togetImage + "/";
+			String dossier = togetImage + "/"+"membres"+"/";
 			File rep = new File(dossier);
 
 			if (!file.isEmpty()) {
@@ -327,7 +323,7 @@ public class MembreController {
 		 // Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); 
 		  //Blocks b = personneLibelle.getBody(); 
 		  System.out.println(version); 
-		  String dossier = togetImage+"/"; 
+		  String dossier = togetImage + "/"+"membres"+"/"; 
 		  File f = new File(dossier+id); 
 		  byte[] img = IOUtils.toByteArray(new FileInputStream(f));
 		 

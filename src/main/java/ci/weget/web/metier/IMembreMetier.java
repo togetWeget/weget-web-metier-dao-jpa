@@ -12,9 +12,10 @@ public interface IMembreMetier extends Imetier<Personne, Long> {
 
 	public Personne findByLogin(String login);
 
-
 	public void addRoleToUser(String userName, String RoleName);
 
 	List<Personne> personneALL(String type);
+
+	
 
 }

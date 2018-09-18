@@ -11,13 +11,15 @@ import ci.weget.web.entites.SousBlock;
 public interface SousBlocksRepository extends JpaRepository<SousBlock, Long> {
 
 	// retrouver un sous block a partir de son libelle
-	@Query("select sb from SousBlock sb where sb.libelle=?1")
-	SousBlock findByLibelle(String libelle);
+	@Query("select sb from SousBlock sb where sb.id=?1")
+	SousBlock findSoublockById(Long id);
 
 	// rechercher un sous bloc a partir de son libelle
-	@Query("select sb from SousBlock sb where sb.libelle like %:x%")
+	@Query("select sb from SousBlock sb where sb.nom like %:x%")
 	List<SousBlock> chercherSousBlockParMc(@Param("x") String mc);
 
-	
+	// ramener les sous blocks a partir de id de block
+	@Query("select sb from SousBlock sb  where sb.detailBlock.id=?1")
+	List<SousBlock> findSousBlockParIdBlock(Long id);
 
 }

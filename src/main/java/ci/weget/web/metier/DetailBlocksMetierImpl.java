@@ -12,12 +12,8 @@ import ci.weget.web.dao.PersonnesRepository;
 import ci.weget.web.entites.Block;
 import ci.weget.web.entites.DetailBlock;
 import ci.weget.web.entites.Membre;
-import ci.weget.web.entites.Paiement;
 import ci.weget.web.entites.Personne;
-import ci.weget.web.entites.TypeStatut;
 import ci.weget.web.exception.InvalideTogetException;
-import ci.weget.web.security.AppRoles;
-import ci.weget.web.security.UserRoles;
 
 @Service
 public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
@@ -35,19 +31,30 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	@Override
 	public DetailBlock creer(DetailBlock entity) throws InvalideTogetException {
 
-		return null;
+		return detailBlocksRepository.save(entity);
 	}
 
 	@Override
 	public DetailBlock modifier(DetailBlock entity) throws InvalideTogetException {
        DetailBlock db = detailBlocksRepository.findDtailBlocksParId(entity.getId());
-		Personne p= db.getPersonne();
+		Membre p= db.getMembre();
 		Personne p1= personnesRepository.getPersonneByid(p.getId());
 		personnesRepository.save(p1);
-       return db;
+       return detailBlocksRepository.save(entity);
 	}
 
-	
+	@Override
+	public DetailBlock modifierVue(Long idPersonne, Long idBlock) throws InvalideTogetException {
+
+		
+		DetailBlock db = detailBlocksRepository.findDetailBlockIdPerAndIdBlock(idPersonne, idBlock);
+		DetailBlock db1 = detailBlocksRepository.findDtailBlocksParId(db.getId());
+		int nombreVue = db1.getNombreVue();
+		nombreVue++;
+		db1.setNombreVue(nombreVue);
+		
+		return detailBlocksRepository.save(db1);
+	}
 	@Override
 	public List<DetailBlock> findAll() {
 
@@ -81,9 +88,9 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	@Override
 	public void addPersonneToBlocks(String login, String libelle) throws InvalideTogetException {
 
-		Personne personne = personnesRepository.findByLogin(login);
+		Membre membre = personnesRepository.findByLogin(login);
 		Block block = blocksRepository.findByLibelle(libelle);
-		DetailBlock db = new DetailBlock(personne, block);
+		DetailBlock db = new DetailBlock(membre, block);
 		detailBlocksRepository.save(db);
 
 	}
@@ -125,7 +132,7 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 			public List<DetailBlock> abonneSpecial(DetailBlock d) {
 				List<DetailBlock> pers = detailBlocksRepository.findAll();
 
-				List<DetailBlock> db = pers.stream().filter(x -> d.getPersonne().isActived()).collect(Collectors.toList());
+				List<DetailBlock> db = pers.stream().filter(x -> d.getMembre().isActived()).collect(Collectors.toList());
 
 				return db;
 
@@ -150,4 +157,5 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 		return false;
 	}
 
+	
 }

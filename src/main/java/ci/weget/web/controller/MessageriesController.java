@@ -48,11 +48,11 @@ public class MessageriesController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
-	@PutMapping("messageries/")
+	@PutMapping("/messageries")
 	public Messagerie modifier(@RequestBody Messagerie entity) throws InvalideTogetException {
 		return messagerieMetier.modifier(entity);
 	}
-	@PutMapping("messages/")
+	@PutMapping("/messages")
 	public String modifierStatutMessage(@RequestBody Messagerie entity) throws InvalideTogetException, JsonProcessingException {
 		Reponse<Messagerie> reponse;
 
@@ -64,6 +64,23 @@ public class MessageriesController {
 			reponse = new Reponse<Messagerie>(0, messages, m1);
 
 		} catch (InvalideTogetException e) {
+
+			reponse = new Reponse<Messagerie>(1, Static.getErreursForException(e), null);
+		}
+		return jsonMapper.writeValueAsString(reponse);
+	}
+	@PutMapping("/envoiemessages")
+	public String envoyeMessage(@RequestBody Messagerie entity) throws InvalideTogetException, JsonProcessingException {
+		Reponse<Messagerie> reponse;
+
+		try {
+
+			Messagerie m1 = messagerieMetier.findById(entity.getId());
+			List<String> messages = new ArrayList<>();
+			messages.add(String.format("%s  à été envoye avec succes", m1.getId()));
+			reponse = new Reponse<Messagerie>(0, messages, m1);
+
+		} catch (Exception e) {
 
 			reponse = new Reponse<Messagerie>(1, Static.getErreursForException(e), null);
 		}

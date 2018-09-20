@@ -1,5 +1,6 @@
 package ci.weget.web.metier;
 
+import java.io.Console;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,38 +15,40 @@ import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 
 @Service
-public class MessagerieMetierImpl  implements ImessagerieMetier{
+public class MessagerieMetierImpl implements ImessagerieMetier {
 	@Autowired
 	private MessagerieRepository messagerieRepository;
 	@Autowired
 	private PersonnesRepository personnesRepository;
 	@Autowired
 	private MessageRepository messageRepository;
- @Override
+
+	@Override
 	public Messagerie creer(Messagerie entity) throws InvalideTogetException {
 		Personne p = personnesRepository.getPersonneByid(entity.getPersonne().getId());
-		
+
 		Messagerie msg = new Messagerie();
 		msg.setExpediteur(entity.getExpediteur());
 		msg.setMessage(entity.getMessage());
 		msg.setPersonne(p);
 		return messagerieRepository.save(msg);
 	}
+
 	@Override
 	public Messagerie modifier(Messagerie entity) throws InvalideTogetException {
-		
+
 		return messagerieRepository.save(entity);
 	}
 
 	@Override
 	public List<Messagerie> findAll() {
-		
+
 		return messagerieRepository.findAll();
 	}
 
 	@Override
 	public Messagerie findById(Long id) {
-		
+
 		return messagerieRepository.getOne(id);
 	}
 
@@ -66,24 +69,27 @@ public class MessagerieMetierImpl  implements ImessagerieMetier{
 		// TODO Auto-generated method stub
 		return false;
 	}
-	
+
 	@Override
-	public List<Message>  findMessagesParPersonneId(Long id) {
-		
-		return  messageRepository.findMessagesParPersonneId(id);
+	public List<Message> findMessagesParPersonneId(Long id) {
+
+		return messageRepository.findMessagesParPersonneId(id);
 	}
+
 	@Override
 	public Messagerie findMessageById(Long id) {
-		
+
 		return messageRepository.findMessageById(id);
 	}
+
 	@Override
-	public Message modifierMessage(Messagerie messagerie) throws InvalideTogetException {
-		Message message = messageRepository.findMessagerieById(messagerie.getId());
-		boolean m = message.isStatutMessage();
-		 m = false;
-		 message.setStatutMessage(m);
-		return messageRepository.save(message);
+	public Messagerie modifierMessage(Messagerie messagerie) throws InvalideTogetException {
+		Messagerie mes = messageRepository.findMessagerieById(messagerie.getId());
+		Message m = mes.getMessage();
+		Message m1= messageRepository.getMessageByid(m.getId());
+		m1.setStatut(false);
+		messageRepository.save(m1);
+        return messagerieRepository.save(mes);
 	}
 
 }

@@ -17,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ci.weget.web.entites.Block;
 import ci.weget.web.entites.Gallery;
+import ci.weget.web.entites.PhotoGallery;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IGalleryMetier;
 import ci.weget.web.modeles.Reponse;
@@ -104,32 +106,46 @@ public class GalleryController {
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////
-	// enregistrer la phorto d'un membre dans la
+	// enregistrer les photo d'une gallery dans la base
 	////////////////////////////////////////////////////////////////////////////////////// base/////////////////////////////////////
 	@PostMapping("/photoGallery")
 	public String creerPhoto(@RequestParam(name = "image_photo") MultipartFile[] myfiles) throws Exception {
+		
+		Reponse<Gallery> reponse = null;
+		Reponse<Gallery> reponseParLibelle;
+		String dossier = togetImage + "/" + "Gallery";
+		File rep = new File(dossier);
+
 		for (MultipartFile file : myfiles) {
-
-			if (file.isEmpty()) {
-				System.out.println("fichier vide");
-			} else {
-
-				String fileName = file.getOriginalFilename();
-
-				// String path1 = request.getSession().getServletContext().getRealPath("file")+
-				// File.separator;
-
-				// String path2 = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date())+
-				// fileName;
-				// request.getSession().setAttribute("document",path2);
-				String path = null;
-
-				System.out.println("path");
-
-				File localFile = new File(path);
-				file.transferTo(localFile);
+			String libelle = file.getOriginalFilename();
+			reponseParLibelle = getGalleryByLibelle(libelle);
+			Gallery g = reponseParLibelle.getBody();
+			System.out.println(g);
+			String path = "http://wegetback:8080/getPhotoGallery/" + g.getVersion() + "/" + g.getId();
+			PhotoGallery ph = new PhotoGallery();
+			List<PhotoGallery>  path1 = new ArrayList<>();
+			//path1.ad;
+			g.setPathPhotoGallery(path1);
+			if (!file.isEmpty()) {
+				if (!rep.exists() && !rep.isDirectory()) {
+					rep.mkdir();
+				}
 			}
+			try {
+				// enregistrer le chemin dans la photo
+				
+				System.out.println(path);
+				file.transferTo(new File(dossier + g.getId()));
+				List<String> messages = new ArrayList<>();
+				messages.add(String.format("%s (photo ajouter avec succes)", g.getLibelle()));
+				reponse = new Reponse<Gallery>(0, messages, galleryMetier.modifier(g));
+
+			} catch (Exception e) {
+
+				reponse = new Reponse<Gallery>(1, Static.getErreursForException(e), null);
+			}
+
 		}
-		return togetImage;
+		return jsonMapper.writeValueAsString(reponse);
 	}
 }

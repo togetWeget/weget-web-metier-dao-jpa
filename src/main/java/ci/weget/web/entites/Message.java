@@ -15,7 +15,7 @@ public class Message extends AbstractEntity {
 	private String sujet;
 	private String contenu;
 	private LocalDateTime date;
-	private boolean statutMessage;
+	private boolean statut;
 
 	public Message() {
 		super();
@@ -44,14 +44,6 @@ public class Message extends AbstractEntity {
 		this.contenu = contenu;
 	}
 
-	public boolean isStatutMessage() {
-		return statutMessage;
-	}
-
-	public void setStatutMessage(boolean statutMessage) {
-		this.statutMessage = statutMessage;
-	}
-
 	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
@@ -60,11 +52,18 @@ public class Message extends AbstractEntity {
 		return date;
 	}
 
+  public boolean isStatut() {
+		return statut;
+	}
+
+	public void setStatut(boolean statut) {
+		this.statut = statut;
+	}
+
 	@PrePersist
-	@PreUpdate
 	public void setDate() {
 		this.date = LocalDateTime.now();
-		this.statutMessage = true;
+		this.statut = true;
 	}
 
 }

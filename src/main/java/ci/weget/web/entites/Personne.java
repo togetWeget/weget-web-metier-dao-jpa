@@ -204,7 +204,6 @@ public abstract class Personne extends AbstractEntity {
 	}
 
 	@PrePersist
-	@PreUpdate
 	public void setNomComplet() {
 		this.nomComplet = nom + " " + prenom;
 	}

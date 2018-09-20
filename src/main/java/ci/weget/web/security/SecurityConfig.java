@@ -63,6 +63,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
           http.authorizeRequests().antMatchers(HttpMethod.POST, "/misAjourProfil/**").hasAuthority("MEMBRE");
           http.authorizeRequests().antMatchers(HttpMethod.POST, "/membresLogin/**").hasAuthority("MEMBRE");
           http.authorizeRequests().antMatchers(HttpMethod.POST, "/membresLogin/**").hasAuthority("ADMIN");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/gallery/**").hasAuthority("MEMBRE");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/gallery/**").hasAuthority("ADMIN");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoGallery/**").hasAuthority("MEMBRE");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoGallery/**").hasAuthority("ADMIN");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoCouvertureMembre/**").hasAuthority("MEMBRE");
+          http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoCouvertureMembre/**").hasAuthority("ADMIN");
 
 		// toutes les requetes necessite une aurhentication
 		http.authorizeRequests().anyRequest().authenticated();

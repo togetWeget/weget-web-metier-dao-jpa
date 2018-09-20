@@ -27,6 +27,8 @@ public class Messagerie extends AbstractEntity {
 	@JoinColumn(name = "id_Expediteur")
 	private Expediteur expediteur;
 	
+	
+	
 	/*@Column(name = "id_Personne", insertable = false, updatable = false)
 	private long idPersonne;
 	@Column(name = "id_Messages", insertable = false, updatable = false)

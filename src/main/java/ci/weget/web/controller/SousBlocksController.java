@@ -20,17 +20,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ci.weget.web.entites.Block;
-import ci.weget.web.entites.DetailBlock;
-import ci.weget.web.entites.Personne;
 import ci.weget.web.entites.SousBlock;
 import ci.weget.web.exception.InvalideTogetException;
-import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.ISousBlockMetier;
 import ci.weget.web.modeles.Reponse;
 import ci.weget.web.utilitaires.Static;

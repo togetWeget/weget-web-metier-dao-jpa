@@ -29,11 +29,21 @@ public class SousBlock extends AbstractEntity {
 	@Embedded
 	private Adresse adresse;
 	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id_SousBlock")
+	@JoinColumn(name = "id_Telephones")
 	private List<Telephone> telephones;
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_detailBlock")
 	private DetailBlock detailBlock;
+	
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_SouBlock")
+	private List<Chiffre> chiffre;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_SouBlock")
+	private List<Partenaire> partenaire;
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id_SouBlock")
+	private List<Temoignage> temoignage;
 
 	public String getPresentation() {
 		return presentation;
@@ -113,6 +123,30 @@ public class SousBlock extends AbstractEntity {
 
 	public void setPathLogo(String pathLogo) {
 		this.pathLogo = pathLogo;
+	}
+
+	public List<Chiffre> getChiffre() {
+		return chiffre;
+	}
+
+	public void setChiffre(List<Chiffre> chiffre) {
+		this.chiffre = chiffre;
+	}
+
+	public List<Partenaire> getPartenaire() {
+		return partenaire;
+	}
+
+	public void setPartenaire(List<Partenaire> partenaire) {
+		this.partenaire = partenaire;
+	}
+
+	public List<Temoignage> getTemoignage() {
+		return temoignage;
+	}
+
+	public void setTemoignage(List<Temoignage> temoignage) {
+		this.temoignage = temoignage;
 	}
 
 }

@@ -69,7 +69,7 @@ public class MessageriesController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
-	@PutMapping("/envoiemessages")
+	@PostMapping("/envoiemessages")
 	public String envoyeMessage(@RequestBody Messagerie entity) throws InvalideTogetException, JsonProcessingException {
 		Reponse<Messagerie> reponse;
 

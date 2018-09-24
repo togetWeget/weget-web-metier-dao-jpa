@@ -59,10 +59,6 @@ public interface PersonnesRepository extends JpaRepository<Personne, Long> {
 	@Query("select p from Personne p left join fetch p.typestatut t where t.libelle='abonne'")
 	List<Personne> getAllAbonnes();
 
-	// rechercher un abonne par competence
-	@Query("select p from Personne p left join fetch p.cvPersonne c where c.specialite=?1")
-	List<Personne> chercherPersonneParSpecialite(String specialite);
-
 	// rechercher une abonne par id
 	@Query("select p from Personne p where p.id=?1")
 	public List<Personne> chercherAbonneParId(long id);

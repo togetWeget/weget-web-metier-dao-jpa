@@ -16,6 +16,5 @@ public interface IMembreMetier extends Imetier<Personne, Long> {
 
 	List<Personne> personneALL(String type);
 
-	
 
 }

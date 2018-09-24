@@ -157,5 +157,11 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 		return false;
 	}
 
+	@Override
+	public List<DetailBlock> chercherPersonneParSpecialite(String specialite) {
+		
+		return detailBlocksRepository.chercherPersonneParSpecialite(specialite);
+	}
+
 	
 }

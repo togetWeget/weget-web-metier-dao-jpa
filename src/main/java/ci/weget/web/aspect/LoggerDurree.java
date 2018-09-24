@@ -10,7 +10,7 @@ import org.aspectj.lang.annotation.Pointcut;
 public class LoggerDurree {
 	private long t1, t2;
 
-	@Pointcut("call(String ci.weget.web.controller.MembreController.creer(..))")
+	@Pointcut("call(Personne ci.weget.web.metier.MembreMetierImpl.creer(..))")
 	public void log() {}
 
 	@Before("log()")

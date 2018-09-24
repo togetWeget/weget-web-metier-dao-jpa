@@ -111,7 +111,36 @@ public class MembreController {
 		// ok
 		return new Reponse<Block>(0, null, block);
 	}
+	
+	
+	// les utilisateurs de Firebase  dans la base de donnee
+		@PostMapping("/firebase")
+		public String creerFirebase(@RequestBody Personne entite) throws JsonProcessingException {
+			Reponse<Personne> reponse;
+			Reponse<Personne> reponse2;
+			try {
+				
+				Personne p1 = membreMetier.creer(entite);
+				// mettre le statut a membre
+				reponse2 = getMembreById(p1.getId());
+				// recuperer la personne
+				Personne p3 = reponse2.getBody();
+				// recupere le role qui a pour nom membre
+				AppRoles roleMembre = roleMetier.findRoleByNom("membre");
 
+				membreMetier.addRoleToUser(p3.getLogin(), roleMembre.getNom());
+
+				// membreMetier.modifier(p3);
+				List<String> messages = new ArrayList<>();
+				messages.add(String.format("%s à été créer avec succes avec statut membres", p1.getLogin()));
+				reponse = new Reponse<Personne>(0, messages, p3);
+
+			} catch (InvalideTogetException e) {
+
+				reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
+			}
+			return jsonMapper.writeValueAsString(reponse);
+		}
 	// enregistrer un membre dans la base de donnee
 	@PostMapping("/membres")
 	public String creer(@RequestBody Personne entite) throws JsonProcessingException {
@@ -208,7 +237,7 @@ public class MembreController {
 			return jsonMapper.writeValueAsString(reponse);
 
 		}
-
+		
 	// enregistrer une commande
 	@PostMapping("/commande")
 	public String enregistrerCommande(@RequestBody Panier p, @RequestBody Personne pers)

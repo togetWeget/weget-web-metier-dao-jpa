@@ -292,6 +292,27 @@ public class DetailBlockContrller {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
+//////////rechercher un membre par competence
+	@GetMapping("/rechercheParComptence")
+	public String chercherBlocParMc(@RequestParam String specialite) throws JsonProcessingException {
+		Reponse<List<DetailBlock>> reponse = null;
+
+		try {
+			List<DetailBlock> db = detailBlocksMetier.chercherPersonneParSpecialite(specialite);
+			if (!db.isEmpty()) {
+				reponse = new Reponse<List<DetailBlock>>(0, null, db);
+			} else {
+				List<String> messages = new ArrayList<>();
+				messages.add(String.format("pas de block enregistrer "));
+				reponse = new Reponse<List<DetailBlock>>(2, messages, new ArrayList<>());
+			}
+
+		} catch (Exception e) {
+			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+		}
+		return jsonMapper.writeValueAsString(reponse);
+
+	}
 
 	// obtenir des blocks d'un abonne
 	@GetMapping("/abonneSpecial")

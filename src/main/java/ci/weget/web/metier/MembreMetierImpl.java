@@ -1,5 +1,7 @@
 package ci.weget.web.metier;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,6 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
 
 import ci.weget.web.dao.BlocksRepository;
 import ci.weget.web.dao.CommandeRepository;
@@ -56,7 +64,26 @@ public class MembreMetierImpl implements IMembreMetier {
 	public void setCORSneeded(boolean cORSneeded) {
 		CORSneeded = cORSneeded;
 	}
+/////////initialiser firebase//////////////////////////////////
+public void initFirebase() throws IOException {
+	FileInputStream serviceAccount = new FileInputStream("D:\\ProjetToget\toget-2b431-firebase-adminsdk-307vo-fa2bb111f5");
 
+	FirebaseOptions options = new FirebaseOptions.Builder()
+	    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+	    .setDatabaseUrl("https://toget-2b431.firebaseio.com/")
+	    .build();
+
+	FirebaseApp.initializeApp(options);
+}
+// recuperer un utilisateur connecter sur firebase
+public UserRecord FindUserFireBaseByMail() throws Exception  {
+	UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail("kamssa0@gmail.com");
+	// See the UserRecord reference doc for the contents of userRecord.
+	System.out.println("*****************************************************");
+	System.out.println("Successfully fetched user data: " + userRecord.getEmail());
+	System.out.println("*****************************************************");
+    return userRecord;
+}
 	@Override
 	public Personne findById(final Long id) {
 

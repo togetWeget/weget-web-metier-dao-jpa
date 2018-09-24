@@ -17,9 +17,9 @@ public class Temoignage extends AbstractEntity {
     private String contenu;
     private String auteur;
     private String PathPhoto;
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+  /*  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_SousBlock")
-	private SousBlock sousBlock;
+	private SousBlock sousBlock;*/
 	public String getTitre() {
 		return titre;
 	}
@@ -44,6 +44,12 @@ public class Temoignage extends AbstractEntity {
 	public void setPathPhoto(String pathPhoto) {
 		PathPhoto = pathPhoto;
 	}
-    
+	/*public SousBlock getSousBlock() {
+		return sousBlock;
+	}
+	public void setSousBlock(SousBlock sousBlock) {
+		this.sousBlock = sousBlock;
+	}
+    */
     
 }

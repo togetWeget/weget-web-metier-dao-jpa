@@ -26,4 +26,7 @@ public interface IDetailBlocksMetier extends Imetier<DetailBlock, Long> {
 	public void addPersonneToBlocks(String login, String libelle) throws InvalideTogetException;
 
 	public DetailBlock modifierVue(Long idPersonne, Long idBlock) throws InvalideTogetException;
+
+	List<DetailBlock> chercherPersonneParSpecialite(String specialite);
+
 }

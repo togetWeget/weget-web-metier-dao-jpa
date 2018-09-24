@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import ci.weget.web.dao.SousBlocksRepository;
 import ci.weget.web.entites.SousBlock;
 import ci.weget.web.exception.InvalideTogetException;
 
 @Service
+@Transactional
 public class SousBlockMetierImpl implements ISousBlockMetier {
 @Autowired
 private SousBlocksRepository sousBlocksRepository;

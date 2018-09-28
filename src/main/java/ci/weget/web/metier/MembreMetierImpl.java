@@ -3,6 +3,7 @@ package ci.weget.web.metier;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.CreateRequest;
 
 import ci.weget.web.dao.BlocksRepository;
 import ci.weget.web.dao.CommandeRepository;
@@ -64,26 +66,55 @@ public class MembreMetierImpl implements IMembreMetier {
 	public void setCORSneeded(boolean cORSneeded) {
 		CORSneeded = cORSneeded;
 	}
-/////////initialiser firebase//////////////////////////////////
-public void initFirebase() throws IOException {
-	FileInputStream serviceAccount = new FileInputStream("D:\\ProjetToget\toget-2b431-firebase-adminsdk-307vo-fa2bb111f5");
 
-	FirebaseOptions options = new FirebaseOptions.Builder()
-	    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-	    .setDatabaseUrl("https://toget-2b431.firebaseio.com/")
-	    .build();
+	///////// initialiser firebase//////////////////////////////////
+	public void initFirebase() throws IOException {
+		FileInputStream serviceAccount = new FileInputStream(
+				"D:\\ProjetToget\toget-2b431-firebase-adminsdk-307vo-fa2bb111f5");
 
-	FirebaseApp.initializeApp(options);
-}
-// recuperer un utilisateur connecter sur firebase
-public UserRecord FindUserFireBaseByMail() throws Exception  {
-	UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail("kamssa0@gmail.com");
-	// See the UserRecord reference doc for the contents of userRecord.
-	System.out.println("*****************************************************");
-	System.out.println("Successfully fetched user data: " + userRecord.getEmail());
-	System.out.println("*****************************************************");
-    return userRecord;
-}
+		FirebaseOptions options = new FirebaseOptions.Builder()
+				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
+				.setDatabaseUrl("https://toget-2b431.firebaseio.com/").build();
+
+		FirebaseApp.initializeApp(options);
+	}
+
+	/// recuperer un utilisateur connecter a partir de son mail  sur firebase/////////////////
+	public static void getUserByEmail(String email) throws InterruptedException, ExecutionException {
+		// [START get_user_by_email]
+		UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmailAsync(email).get();
+		// See the UserRecord reference doc for the contents of userRecord.
+		System.out.println("Successfully fetched user data: " + userRecord.getEmail());
+		// [END get_user_by_email]
+	}
+
+	/////// creer un utilisateur sur firebase///////////////////////////////////////
+	public static void createUser() throws InterruptedException, ExecutionException {
+		// [START create_user]
+		CreateRequest request = new CreateRequest().setEmail("kamssa0@gmail.com").setEmailVerified(false)
+				.setPassword("secretPassword").setPhoneNumber("+11234567890").setDisplayName("Traore Abdoulaye")
+				.setPhotoUrl("http://www.example.com/12345678/photo.png").setDisabled(false);
+
+		UserRecord userRecord = FirebaseAuth.getInstance().createUserAsync(request).get();
+		System.out.println("Successfully created new user: " + userRecord.getUid());
+		// [END create_user]
+	}
+	@Override
+	public void saveUser(String idToken) throws Exception {
+		String uid = getUserIdFromIdToken(idToken);
+		System.out.println("User Id :: " + uid);
+
+	}
+
+	public String getUserIdFromIdToken(String idToken) throws Exception {
+		String uid = null;
+		try {
+			uid = FirebaseAuth.getInstance().verifyIdTokenAsync(idToken).get().getUid();
+		} catch (InterruptedException | ExecutionException e) {
+			throw new Exception("User Not Authenticated");
+		}
+		return uid;
+	}
 	@Override
 	public Personne findById(final Long id) {
 
@@ -127,7 +158,7 @@ public UserRecord FindUserFireBaseByMail() throws Exception  {
 		modif.setRepassword(hshRPW);
 		return personnesRepository.save(modif);
 	}
-	
+
 	// la liste de tous les membres
 	@Override
 	public List<Personne> personneALL(String type) {

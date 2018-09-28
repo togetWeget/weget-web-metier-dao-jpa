@@ -58,7 +58,7 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	@Override
 	public List<DetailBlock> findAll() {
 
-		return null;
+		return detailBlocksRepository.findAll();
 	}
 
 	@Override
@@ -142,19 +142,20 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	@Override
 	public boolean supprimer(Long id) {
 
-		return false;
+		detailBlocksRepository.deleteById(id);
+		return true;
 	}
 
 	@Override
 	public boolean supprimer(List<DetailBlock> entites) {
-
-		return false;
+    detailBlocksRepository.deleteAll(entites);
+		return true;
 	}
 
 	@Override
 	public boolean existe(Long id) {
 
-		return false;
+		return detailBlocksRepository.existsById(id);
 	}
 
 	@Override

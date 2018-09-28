@@ -120,6 +120,7 @@ public class GalleryController {
 			String libelle = file.getOriginalFilename();
 			reponseParLibelle = getGalleryByLibelle(libelle);
 			Gallery g = reponseParLibelle.getBody();
+			List<PhotoGallery> p =g.getPathPhotoGallery();
 			System.out.println(g);
 			String path = "http://wegetback:8080/getPhotoGallery/" + g.getVersion() + "/" + g.getId();
 			PhotoGallery ph = new PhotoGallery();

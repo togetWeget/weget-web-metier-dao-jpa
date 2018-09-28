@@ -16,5 +16,5 @@ public interface IMembreMetier extends Imetier<Personne, Long> {
 
 	List<Personne> personneALL(String type);
 
-
+	public void saveUser(String idToken) throws Exception;
 }

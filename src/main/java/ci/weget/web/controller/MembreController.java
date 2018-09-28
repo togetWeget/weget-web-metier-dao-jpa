@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -140,6 +141,11 @@ public class MembreController {
 				reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
 			}
 			return jsonMapper.writeValueAsString(reponse);
+		}
+		
+		@PostMapping("/save")
+		public void save(@RequestHeader(value="ID-TOKEN") String idToken) throws Exception {
+			membreMetier.saveUser(idToken);
 		}
 	// enregistrer un membre dans la base de donnee
 	@PostMapping("/membres")

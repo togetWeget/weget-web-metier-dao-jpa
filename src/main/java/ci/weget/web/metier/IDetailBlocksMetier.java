@@ -29,4 +29,6 @@ public interface IDetailBlocksMetier extends Imetier<DetailBlock, Long> {
 
 	List<DetailBlock> chercherPersonneParSpecialite(String specialite);
 
+	List<DetailBlock> findDtailBlocksParIdBlock(Long id);
+
 }

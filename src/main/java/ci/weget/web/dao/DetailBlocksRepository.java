@@ -49,5 +49,9 @@ public interface DetailBlocksRepository extends JpaRepository<DetailBlock, Long>
 	// rechercher un abonne par competence
 	@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.membre p where p.cvPersonne.specialite=?1")
 	List<DetailBlock> chercherPersonneParSpecialite(String specialite);
+	// ramener tous les detail blocks identifiant du block
+		@Query("select db from DetailBlock db left join fetch db.block b left join fetch db.membre p where db.block.id=?1")
+		List<DetailBlock> findDtailBlocksParIdBlock(Long id);
+
 
 }

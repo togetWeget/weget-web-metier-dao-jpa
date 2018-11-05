@@ -15,10 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ci.weget.web.entites.Block;
 import ci.weget.web.entites.Position;
 import ci.weget.web.exception.InvalideTogetException;
-import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IPositionMetier;
 import ci.weget.web.modeles.Reponse;
 import ci.weget.web.utilitaires.Static;
@@ -53,33 +51,42 @@ public class PositionController {
 		return new Reponse<Position>(0, null, position);
 	}
 
-	
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////// enregistrer un block dans la base de donnee
 	////////////////////////////////////////////////////////////////////////////////////////////// donnee////////////////////////////////
 
 	@PostMapping("/position")
-	public String creer(@RequestBody Position position) throws JsonProcessingException {
-		Reponse<Position> reponse;
+	public String creer(@RequestBody Position position) throws JsonProcessingException, InvalideTogetException {
+		Reponse<Position> reponse = null;
 
-		try {
+		List<Position> pos = positionMetier.findAllPositionsParIdMembre(position.getMembre().getId());
+		if (pos.isEmpty()) {
+			try {
 
-			Position p1 = positionMetier.creer(position);
+				Position p1 = positionMetier.creer(position);
+				List<String> messages = new ArrayList<>();
+				messages.add(String.format("%s  à été créer avec succes", p1.getId()));
+				reponse = new Reponse<Position>(0, messages, p1);
+
+			} catch (InvalideTogetException e) {
+
+				reponse = new Reponse<Position>(1, Static.getErreursForException(e), null);
+			}
+		} else {
+          
+			Position p2 = positionMetier.modifier(position);
 			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s  à été créer avec succes", p1.getId()));
-			reponse = new Reponse<Position>(0, messages, p1);
-
-		} catch (InvalideTogetException e) {
-
-			reponse = new Reponse<Position>(1, Static.getErreursForException(e), null);
+			messages.add(String.format("%s  à été modifie avec succes", p2.getId()));
+			reponse = new Reponse<Position>(0, messages, p2);
 		}
+
 		return jsonMapper.writeValueAsString(reponse);
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////////////
 	// modifier un block dans la base de donnee
 	///////////////////////////////////////////////////////////////////////////////////////// ///////////////////////////////////////////
-	
+
 	@PutMapping("/position")
 	public String modfierUnBlock(@RequestBody Position modif) throws JsonProcessingException {
 		Reponse<Position> reponsePersModif = null;

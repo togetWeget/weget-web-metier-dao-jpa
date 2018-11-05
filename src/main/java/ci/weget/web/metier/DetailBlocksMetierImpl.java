@@ -56,9 +56,11 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 		return detailBlocksRepository.save(db1);
 	}
 	@Override
-	public List<DetailBlock> findAll() {
-
-		return detailBlocksRepository.findAll();
+	public List<DetailBlock> findAll()  {
+     
+		return  detailBlocksRepository.findAll();
+	
+	 
 	}
 
 	@Override
@@ -105,6 +107,7 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	// alors son statut est mis a Abonne qui est une enumeration
 	@Override
 	public boolean creerAbonne(String login, String libelle)  {
+		
 		try {
 			addPersonneToBlocks(login, libelle);
 		} catch (InvalideTogetException e) {
@@ -162,6 +165,12 @@ public class DetailBlocksMetierImpl implements IDetailBlocksMetier {
 	public List<DetailBlock> chercherPersonneParSpecialite(String specialite) {
 		
 		return detailBlocksRepository.chercherPersonneParSpecialite(specialite);
+	}
+
+	@Override
+	public List<DetailBlock> findDtailBlocksParIdBlock(Long id) {
+		
+		return detailBlocksRepository.findDtailBlocksParIdBlock(id);
 	}
 
 	

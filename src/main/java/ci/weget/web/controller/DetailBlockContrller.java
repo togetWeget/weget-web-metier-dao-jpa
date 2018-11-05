@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +33,6 @@ import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IDetailBlocksMetier;
 import ci.weget.web.metier.IMembreMetier;
 import ci.weget.web.modeles.PostAjoutDetailBlock;
-import ci.weget.web.modeles.PostModifAbonne;
 import ci.weget.web.modeles.Reponse;
 import ci.weget.web.utilitaires.Static;
 
@@ -375,7 +373,20 @@ public class DetailBlockContrller {
 		return jsonMapper.writeValueAsString(reponse);
 	}
 
-	
+	// obtenir tous les details blocks par leur identifiant
+		@GetMapping("/detailBlockParIdBlock/{id}")
+		public String finddetailBlockParIdBlock(@PathVariable Long id) throws JsonProcessingException {
+			Reponse<List<DetailBlock>> reponse;
+			try {
+				List<DetailBlock> db = detailBlocksMetier.findDtailBlocksParIdBlock(id);
+				reponse = new Reponse<List<DetailBlock>>(0, null, db);
+			} catch (Exception e) {
+				reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+			}
+			return jsonMapper.writeValueAsString(reponse);
+
+		}
+
 
 	@PostMapping("/photoAbonnes")
 	public String creerPhoto(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {

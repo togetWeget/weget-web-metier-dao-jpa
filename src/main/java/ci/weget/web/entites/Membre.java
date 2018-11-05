@@ -21,10 +21,10 @@ public class Membre extends Personne {
 	private CvPersonne cvPersonne;
 		
 	private String description;
-
+    
 	public Membre() {
 		super();
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public Membre(String login, String password, String repassword) {
@@ -53,6 +53,8 @@ public class Membre extends Personne {
 		super(login, password);
 		// TODO Auto-generated constructor stub
 	}
+	
+
 
 	public String getDescription() {
 		return description;
@@ -69,5 +71,8 @@ public class Membre extends Personne {
 	public void setCvPersonne(CvPersonne cvPersonne) {
 		this.cvPersonne = cvPersonne;
 	}
+
+	
+	
 
 }

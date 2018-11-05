@@ -71,18 +71,18 @@ public class MessageriesController {
 	}
 	@PostMapping("/envoiemessages")
 	public String envoyeMessage(@RequestBody Messagerie entity) throws InvalideTogetException, JsonProcessingException {
-		Reponse<Messagerie> reponse;
+		Reponse<Boolean> reponse;
 
 		try {
 
-			Messagerie m1 = messagerieMetier.findById(entity.getId());
+			messagerieMetier.sendEmail(entity);
 			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s  à été envoye avec succes", m1.getId()));
-			reponse = new Reponse<Messagerie>(0, messages, m1);
+			messages.add(String.format("%s  à été envoye avec succes"));
+			reponse = new Reponse<Boolean>(0, messages,true);
 
 		} catch (Exception e) {
 
-			reponse = new Reponse<Messagerie>(1, Static.getErreursForException(e), null);
+			reponse = new Reponse<Boolean>(1, Static.getErreursForException(e), null);
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}

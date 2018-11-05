@@ -19,11 +19,11 @@ public class Panier extends AbstractEntity {
 	private LocalDateTime date;
 	private Double quantite;
 	private Double total;
-	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_Block")
 	private Block block;
 
-	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_Personne")
 	private Personne personne;
 	/*
@@ -31,7 +31,7 @@ public class Panier extends AbstractEntity {
 	 * idPersonne;
 	 */
 
-	@OneToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	@OneToOne(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_Tarif")
 	private Tarif tarif;
 

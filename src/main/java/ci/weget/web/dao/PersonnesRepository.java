@@ -1,19 +1,17 @@
 package ci.weget.web.dao;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import ci.weget.web.entites.Administrateur;
-import ci.weget.web.entites.Block;
 import ci.weget.web.entites.Membre;
 import ci.weget.web.entites.Personne;
 import ci.weget.web.security.AppRoles;
-import ci.weget.web.security.UserRoles;
 
 public interface PersonnesRepository extends JpaRepository<Personne, Long> {
-
 	// liste des roles d'une personne identifie par son identifiant
 	@Query("select ur.roles from UserRoles ur where ur.personne.id=?1")
 	List<AppRoles> getRoles(long id);
@@ -71,4 +69,4 @@ public interface PersonnesRepository extends JpaRepository<Personne, Long> {
 	@Query("select db.membre from DetailBlock db where db.block.id=?1")
 	List<Personne> getPersonnesParBlock(long id);
 
-}
+	}

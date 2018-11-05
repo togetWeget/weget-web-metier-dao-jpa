@@ -1,9 +1,6 @@
 package ci.weget.web.metier;
 
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,17 +8,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
+import com.google.firebase.auth.UserRecord.UpdateRequest;
 
-import ci.weget.web.dao.BlocksRepository;
-import ci.weget.web.dao.CommandeRepository;
-import ci.weget.web.dao.DetailBlocksRepository;
-import ci.weget.web.dao.PaiementRepository;
 import ci.weget.web.dao.PersonnesRepository;
 import ci.weget.web.dao.RoleRepository;
 import ci.weget.web.dao.UserRoleRepository;
@@ -37,84 +29,40 @@ import ci.weget.web.security.UserRoles;
 public class MembreMetierImpl implements IMembreMetier {
 
 	@Autowired
-	private CommandeRepository commandeRepository;
-	@Autowired
 	private PersonnesRepository personnesRepository;
 
-	@Autowired
-	private DetailBlocksRepository detailBlocksRepository;
-	@Autowired
-	private BlocksRepository blocksRepository;
 	@Autowired
 	private UserRoleRepository userRoleRepository;
 	@Autowired
 	private RoleRepository roleRepository;
 	@Autowired
-	private PaiementRepository paiementRepository;
-	@Autowired
-	private IDetailBlocksMetier detailBlocksMetier;
-	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-	// données de configuration
-	private boolean CORSneeded = true;
-
-	public boolean isCORSneeded() {
-		return CORSneeded;
-	}
-
-	public void setCORSneeded(boolean cORSneeded) {
-		CORSneeded = cORSneeded;
-	}
-
-	///////// initialiser firebase//////////////////////////////////
-	public void initFirebase() throws IOException {
-		FileInputStream serviceAccount = new FileInputStream(
-				"D:\\ProjetToget\toget-2b431-firebase-adminsdk-307vo-fa2bb111f5");
-
-		FirebaseOptions options = new FirebaseOptions.Builder()
-				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
-				.setDatabaseUrl("https://toget-2b431.firebaseio.com/").build();
-
-		FirebaseApp.initializeApp(options);
-	}
-
-	/// recuperer un utilisateur connecter a partir de son mail  sur firebase/////////////////
-	public static void getUserByEmail(String email) throws InterruptedException, ExecutionException {
-		// [START get_user_by_email]
-		UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmailAsync(email).get();
-		// See the UserRecord reference doc for the contents of userRecord.
-		System.out.println("Successfully fetched user data: " + userRecord.getEmail());
-		// [END get_user_by_email]
-	}
-
 	/////// creer un utilisateur sur firebase///////////////////////////////////////
-	public static void createUser() throws InterruptedException, ExecutionException {
-		// [START create_user]
-		CreateRequest request = new CreateRequest().setEmail("kamssa0@gmail.com").setEmailVerified(false)
-				.setPassword("secretPassword").setPhoneNumber("+11234567890").setDisplayName("Traore Abdoulaye")
-				.setPhotoUrl("http://www.example.com/12345678/photo.png").setDisabled(false);
+	public UserRecord createUser(Personne personne) throws FirebaseAuthException {
 
-		UserRecord userRecord = FirebaseAuth.getInstance().createUserAsync(request).get();
-		System.out.println("Successfully created new user: " + userRecord.getUid());
-		// [END create_user]
+		CreateRequest request = new CreateRequest().setEmail(personne.getLogin())
+				// .setEmailVerified(personne.getAdresse().getEmail())
+				.setPassword(personne.getPassword());
+
+		UserRecord userRecord = FirebaseAuth.getInstance().createUser(request);
+		System.out.println("utilisateur creer avec success: " + userRecord.getUid());
+		System.out.println("utilisateur creer avec success: "+ FirebaseAuth.getInstance().getUserAsync(userRecord.getUid()));
+
+		return userRecord;
+
 	}
 	@Override
-	public void saveUser(String idToken) throws Exception {
-		String uid = getUserIdFromIdToken(idToken);
-		System.out.println("User Id :: " + uid);
+	public UserRecord updateUser(Personne personne) throws Exception {
+		UpdateRequest  request = new UpdateRequest (personne.getLogin())
+				.setEmail(personne.getLogin())
+				// .setEmailVerified(personne.getAdresse().getEmail())
+				.setPassword(personne.getPassword());
+		UserRecord userRecord = FirebaseAuth.getInstance().updateUser(request);
 
+		return userRecord;
 	}
 
-	public String getUserIdFromIdToken(String idToken) throws Exception {
-		String uid = null;
-		try {
-			uid = FirebaseAuth.getInstance().verifyIdTokenAsync(idToken).get().getUid();
-		} catch (InterruptedException | ExecutionException e) {
-			throw new Exception("User Not Authenticated");
-		}
-		return uid;
-	}
 	@Override
 	public Personne findById(final Long id) {
 
@@ -123,9 +71,9 @@ public class MembreMetierImpl implements IMembreMetier {
 
 	@Override
 	public Personne creer(Personne p) throws InvalideTogetException {
-		if (!p.getPassword().equals(p.getRepassword())) {
+		/*if (!p.getPassword().equals(p.getRepassword())) {
 			throw new InvalideTogetException("Vous devez remplir des mots de passe identique");
-		}
+		}*/
 		Personne pers = null;
 
 		pers = personnesRepository.findByLogin(p.getLogin());
@@ -178,8 +126,8 @@ public class MembreMetierImpl implements IMembreMetier {
 		AppRoles appRole = roleRepository.findByNom(roleName);
 		UserRoles userRole = new UserRoles(personne, appRole);
 		userRoleRepository.save(userRole);
-		List<AppRoles> roles = personnesRepository.getRoles(personne.getId());
-		roles.add(appRole);
+		/*List<AppRoles> roles = personnesRepository.getRoles(personne.getId());
+		roles.add(appRole);*/
 
 	}
 
@@ -225,5 +173,7 @@ public class MembreMetierImpl implements IMembreMetier {
 
 		return personnesRepository.existsById(id);
 	}
+
+	
 
 }

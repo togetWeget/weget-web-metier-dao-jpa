@@ -1,9 +1,12 @@
 package ci.weget.web.entites;
 
+import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 @Entity
@@ -13,7 +16,9 @@ public class Position extends AbstractEntity {
 	private static final long serialVersionUID = 1L;
     private Double longitude;
     private Double latitude;
-    @ManyToOne(cascade=CascadeType.ALL)
+    private LocalDate date;
+   
+	@ManyToOne(cascade=CascadeType.MERGE, fetch= FetchType.EAGER)
     @JoinColumn(name="id_Membre")
     private Membre membre;
 	public Position() {
@@ -44,5 +49,14 @@ public class Position extends AbstractEntity {
 	public void setMembre(Membre membre) {
 		this.membre = membre;
 	}
-    
+	 public LocalDate getDate() {
+			return date;
+		}
+		public void setDate(LocalDate date) {
+			this.date = date;
+		}
+		@PrePersist
+		public void setDate() {
+			this.date = LocalDate.now();
+		}
 }

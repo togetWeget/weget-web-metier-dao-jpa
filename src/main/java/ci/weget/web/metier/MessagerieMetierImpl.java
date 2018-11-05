@@ -1,9 +1,11 @@
 package ci.weget.web.metier;
 
-import java.io.Console;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import ci.weget.web.dao.MessageRepository;
@@ -22,6 +24,7 @@ public class MessagerieMetierImpl implements ImessagerieMetier {
 	private PersonnesRepository personnesRepository;
 	@Autowired
 	private MessageRepository messageRepository;
+	private JavaMailSender javaMailSender;
 
 	@Override
 	public Messagerie creer(Messagerie entity) throws InvalideTogetException {
@@ -39,7 +42,21 @@ public class MessagerieMetierImpl implements ImessagerieMetier {
 
 		return messagerieRepository.save(entity);
 	}
-
+   
+	@Autowired
+	public MessagerieMetierImpl(JavaMailSender javaMailSender) {
+	   this.javaMailSender=javaMailSender;
+   }
+	@Override
+	public boolean sendEmail(Messagerie  m) throws MailException {
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setFrom(m.getPersonne().getAdresse().getEmail());
+		mail.setTo(m.getExpediteur().getEmail());
+		mail.setSubject(m.getMessage().getSujet());
+		mail.setText(m.getMessage().getContenu());
+		javaMailSender.send(mail);
+		return true;
+	}
 	@Override
 	public List<Messagerie> findAll() {
 
@@ -54,8 +71,8 @@ public class MessagerieMetierImpl implements ImessagerieMetier {
 
 	@Override
 	public boolean supprimer(Long id) {
-		// TODO Auto-generated method stub
-		return false;
+		messageRepository.deleteById(id);
+		return true;
 	}
 
 	@Override

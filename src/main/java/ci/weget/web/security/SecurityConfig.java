@@ -1,81 +1,93 @@
 package ci.weget.web.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(
+        securedEnabled = true,
+        jsr250Enabled = true,
+        prePostEnabled = true
+)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+	 @Autowired
+	    CustomUserDetailsService customUserDetailsService;
 
-	@Autowired
-	private UserDetailsService userDetailsService;
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	    @Autowired
+	    private JwtAuthenticationEntryPoint unauthorizedHandler;
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		// auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-		/*
-		 * auth.inMemoryAuthentication()
-		 * .withUser("admin").password("{noop}1234").roles("ADMIN","USER") .and()
-		 * .withUser("user").password("{noop}1234").roles("USER");
-		 */
-		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-	}
+	    @Bean
+	    public JWTAuthenticationFilter jwtAuthenticationFilter() {
+	        return new JWTAuthenticationFilter();
+	    }
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
+	    @Override
+	    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
+	        authenticationManagerBuilder
+	                .userDetailsService(customUserDetailsService)
+	                .passwordEncoder(passwordEncoder());
+	    }
 
-		http.csrf().disable();
-		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+	    @Bean(BeanIds.AUTHENTICATION_MANAGER)
+	    @Override
+	    public AuthenticationManager authenticationManagerBean() throws Exception {
+	        return super.authenticationManagerBean();
+	    }
 
-		// http.formLogin();
+	    @Bean
+	    public PasswordEncoder passwordEncoder() {
+	        return new BCryptPasswordEncoder();
+	    }
 
-		http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**","/fichierCv/**","/sousBlocks/**","/SousBlocksParBlock/**",
-				"/personnesparId/**","/rechercheBlock/**","/panierParPersonne/**","/blocks/**","/photoCouvertureMembre/**","/gallery/**","/nombreVue/**",
-				"/photoBlock/**","/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**","/detailBlock/**","/getPhotoMembre/**","/photoGallery/**",
-				"/envoiemessages/**","/categoryBlocks/**","/position/**",
-				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**","/profilAbonneLogin/**","/messageries/**","/cursus/**","/messages/**",
-				"/profil/**","/tousLesAbonnesParBlock/**","/panier/**","/tousLesBlockParAbonne/**","/misAjourProfil/**","/message/**","/experience/**",
-				"/rechercheParComptence/**","/partenaire/**","/chiffre/**","/temoignage/**",
-				"/abonnes/**","/admin/**","/abonneParblocks/**","/membres/**","/photoMembre/**","/getPhotoCouvertureMembre/**").permitAll();
-		  http.authorizeRequests().antMatchers("/membres/**").permitAll();
-		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("ADMIN");
+	    @Override
+	    protected void configure(HttpSecurity http) throws Exception {
+	        http
+	                .cors()
+	                    .and()
+	                .csrf()
+	                    .disable()
+	                .exceptionHandling()
+	                    .authenticationEntryPoint(unauthorizedHandler)
+	                    .and()
+	                .sessionManagement()
+	                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+	                    .and()
+	                .authorizeRequests()
+	                    .antMatchers("/",
+	                        "/favicon.ico",
+	                        "/**/*.png",
+	                        "/**/*.gif",
+	                        "/**/*.svg",
+	                        "/**/*.jpg",
+	                        "/**/*.html",
+	                        "/**/*.css",
+	                        "/**/*.js")
+	                        .permitAll()
+	                    .antMatchers("/signin/**","/blocks/**","/signup/**")
+	                        .permitAll()
+	                    .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
+	                        .permitAll()
+	                    .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/users/**")
+	                        .permitAll()
+	                    .anyRequest()
+	                        .authenticated();
 
-		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/blocks/**").hasAuthority("ADMIN");
-		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("MEMBRE");
+	        // Add our custom JWT security filter
+	        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
-		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/membres/**").hasAuthority("ADMIN");
-		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/membres/**").hasAuthority("ADMIN");
-
-		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/membres/**").hasAuthority("MEMBRE");
-		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/membres/**").hasAuthority("MEMBRE");
-		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/messageries/**").hasAuthority("ADMIN");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/messageries/**").hasAuthority("MEMBRE");
-		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/panier/**").hasAuthority("MEMBRE");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/misAjourProfil/**").hasAuthority("MEMBRE");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/membresLogin/**").hasAuthority("MEMBRE");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/membresLogin/**").hasAuthority("ADMIN");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/gallery/**").hasAuthority("MEMBRE");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/gallery/**").hasAuthority("ADMIN");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoGallery/**").hasAuthority("MEMBRE");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoGallery/**").hasAuthority("ADMIN");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoCouvertureMembre/**").hasAuthority("MEMBRE");
-          http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoCouvertureMembre/**").hasAuthority("ADMIN");
-
-		// toutes les requetes necessite une aurhentication
-		http.authorizeRequests().anyRequest().authenticated();
-		http.addFilter(new JWTAutenticationFilter(authenticationManager()));
-		http.addFilterBefore(new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
-	}
-
+	    }
 }

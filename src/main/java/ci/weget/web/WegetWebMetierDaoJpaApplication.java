@@ -1,18 +1,30 @@
 package ci.weget.web;
 
 import java.io.FileInputStream;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.CreateRequest;
 
 @SpringBootApplication
+@EntityScan(basePackageClasses = { 
+		WegetWebMetierDaoJpaApplication.class,
+		Jsr310JpaConverters.class 
+})
 public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 	/*
 	 * @Autowired private AccountService accountService;
@@ -26,6 +38,10 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 	/*
 	 * @Autowired private IBlocksMetier blockMetier;
 	 */
+	@PostConstruct
+	void init() {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	}
 	@Bean
 	public BCryptPasswordEncoder getBCPE() {
 		return new BCryptPasswordEncoder();
@@ -33,9 +49,9 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WegetWebMetierDaoJpaApplication.class, args);
-		try {
+		/*try {
 			FileInputStream serviceAccount = new FileInputStream(
-					"D:\\ProjetToget\toget-2b431-firebase-adminsdk-307vo-fa2bb111f5");
+					"D://ProjetToget/kamssa-1518387828762-firebase-adminsdk-fudl9-3f3763ec64");
 
 			FirebaseOptions options = new FirebaseOptions.Builder()
 					.setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -45,7 +61,7 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 			System.out.println("test firebase ");
 		} catch (Exception e) {
 			// TODO: handle exception
-		}
+		}*/
 	}
 
 	@Override
@@ -111,5 +127,7 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 		 * System.out.println("abonne ab1 Creer:"+ab1.getLogin());
 		 * System.out.println("abonne ab2 Creer:"+ab2.getLogin());
 		 */
+		
+		
 	}
 }

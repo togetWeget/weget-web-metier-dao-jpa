@@ -8,12 +8,18 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,15 +27,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.UserRecord;
 
 import ci.weget.web.entites.Block;
 import ci.weget.web.entites.Commande;
@@ -40,20 +43,26 @@ import ci.weget.web.metier.IAppRoleMetier;
 import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IMembreMetier;
 import ci.weget.web.modeles.Reponse;
-import ci.weget.web.security.AppRoles;
+import ci.weget.web.security.JwtTokenProvider;
 import ci.weget.web.utilitaires.ApiResponse;
+import ci.weget.web.utilitaires.JwtAuthenticationResponse;
 import ci.weget.web.utilitaires.Static;
+
 
 @RestController
 @CrossOrigin(origins = "*")
 public class MembreController {
 
 	@Autowired
+    AuthenticationManager authenticationManager;
+	@Autowired
 	private IMembreMetier membreMetier;
 	@Autowired
 	private IAppRoleMetier roleMetier;
 	@Autowired
 	private IBlocksMetier blocksMetier;
+	@Autowired
+    JwtTokenProvider tokenProvider;
 
 	@Autowired
 	private ObjectMapper jsonMapper;
@@ -118,59 +127,39 @@ public class MembreController {
 		// ok
 		return new Reponse<Block>(0, null, block);
 	}
+	 @PostMapping("/signin")
+	    public ResponseEntity<?> authenticateUser(@Valid @RequestBody Personne personne) {
+
+	        Authentication authentication = authenticationManager.authenticate(
+	                new UsernamePasswordAuthenticationToken(personne.getLogin(),
+	                        personne.getPassword()
+	                       
+	                )
+	        );
+
+	        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+	        String jwt = tokenProvider.generateToken(authentication);
+	        return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+	    }
 
 	// enregistrer un membre dans la base de donnee
 	@PostMapping("/signup")
-	@ResponseStatus(code = HttpStatus.CREATED)
-	public String registerUser(@RequestBody Personne entite) throws Exception {
-		Reponse<ResponseEntity<?>> responseEntity;
-		Reponse<ResponseEntity<ApiResponse>> responseEntityApi;
-		ResponseEntity<ApiResponse> resApi;
-		Reponse<Personne> reponse;
-		Reponse<Personne> reponse2;
-		// creer un utilisateur dans firebase 
-		Reponse<UserRecord> reponseFirebase;
-		UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(entite.getLogin());
-		// verifier d'abord si l'utiloisateur existe avec son mail ici le login est le mail
-		/*if (userRecord.getUid() == null) {
-			// si il n'existe pas on le creer
-			UserRecord record = membreMetier.createUser(entite);
-			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s firebase a ete creer avec succee", record.getUid()));
-			// on retourne l'utilisateur dans la reponse 
-			reponseFirebase = new Reponse<UserRecord>(0, messages, record);
-		} */
+    public ResponseEntity<?> registerUser(@Valid @RequestBody Personne personne) throws InvalideTogetException {
+        if(membreMetier.findByLogin(personne.getLogin()) != null) {
+            return new ResponseEntity<Object>(new ApiResponse(false, "login is already taken!"),
+                    HttpStatus.BAD_REQUEST);
+        }
 
-		try {
-            // on creer l'utilisateur dans la base de donne mysql
-			Personne p1 = membreMetier.creer(entite);
+        Personne result = membreMetier.creer(personne);
 
-			// mettre le statut a membre
-			reponse2 = getMembreById(p1.getId());
-			// recuperer la personne
-			Personne p3 = reponse2.getBody();
-			// recupere le role qui a pour nom membre
-			AppRoles roleMembre = roleMetier.findRoleByNom("membre");
-           // associe l'utilisateur au role membre
-			membreMetier.addRoleToUser(p3.getLogin(), roleMembre.getNom());
-			
-			URI location = ServletUriComponentsBuilder
-	                .fromCurrentContextPath().path("/api/users/{username}")
-	                .buildAndExpand(p1.getLogin()).toUri();
-			resApi= ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentContextPath().path("/api/users/{username}")
+                .buildAndExpand(result.getLogin()).toUri();
 
-			// membreMetier.modifier(p3);
-			List<String> messages = new ArrayList<>();
-			messages.add(String.format("%s à été créer avec succes avec statut membres", p1.getLogin()));
-			responseEntity = new Reponse<ResponseEntity<?>>(0, messages, resApi);
-
-		} catch (InvalideTogetException e) {
-
-			responseEntity = new Reponse<ResponseEntity<?>>(1, Static.getErreursForException(e), null);
-
-		}
-		return jsonMapper.writeValueAsString(responseEntity);
-	}
+        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    
+}
 
 	// mettre a jour un membre
 	@PutMapping("/membres")

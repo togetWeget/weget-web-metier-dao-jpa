@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import ci.weget.web.dao.PersonnesRepository;
+import ci.weget.web.entites.Membre;
 import ci.weget.web.entites.Personne;
+
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService{
@@ -19,13 +21,13 @@ public class CustomUserDetailsService implements UserDetailsService{
     @Transactional
     public UserDetails loadUserByUsername(String login)
             throws UsernameNotFoundException {
-        // Let people login with either username or email
-        Personne personne = personnesRepository.findByLogin(login);
-        		if (personne==null) {
-        			new UsernameNotFoundException("User not found with username or email : " + login);
+        // recuperer une personne a partir de son login
+        Membre user = personnesRepository.findByLogin(login);
+        		if (user==null) {
+        			new UsernameNotFoundException("User not found with login: " + login);
         		}
 
-        return UserPrincipal.create(personne);
+        return UserPrincipal.create(user);
     }
 
     @Transactional

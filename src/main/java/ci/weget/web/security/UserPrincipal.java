@@ -1,9 +1,8 @@
 package ci.weget.web.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,32 +15,27 @@ import ci.weget.web.entites.AbstractEntity;
 import ci.weget.web.entites.Personne;
 import ci.weget.web.metier.IAdminMetier;
 
-public class UserPrincipal extends AbstractEntity implements UserDetails {
+public class UserPrincipal  implements UserDetails {
 
-	private static final long serialVersionUID = 1L;
 	
+	private static final long serialVersionUID = 1L;
+
+	private Long id;
+
 	@Autowired
 	private static IAdminMetier adminMetier;
-	
-    private String login;
+
+	private String login;
 
 	@JsonIgnore
 	private String password;
 
-	@JsonIgnore
-	private String repassword;
+	
 
 	private Collection<? extends GrantedAuthority> authorities;
 
-	public UserPrincipal(String login, String password,String repassword,
-			Collection<? extends GrantedAuthority> authorities) {
-		this.login = login;
-		this.password = password;
-		this.repassword = repassword;
-        this.authorities = authorities;
-	}
-
-	public UserPrincipal(String login, String password, Collection<? extends GrantedAuthority> authorities) {
+	
+public UserPrincipal(String login, String password, Collection<? extends GrantedAuthority> authorities) {
 		super();
 		this.login = login;
 		this.password = password;
@@ -49,55 +43,90 @@ public class UserPrincipal extends AbstractEntity implements UserDetails {
 	}
 
 	public static UserPrincipal create(Personne user) {
-		Collection<GrantedAuthority> authorities = new ArrayList<>();
-		List<AppRoles> roles = adminMetier.getRoles(user.getId());
-		roles.forEach(r -> {
-			authorities.add(new SimpleGrantedAuthority(r.getNom()));
-		});
-		return new UserPrincipal(user.getLogin(), user.getPassword(), authorities);
+			List<GrantedAuthority> authorities = adminMetier.getRoles(user.getId()).stream()
+				.map(role -> new SimpleGrantedAuthority(role.getNom()))
+				.collect(Collectors.toList());
+		return new UserPrincipal(
+                user.getLogin(),
+                 user.getPassword(),
+                authorities
+        );
 
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
+
 		return authorities;
 	}
 
 	@Override
 	public String getPassword() {
-		
+
 		return password;
 	}
 
 	@Override
 	public String getUsername() {
-		
+
 		return login;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		
+
 		return true;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		
+
 		return true;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		
+
 		return true;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		
+
 		return true;
+	}
+	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public static IAdminMetier getAdminMetier() {
+		return adminMetier;
+	}
+
+	public static void setAdminMetier(IAdminMetier adminMetier) {
+		UserPrincipal.adminMetier = adminMetier;
+	}
+
+	public String getLogin() {
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public void setAuthorities(Collection<? extends GrantedAuthority> authorities) {
+		this.authorities = authorities;
 	}
 
 	@Override
@@ -107,7 +136,7 @@ public class UserPrincipal extends AbstractEntity implements UserDetails {
 		result = prime * result + ((authorities == null) ? 0 : authorities.hashCode());
 		result = prime * result + ((login == null) ? 0 : login.hashCode());
 		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((repassword == null) ? 0 : repassword.hashCode());
+		
 		return result;
 	}
 
@@ -135,13 +164,8 @@ public class UserPrincipal extends AbstractEntity implements UserDetails {
 				return false;
 		} else if (!password.equals(other.password))
 			return false;
-		if (repassword == null) {
-			if (other.repassword != null)
-				return false;
-		} else if (!repassword.equals(other.repassword))
-			return false;
+		
 		return true;
 	}
 
-	
 }

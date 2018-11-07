@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -28,8 +27,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    CustomUserDetailsService customUserDetailsService;
 
 	    @Autowired
-	    private JwtAuthenticationEntryPoint unauthorizedHandler;
-
+	    private JwtAuthenticationEntryPoint  unauthorizedHandler;
+	    @Autowired
+		private BCryptPasswordEncoder bCryptPasswordEncoder;
 	    @Bean
 	    public JWTAuthenticationFilter jwtAuthenticationFilter() {
 	        return new JWTAuthenticationFilter();
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	    public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
 	        authenticationManagerBuilder
 	                .userDetailsService(customUserDetailsService)
-	                .passwordEncoder(passwordEncoder());
+	                .passwordEncoder(bCryptPasswordEncoder);
 	    }
 
 	    @Bean(BeanIds.AUTHENTICATION_MANAGER)
@@ -48,10 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	        return super.authenticationManagerBean();
 	    }
 
-	    @Bean
-	    public PasswordEncoder passwordEncoder() {
-	        return new BCryptPasswordEncoder();
-	    }
+	   
 
 	    @Override
 	    protected void configure(HttpSecurity http) throws Exception {
@@ -77,7 +74,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	                        "/**/*.css",
 	                        "/**/*.js")
 	                        .permitAll()
-	                    .antMatchers("/signin/**","/blocks/**","/signup/**")
+	                    .antMatchers("/blocks/**","/signup/**","/signin/**")
 	                        .permitAll()
 	                    .antMatchers("/api/user/checkUsernameAvailability", "/api/user/checkEmailAvailability")
 	                        .permitAll()

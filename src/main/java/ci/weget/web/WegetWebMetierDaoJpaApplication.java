@@ -11,6 +11,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.UserRecord;
+import com.google.firebase.auth.UserRecord.CreateRequest;
 
 @SpringBootApplication
 public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
@@ -33,9 +36,9 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 
 	public static void main(String[] args) {
 		SpringApplication.run(WegetWebMetierDaoJpaApplication.class, args);
-		try {
+		/*try {
 			FileInputStream serviceAccount = new FileInputStream(
-					"D:\\ProjetToget\toget-2b431-firebase-adminsdk-307vo-fa2bb111f5");
+					"D://ProjetToget/kamssa-1518387828762-firebase-adminsdk-fudl9-3f3763ec64");
 
 			FirebaseOptions options = new FirebaseOptions.Builder()
 					.setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -45,7 +48,7 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 			System.out.println("test firebase ");
 		} catch (Exception e) {
 			// TODO: handle exception
-		}
+		}*/
 	}
 
 	@Override
@@ -111,5 +114,7 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 		 * System.out.println("abonne ab1 Creer:"+ab1.getLogin());
 		 * System.out.println("abonne ab2 Creer:"+ab2.getLogin());
 		 */
+		
+		
 	}
 }

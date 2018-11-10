@@ -13,8 +13,7 @@ import ci.weget.web.exception.InvalideTogetException;
 
 @Service
 public class BlocksMetierImpl implements IBlocksMetier {
-	@Autowired
-	private DetailBlocksRepository detailBlocksRepository;
+	
 	@Autowired
 	private BlocksRepository blocksRepository;
 

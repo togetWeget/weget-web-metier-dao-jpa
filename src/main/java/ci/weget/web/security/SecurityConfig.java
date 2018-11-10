@@ -20,15 +20,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailsService userDetailsService;
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	 
+	 @Autowired
+	 private JwtAuthenticationEntryPoint unauthorizedHandler;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		// auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
-		/*
-		 * auth.inMemoryAuthentication()
-		 * .withUser("admin").password("{noop}1234").roles("ADMIN","USER") .and()
-		 * .withUser("user").password("{noop}1234").roles("USER");
-		 */
+		
 		auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
 	}
 
@@ -37,19 +35,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-		// http.formLogin();
-
-		http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**","/fichierCv/**","/sousBlocks/**","/SousBlocksParBlock/**",
-				"/personnesparId/**","/rechercheBlock/**","/panierParPersonne/**","/blocks/**","/photoCouvertureMembre/**","/gallery/**","/nombreVue/**",
-				"/photoBlock/**","/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**","/detailBlock/**","/getPhotoMembre/**","/photoGallery/**",
-				"/envoiemessages/**","/categoryBlocks/**","/position/**",
+        http.authorizeRequests().antMatchers("/login/**","/roleParPersonne/**","/ajouterUR/**","/fichierCv/**","/sousBlocks/**","/SousBlocksParIdDetailBlock/**","/document/**",
+				"/personnesparId/**","/rechercheBlock/**","/panierParPersonne/**","/blocks/**","/photoCouvertureMembre/**","/gallery/**","/nombreVue/**","/sousblockDocument/**",
+				"/getPhotoBlock/**","/membresLogin/**","/typePersonnes/**","/detailBlock/**","/getPhotoMembre/**","/photoGallery/**","/detailBlockParIdBlock/**","/getsoublockDocument/**",
+				"/envoiemessages/**","/categoryBlocks/**","/position/**","/flashInfo/**","/flashInfoSousBlock/**","/formations/**","/formationSousBlock/**",
 				"/tarifsBlocksId/**","/tarifs/**","/ajouterDb/**","/Personneblocks/**","/profilAbonneLogin/**","/messageries/**","/cursus/**","/messages/**",
-				"/profil/**","/tousLesAbonnesParBlock/**","/panier/**","/tousLesBlockParAbonne/**","/misAjourProfil/**","/message/**","/experience/**",
-				"/rechercheParComptence/**","/partenaire/**","/chiffre/**","/temoignage/**",
-				"/abonnes/**","/admin/**","/abonneParblocks/**","/membres/**","/photoMembre/**","/getPhotoCouvertureMembre/**").permitAll();
+				"/profil/**","/tousLesAbonnesParBlock/**","/tousLesBlockParAbonne/**","/misAjourProfil/**","/message/**","/experience/**","/documentCompetence/**",
+				"/getDocCompetence/**","/SousBlocksParIdBlock/**","/sousBlockphotoCouverture/**","/getPhotoCouvertureSousBlock/**","/sousBlockLogo/**","/getPhotoLogoSousBlock/**",
+				"/rechercheParComptence/**","/partenaire/**","/chiffre/**","/temoignage/**","/panier/**","/blocks/**","/photoBlock/**","/photoDocumentCompetence/**",
+				"/abonnes/**","/admin/**","/abonneParblocks/**","/membres/**","/photoMembre/**","/getPhotoCouvertureMembre/**","/videoGallerySousBlock/**","/photoVideoMembre/**",
+				"/getSoublockVideo/**","/getMembresVideo/**","/galleryParIdSousBlock/**","/galleryParIdMembre/**",
+				"/documentParIdSousBlock/**","/photoGallerySouBlock/**","/photoGalleryMembre/**","/getSoublockGallery/**","/getMembresGallery/**").permitAll();
 		  http.authorizeRequests().antMatchers("/membres/**").permitAll();
 		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("ADMIN");
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/photoBlock/**").hasAuthority("ADMIN");
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/documentCompetence/**").hasAuthority("ADMIN");
+		  http.authorizeRequests().antMatchers(HttpMethod.GET, "/documentCompetence/**").hasAuthority("MEMBRE");
+		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/documentCompetence/**").hasAuthority("MEMBRE");
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/sousblockDocument/**").hasAuthority("ADMIN");
+		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/sousblockDocument/**").hasAuthority("MEMBRE");
 
 		  http.authorizeRequests().antMatchers(HttpMethod.PUT, "/blocks/**").hasAuthority("ADMIN");
 		  http.authorizeRequests().antMatchers(HttpMethod.POST, "/blocks/**").hasAuthority("MEMBRE");

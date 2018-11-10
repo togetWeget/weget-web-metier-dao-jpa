@@ -21,12 +21,9 @@ import ci.weget.web.entites.Personne;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-
-
 public class JWTAutenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	private AuthenticationManager authenticationManager;
-	
 
 	public JWTAutenticationFilter(AuthenticationManager authenticationManager) {
 		super();
@@ -60,10 +57,10 @@ public class JWTAutenticationFilter extends UsernamePasswordAuthenticationFilter
 			Authentication authResult) throws IOException, ServletException {
 		User springUser = (User) authResult.getPrincipal();
 		String jwt = Jwts.builder().setSubject(springUser.getUsername())
-				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+				.setExpiration(new Date(System.currentTimeMillis() + 86400000))
 				.signWith(SignatureAlgorithm.HS256, SecurityConstants.SECRET)
 				.claim("roles", springUser.getAuthorities()).compact();
-		        response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + jwt);
+		response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + jwt);
 
 	}
 }

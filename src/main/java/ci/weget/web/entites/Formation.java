@@ -1,10 +1,13 @@
 package ci.weget.web.entites;
 
+import java.util.List;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -20,8 +23,10 @@ public class Formation extends AbstractEntity {
 	private String dureeFormation;
 	private String diplome;
 	private String formation_prix;
-
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.MERGE)
+	@JoinColumn(name = "id_Formatiom")
+	private List<Cour> cour;
+	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "id_SousBlock")
 	private SousBlock sousBlock;
 
@@ -92,5 +97,14 @@ public class Formation extends AbstractEntity {
 	public void setSousBlock(SousBlock sousBlock) {
 		this.sousBlock = sousBlock;
 	}
+
+	public List<Cour> getCour() {
+		return cour;
+	}
+
+	public void setCour(List<Cour> cour) {
+		this.cour = cour;
+	}
+
 
 }

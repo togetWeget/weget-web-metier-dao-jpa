@@ -8,6 +8,7 @@ import ci.weget.web.security.AppRoles;
 
 
 public interface RoleRepository extends JpaRepository<AppRoles, Long>{
+	
 	// recherche d'un rôle via son nom
 	   @Query("select r from AppRoles r where r.nom=?1")
 		AppRoles findByNom(String roleName);

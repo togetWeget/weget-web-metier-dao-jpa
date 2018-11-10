@@ -1,12 +1,11 @@
 package ci.weget.web.dao;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import ci.weget.web.entites.Document;
 import ci.weget.web.entites.Gallery;
+
 
 public interface GalleryRepository extends JpaRepository<Gallery, Long> {
 	// rechercher une gallery a partir de son libelle

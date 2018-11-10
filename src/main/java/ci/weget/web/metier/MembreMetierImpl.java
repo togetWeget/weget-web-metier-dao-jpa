@@ -71,9 +71,9 @@ public class MembreMetierImpl implements IMembreMetier {
 
 	@Override
 	public Personne creer(Personne p) throws InvalideTogetException {
-		if (!p.getPassword().equals(p.getRepassword())) {
+		/*if (!p.getPassword().equals(p.getRepassword())) {
 			throw new InvalideTogetException("Vous devez remplir des mots de passe identique");
-		}
+		}*/
 		Personne pers = null;
 
 		pers = personnesRepository.findByLogin(p.getLogin());
@@ -126,8 +126,8 @@ public class MembreMetierImpl implements IMembreMetier {
 		AppRoles appRole = roleRepository.findByNom(roleName);
 		UserRoles userRole = new UserRoles(personne, appRole);
 		userRoleRepository.save(userRole);
-		List<AppRoles> roles = personnesRepository.getRoles(personne.getId());
-		roles.add(appRole);
+		/*List<AppRoles> roles = personnesRepository.getRoles(personne.getId());
+		roles.add(appRole);*/
 
 	}
 

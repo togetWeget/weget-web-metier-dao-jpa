@@ -4,14 +4,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,13 +46,18 @@ import ci.weget.web.metier.IAppRoleMetier;
 import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IMembreMetier;
 import ci.weget.web.modeles.Reponse;
-import ci.weget.web.security.AppRoles;
+import ci.weget.web.security.JwtTokenProvider;
+import ci.weget.web.utilitaires.ApiResponse;
+import ci.weget.web.utilitaires.JwtAuthenticationResponse;
 import ci.weget.web.utilitaires.Static;
+
 
 @RestController
 @CrossOrigin(origins = "*")
 public class MembreController {
 
+	@Autowired
+    AuthenticationManager authenticationManager;
 	@Autowired
 	private IMembreMetier membreMetier;
 	@Autowired
@@ -141,14 +155,16 @@ public class MembreController {
 			// recupere le role qui a pour nom membre
 			AppRoles roleMembre = roleMetier.findRoleByNom("membre");
 
-			membreMetier.addRoleToUser(p3.getLogin(), roleMembre.getNom());
+        Personne result = membreMetier.creer(personne);
 
 			// membreMetier.modifier(p3);
 			List<String> message = new ArrayList<>();
 			messages.add(String.format("%s à été créer avec succes avec statut membres", p1.getLogin()));
 			reponse = new Reponse<Personne>(0, message, p3);
 
-		} catch (InvalideTogetException e) {
+        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+    
+}
 
 			reponse = new Reponse<Personne>(1, Static.getErreursForException(e), null);
 

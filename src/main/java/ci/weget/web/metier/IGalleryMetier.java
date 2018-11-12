@@ -1,5 +1,7 @@
 package ci.weget.web.metier;
 
+import java.util.List;
+
 import ci.weget.web.entites.Gallery;
 
 

@@ -66,12 +66,8 @@ public class GalleryController {
 		return new Reponse<Gallery>(0, null, gallery);
 
 	}
-	private Reponse<Gallery> getGalleryById(final Long id) {
-		Gallery gallery = null;
-		try {
-			gallery = galleryMetier.findById(id);
-
-	private Reponse<Gallery> getGalleryById(final Long id) {
+	
+private Reponse<Gallery> getGalleryById(final Long id) {
 		Gallery gallery = null;
 		try {
 			gallery = galleryMetier.findById(id);

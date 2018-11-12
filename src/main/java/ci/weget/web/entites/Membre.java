@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "T_Membre")
 @DiscriminatorValue("ME")
-public class Membre extends Personne {
+public class Membre extends Personne   {
 
 	private static final long serialVersionUID = 1L;
 	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -53,6 +53,8 @@ public class Membre extends Personne {
 		super(login, password);
 		// TODO Auto-generated constructor stub
 	}
+	
+
 
 	public String getDescription() {
 		return description;

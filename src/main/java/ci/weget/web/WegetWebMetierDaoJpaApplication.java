@@ -1,11 +1,16 @@
 package ci.weget.web;
 
 import java.io.FileInputStream;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.google.auth.oauth2.GoogleCredentials;
@@ -16,6 +21,10 @@ import com.google.firebase.auth.UserRecord;
 import com.google.firebase.auth.UserRecord.CreateRequest;
 
 @SpringBootApplication
+@EntityScan(basePackageClasses = { 
+		WegetWebMetierDaoJpaApplication.class,
+		Jsr310JpaConverters.class 
+})
 public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 	/*
 	 * @Autowired private AccountService accountService;
@@ -29,11 +38,11 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 	/*
 	 * @Autowired private IBlocksMetier blockMetier;
 	 */
-	@Bean
-	public BCryptPasswordEncoder getBCPE() {
-		return new BCryptPasswordEncoder();
+	@PostConstruct
+	void init() {
+		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	}
-
+	
 	public static void main(String[] args) {
 		SpringApplication.run(WegetWebMetierDaoJpaApplication.class, args);
 		/*try {

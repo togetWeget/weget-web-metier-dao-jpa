@@ -1,6 +1,8 @@
 package ci.weget.web.security;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Table;
 
 import ci.weget.web.entites.AbstractEntity;
@@ -11,8 +13,8 @@ import ci.weget.web.entites.AbstractEntity;
 @Table(name="T_Roles")
 public class AppRoles extends AbstractEntity {
 
+	
 	private static final long serialVersionUID = 1L;
-    
 	private String nom;
 	private String description;
 	public AppRoles() {
@@ -43,14 +45,10 @@ public class AppRoles extends AbstractEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
-
+	
 	@Override
 	public String toString() {
 		return "AppRoles [nom=" + nom + ", description=" + description + "]";
 	}
-	
 	
 }

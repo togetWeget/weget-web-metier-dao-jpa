@@ -72,9 +72,21 @@ private SousBlocksRepository sousBlocksRepository;
 	}
 
 	@Override
+	public SousBlock findSousBlockParIdDetailBlock(Long id) {
+		
+		return sousBlocksRepository.findSousBlockParIdDetailBlock(id);
+	}
+
+	@Override
 	public List<SousBlock> findSousBlockParIdBlock(Long id) {
 		
 		return sousBlocksRepository.findSousBlockParIdBlock(id);
+	}
+
+	@Override
+	public SousBlock findSousBlockParNom(String nom) {
+		
+		return sousBlocksRepository.findSousBlockParNom(nom);
 	}
 
 }

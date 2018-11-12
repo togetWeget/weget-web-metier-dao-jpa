@@ -18,8 +18,16 @@ public interface SousBlocksRepository extends JpaRepository<SousBlock, Long> {
 	@Query("select sb from SousBlock sb where sb.nom like %:x%")
 	List<SousBlock> chercherSousBlockParMc(@Param("x") String mc);
 
-	// ramener les sous blocks a partir de id de block
+	// ramener les sous blocks a partir de id de detail block
 	@Query("select sb from SousBlock sb  where sb.detailBlock.id=?1")
+	SousBlock findSousBlockParIdDetailBlock(Long id);
+
+	// rechercher les sous blocks par block
+	@Query("select sb from SousBlock sb  where sb.idBlock=?1")
 	List<SousBlock> findSousBlockParIdBlock(Long id);
+
+	// rechercher les sous blocks par libelle
+	@Query("select sb from SousBlock sb  where sb.nom=?1")
+	SousBlock findSousBlockParNom(String nom);
 
 }

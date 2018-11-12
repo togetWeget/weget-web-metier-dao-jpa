@@ -9,8 +9,8 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,18 +23,19 @@ public class SousBlock extends AbstractEntity {
 	private String refSousBlock;
 	private String presentation;
 	private String description;
+
 	@ElementCollection
-	private List<String> pathPhoto = new ArrayList<>();
+	private List<String> pathPhotoCouverture;
 	private String pathLogo;
 	@Embedded
 	private Adresse adresse;
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_Telephones")
 	private List<Telephone> telephones;
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
 	@JoinColumn(name = "id_detailBlock")
 	private DetailBlock detailBlock;
-	
+
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_SouBlock")
 	private List<Chiffre> chiffre;
@@ -44,6 +45,33 @@ public class SousBlock extends AbstractEntity {
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_SouBlock")
 	private List<Temoignage> temoignage;
+	private Long idBlock;
+
+	public SousBlock() {
+		super();
+
+	}
+
+	public SousBlock(String nom, String typeEtablissement, String refSousBlock, String presentation, String description,
+			List<String> pathPhotoCouverture, String pathLogo, Adresse adresse, List<Telephone> telephones,
+			DetailBlock detailBlock, List<Chiffre> chiffre, List<Partenaire> partenaire, List<Temoignage> temoignage,
+			Long idBlock) {
+		super();
+		this.nom = nom;
+		this.typeEtablissement = typeEtablissement;
+		this.refSousBlock = refSousBlock;
+		this.presentation = presentation;
+		this.description = description;
+		this.pathPhotoCouverture = pathPhotoCouverture;
+		this.pathLogo = pathLogo;
+		this.adresse = adresse;
+		this.telephones = telephones;
+		this.detailBlock = detailBlock;
+		this.chiffre = chiffre;
+		this.partenaire = partenaire;
+		this.temoignage = temoignage;
+		this.idBlock = idBlock;
+	}
 
 	public String getPresentation() {
 		return presentation;
@@ -71,18 +99,6 @@ public class SousBlock extends AbstractEntity {
 
 	public DetailBlock getDetailBlock() {
 		return detailBlock;
-	}
-
-	public void setDetailBlock(DetailBlock detailBlock) {
-		this.detailBlock = detailBlock;
-	}
-
-	public List<String> getPathPhoto() {
-		return pathPhoto;
-	}
-
-	public void setPathPhoto(List<String> pathPhoto) {
-		this.pathPhoto = pathPhoto;
 	}
 
 	public String getNom() {
@@ -147,6 +163,35 @@ public class SousBlock extends AbstractEntity {
 
 	public void setTemoignage(List<Temoignage> temoignage) {
 		this.temoignage = temoignage;
+	}
+
+	public Long getIdBlock() {
+		return idBlock;
+	}
+
+	public void setIdBlock(Long idBlock) {
+		this.idBlock = idBlock;
+	}
+
+	public List<String> getPathPhotoCouverture() {
+		return pathPhotoCouverture;
+	}
+
+	public void setPathPhotoCouverture(List<String> pathPhotoCouverture) {
+		this.pathPhotoCouverture = pathPhotoCouverture;
+	}
+
+	public void setDetailBlock(DetailBlock detailBlock) {
+		this.detailBlock = detailBlock;
+	}
+
+	@Override
+	public String toString() {
+		return "SousBlock [nom=" + nom + ", typeEtablissement=" + typeEtablissement + ", refSousBlock=" + refSousBlock
+				+ ", presentation=" + presentation + ", description=" + description + ", pathPhotoCouverture="
+				+ pathPhotoCouverture + ", pathLogo=" + pathLogo + ", adresse=" + adresse + ", telephones=" + telephones
+				+ ", detailBlock=" + detailBlock + ", chiffre=" + chiffre + ", partenaire=" + partenaire
+				+ ", temoignage=" + temoignage + ", idBlock=" + idBlock + "]";
 	}
 
 }

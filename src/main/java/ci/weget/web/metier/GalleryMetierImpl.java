@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import ci.weget.web.dao.GalleryRepository;
 import ci.weget.web.entites.Gallery;
-import ci.weget.web.entites.PhotoGallery;
+
 import ci.weget.web.exception.InvalideTogetException;
 
 @Service
@@ -29,13 +29,13 @@ public class GalleryMetierImpl implements IGalleryMetier{
 	@Override
 	public List<Gallery> findAll() {
 		// TODO Auto-generated method stub
-		return null;
+		return galleryRepository.findAll();
 	}
 
 	@Override
 	public Gallery findById(Long id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return galleryRepository.chercherGalleryParId(id);
 	}
 
 	@Override
@@ -60,6 +60,18 @@ public class GalleryMetierImpl implements IGalleryMetier{
 	public Gallery chercherGalleryParLibelle(String libelle) {
 		
 		return galleryRepository.chercherGalleryParLibelle(libelle) ;
+	}
+
+	@Override
+	public List<Gallery> findGalleryParIdSouBlock(Long id) {
+		
+		return galleryRepository.findGallerieParIdSouBlock(id);
+	}
+
+	@Override
+	public List<Gallery> findGalleryParIdMembre(Long id) {
+		
+		return galleryRepository.findGallerieParIdMembre(id);
 	}
 
 /*	@Override

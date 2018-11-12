@@ -100,11 +100,7 @@
 			<artifactId>firebase-admin</artifactId>
 			<version>6.4.0</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.firebase</groupId>
-			<artifactId>firebase-server-sdk</artifactId>
-			<version>0.0.3</version>
-		</dependency>
+		
 
 		<dependency>
 			<groupId>commons-lang</groupId>

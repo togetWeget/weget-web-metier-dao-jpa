@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
+import org.h2.util.New;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -53,12 +54,12 @@ public class BlocksController {
 		try {
 			block = blocksMetier.findById(id);
 		} catch (RuntimeException e) {
-			new Reponse<>(1, Static.getErreursForException(e), null);
+			new Reponse<Block>(1, Static.getErreursForException(e), null);
 		}
 		if (block == null) {
 			List<String> messages = new ArrayList<>();
-			messages.add(String.format("la matiere n'existe pas", id));
-			new Reponse<>(2, messages, null);
+			messages.add(String.format("le block demande n'existe pas", id));
+			new Reponse<Block>(2, messages, null);
 
 		}
 		return new Reponse<Block>(0, null, block);
@@ -147,7 +148,7 @@ public class BlocksController {
 			List<Block> mats = blocksMetier.findAll();
 			reponse = new Reponse<List<Block>>(0, null, mats);
 		} catch (Exception e) {
-			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+			reponse = new Reponse<List<Block>>(1, Static.getErreursForException(e), new ArrayList<>());
 		}
 		return jsonMapper.writeValueAsString(reponse);
 
@@ -160,14 +161,14 @@ public class BlocksController {
 			List<Personne> pers = blocksMetier.getPersonnes(id);
 			reponse = new Reponse<List<Personne>>(0, null, pers);
 		} catch (Exception e) {
-			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+			reponse = new Reponse<List<Personne>>(1, Static.getErreursForException(e), new ArrayList<>());
 		}
 		return jsonMapper.writeValueAsString(reponse);
 
 	}
 
 	/////////////////////////////////////////////////////////////////////////////////
-	// renvoie un block par son
+	// renvoie un block par son identifiant
 	///////////////////////////////////////////////////////////////////////////////// identifiant//////////////////////////////////////////
 	@GetMapping("/blocks/{id}")
 	public String chercherBlockParId(@PathVariable Long id) throws JsonProcessingException {

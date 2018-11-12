@@ -4,10 +4,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -20,10 +25,12 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import ci.weget.web.entites.Personne;
 import ci.weget.web.entites.SousBlock;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.ISousBlockMetier;
@@ -65,21 +72,21 @@ public class SousBlocksController {
 	///////////////// recuperer unn block a partir de son libelle
 	///////////////////////////////////////////////////////////////////////////////////////////// ///////////////////////////////
 
-	/*private Reponse<SousBlock> getSousBlockParLibellle(String libelle) {
+	private Reponse<SousBlock> getSousBlockParNom(String nom) {
 		SousBlock sousBlock = null;
 		try {
-			sousBlock = sousBlocksMetier.rechercheSousBlockParLibelle(libelle);
+			sousBlock = sousBlocksMetier.findSousBlockParNom(nom);
 		} catch (RuntimeException e) {
-			new Reponse<Block>(1, Static.getErreursForException(e), null);
+			new Reponse<SousBlock>(1, Static.getErreursForException(e), null);
 		}
 		if (sousBlock == null) {
 			List<String> messages = new ArrayList<>();
-			messages.add(String.format("le block n'exixte pas", libelle));
+			messages.add(String.format("le block n'exixte pas", nom));
 			return new Reponse<SousBlock>(2, messages, null);
 		}
 		return new Reponse<SousBlock>(0, null, sousBlock);
 	}
-*/
+
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////// enregistrer un block dans la base de donnee
 	////////////////////////////////////////////////////////////////////////////////////////////// donnee////////////////////////////////
@@ -111,19 +118,16 @@ public class SousBlocksController {
 		Reponse<SousBlock> reponse = null;
 
 		// on recupere la personne a modifier
-		
-		
-			try {
-				SousBlock sb2 = sousBlocksMetier.modifier(modif);
-				List<String> messages = new ArrayList<>();
-				messages.add(String.format("%s a modifier avec succes", sb2.getId()));
-				reponse = new Reponse<SousBlock>(0, messages, sb2);
-			} catch (InvalideTogetException e) {
 
-				reponse = new Reponse<SousBlock>(1, Static.getErreursForException(e), null);
-			}
+		try {
+			SousBlock sb2 = sousBlocksMetier.modifier(modif);
+			List<String> messages = new ArrayList<>();
+			messages.add(String.format("%s a modifier avec succes", sb2.getId()));
+			reponse = new Reponse<SousBlock>(0, messages, sb2);
+		} catch (InvalideTogetException e) {
 
-		
+			reponse = new Reponse<SousBlock>(1, Static.getErreursForException(e), null);
+		}
 
 		return jsonMapper.writeValueAsString(reponse);
 
@@ -139,20 +143,41 @@ public class SousBlocksController {
 			List<SousBlock> mats = sousBlocksMetier.findAll();
 			reponse = new Reponse<List<SousBlock>>(0, null, mats);
 		} catch (Exception e) {
+			reponse = new Reponse<List<SousBlock>>(1, Static.getErreursForException(e), new ArrayList<>());
+		}
+		return jsonMapper.writeValueAsString(reponse);
+
+	}
+
+	//////////// personnes d'un block par id
+	@GetMapping("/SousBlocksParIdDetailBlock/{id}")
+	public String getSousBlockParIdDetailBlock(@PathVariable Long id)
+			throws JsonProcessingException, InvalideTogetException {
+		Reponse<SousBlock> reponse;
+		try {
+			SousBlock sb = sousBlocksMetier.findSousBlockParIdDetailBlock(id);
+			reponse = new Reponse<SousBlock>(0, null, sb);
+			if (reponse.getBody() == null) {
+				throw new RuntimeException("pas d'enregistrement");
+			}
+		} catch (Exception e) {
 			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
 		}
 		return jsonMapper.writeValueAsString(reponse);
 
 	}
-	//////////// personnes d'un block par id
-	@GetMapping("/SousBlocksParBlock/{id}")
-	public String getPersonneBlock(@PathVariable Long id) throws JsonProcessingException, InvalideTogetException {
+
+	@GetMapping("/SousBlocksParIdBlock/{id}")
+	public String getSousBlockParIdBlock(@PathVariable Long id) throws JsonProcessingException, InvalideTogetException {
 		Reponse<List<SousBlock>> reponse;
 		try {
 			List<SousBlock> sb = sousBlocksMetier.findSousBlockParIdBlock(id);
 			reponse = new Reponse<List<SousBlock>>(0, null, sb);
+			if (reponse.getBody().isEmpty()) {
+				throw new RuntimeException("pas d'enregistrement");
+			}
 		} catch (Exception e) {
-			reponse = new Reponse<>(1, Static.getErreursForException(e), null);
+			reponse = new Reponse<>(1, Static.getErreursForException(e), new ArrayList<>());
 		}
 		return jsonMapper.writeValueAsString(reponse);
 
@@ -234,83 +259,164 @@ public class SousBlocksController {
 	////// ajouter une photo a la base a partir du libelle d'un block
 	///////////////////////////////////////////////////////////////////////////////////////////////// //////////////////////////////
 
-	/*@PostMapping("/sousBlockphoto")
-	public String creerPhoto(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
+	@PostMapping("/sousBlockphotoCouverture")
+	public String creerPhoto(@RequestParam(name = "image_photo[]") MultipartFile[] files, @RequestParam Long id)
+			throws Exception {
 		Reponse<SousBlock> reponse = null;
 		Reponse<SousBlock> reponseParLibelle;
-		// recuperer le libelle à partir du nom de la photo
-		String libelle = file.getOriginalFilename();
-		reponseParLibelle = getSousBlockParLibellle(libelle);
+		reponseParLibelle = getSousBlockById(id);
+
 		SousBlock sb = reponseParLibelle.getBody();
-		System.out.println(sb);
-
-		String path = "http://localhost:8080/getPhotoSousBlock/"+ sb.getVersion()+"/" + sb.getId();
-		System.out.println(path);
+		List<String> pathPhotoCouverture = new ArrayList<>();
 		if (reponseParLibelle.getStatus() == 0) {
-			String dossier = togetImage + "/";
+			String dossier = togetImage + "/" + "sousBlockPhotoCouverture" + "/";
 			File rep = new File(dossier);
-
-			if (!file.isEmpty()) {
-				if (!rep.exists() && !rep.isDirectory()) {
-					rep.mkdir();
-				}
-			}
-			try {
-				// enregistrer le chemin dans la photo
-				sb.setPathPhoto(path);
-				System.out.println(path);
-				file.transferTo(new File(dossier + sb.getId()));
-				List<String> messages = new ArrayList<>();
-				messages.add(String.format("%s (photo ajouter avec succes)", sb.getId()));
-				reponse = new Reponse<SousBlock>(0, messages, sousBlocksMetier.modifier(sb));
-
-			} catch (Exception e) {
-
-				reponse = new Reponse<SousBlock>(1, Static.getErreursForException(e), null);
+			if (!rep.exists() && !rep.isDirectory()) {
+				rep.mkdir();
 			}
 
-		} else {
-			List<String> messages = new ArrayList<>();
-			messages.add(String.format("cette personne n'existe pas"));
-			reponse = new Reponse<SousBlock>(reponseParLibelle.getStatus(), reponseParLibelle.getMessages(), null);
 		}
-		return jsonMapper.writeValueAsString(reponse);
-	}*/
+		for (MultipartFile file : files) {
 
+			System.out.println("Le nom du file dans le for" + file);
+			String libelle = file.getOriginalFilename();
+	       
+	        if (file.isEmpty()) {
+				 throw new Exception("impossible de charger un fichier vide "+file.getOriginalFilename() ); 
+			}
+	        
+	        
+			System.out.println("*******************************************");
+			System.out.println("les types de fichier" + file.getContentType());
+			System.out.println("********************************************");
+			String dossier = togetImage + "/" + "sousBlockPhotoCouverture" + "/" + libelle;
+			file.transferTo(new File(dossier));
+			String path = "http://wegetback:8080/getPhotoCouvertureSousBlock" + "/" + sb.getVersion() + "/" + sb.getId()
+					+ "/" + libelle;
+			pathPhotoCouverture.add(path);
+			sb.setPathPhotoCouverture(pathPhotoCouverture);
+			
+				
+			
+	        
+		}
+		reponse = new Reponse<SousBlock>(0, null, sousBlocksMetier.modifier(sb));
+
+		return jsonMapper.writeValueAsString(reponse);
+	}
+
+	// Multiple file upload
+	/*
+	 * @PostMapping("/sousBlockphotoCouverture") public String
+	 * uploadFileMulti(@RequestParam("image_photo") MultipartFile[]
+	 * multipartFiles, @RequestParam Long id) throws InvalideTogetException,
+	 * JsonProcessingException { Reponse<SousBlock> reponse = null;
+	 * Reponse<SousBlock> reponseParId; reponseParId = getSousBlockById(id); //
+	 * appartir de ce libelle on recupere la gallery SousBlock sb =
+	 * reponseParId.getBody(); String uploadedFileName =
+	 * Arrays.stream(multipartFiles) .map(x -> x.getOriginalFilename()) .filter(x ->
+	 * !StringUtils.isEmpty(x)) .collect(Collectors.joining(" , "));
+	 * 
+	 * if (StringUtils.isEmpty(uploadedFileName)) { List<String> messages = new
+	 * ArrayList<>(); messages.add(String.format(" Non effectue")); reponse = new
+	 * Reponse<SousBlock>(0, messages, null); }
+	 * 
+	 * try { String ok = saveUploadedFiles(Arrays.asList(multipartFiles));
+	 * List<String> messages = new ArrayList<>();
+	 * 
+	 * messages.add(String.format(" ok"));
+	 * 
+	 * reponse = new Reponse<SousBlock>(0, messages, sousBlocksMetier.modifier(sb));
+	 * 
+	 * } catch (IOException e) { reponse = new Reponse<SousBlock>(1,
+	 * Static.getErreursForException(e), null); }
+	 * 
+	 * return jsonMapper.writeValueAsString(reponse); }
+	 */
+	// Save single file
+	private String saveUploadedFiles(List<MultipartFile> files) throws Exception {
+		if (Files.notExists(Paths.get(togetImage + "/" + "sousBlockPhotoCouverture" + "/"))) {
+			init();
+		}
+
+		// String randomPath = "";
+
+		for (MultipartFile file : files) {
+			if (file.isEmpty()) {
+				 throw new Exception("impossible de charger un fichier vide "+file.getOriginalFilename() ); 
+			}
+			 String ext = file.getOriginalFilename();
+		        String[] extAutorise = {"mp4", "avi","ogg","ogv","jpg","jpeg","png","gif"};
+		        String fileNameTarget ="";
+		        if (ArrayUtils.contains(extAutorise, ext)) {
+		        	fileNameTarget = file.getOriginalFilename();
+		             fileNameTarget = fileNameTarget.replaceAll(" ", "_");
+		        	byte[] bytes = file.getBytes();
+
+					String fileName = file.getOriginalFilename();
+					Path path = Paths.get(togetImage + "/" + "sousBlockPhotoCouverture" + "/" + fileName);
+					Files.write(path, bytes);
+				}
+			
+		}
+
+		return null;
+	}
+
+	private void init() {
+		try {
+			Files.createDirectory(Paths.get(togetImage + "/" + "sousBlockPhotoCouverture" + "/"));
+		} catch (IOException e) {
+			throw new RuntimeException("Could not initialize storage", e);
+		}
+	}
+
+	public static String generateRandomPath() {
+		String path = UUID.randomUUID().toString().replace("-", "");
+		return path;
+	}
 	//////// recuperer une photo avec pour retour tableau de byte
 	//////// /////////////////////////////////
 
-	@GetMapping(value = "/getPhotoSousBlock/{version}/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-	public byte[] getPhotos(@PathVariable String version, @PathVariable Long id)
+	@GetMapping(value = "/getPhotoCouvertureSousBlock/{version}/{id}/{libelle}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] getPhotos(@PathVariable String version, @PathVariable Long id, @PathVariable String libelle)
 			throws FileNotFoundException, IOException {
+		Reponse<SousBlock> reponseParLibelle;
+		reponseParLibelle = getSousBlockById(id);
+
+		SousBlock sb = reponseParLibelle.getBody();
+		System.out.println(version);
+		   if (sb.getPathPhotoCouverture()==null) {
+			   throw new RuntimeException("vous devez entrer des photos couverture");
+		}
+		String dossier = togetImage + "/" + "sousBlockPhotoCouverture" + "/" + libelle;
 		
-		 // Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); 
-		  //Blocks b = personneLibelle.getBody(); 
-		  System.out.println(version); 
-		  String dossier = togetImage+"/"; 
-		  File f = new File(dossier+id); 
-		  byte[] img = IOUtils.toByteArray(new FileInputStream(f));
-		 
+			File f = new File(dossier);
+           byte[] img = IOUtils.toByteArray(new FileInputStream(f));
+          
+
 		return img;
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// photo de couverture du sous block
 
-	/*@PostMapping("/sousBlockphotoCouverture")
-	public String creerPhotoCouverture(@RequestParam(name = "image_photo") MultipartFile file) throws Exception {
+	@PostMapping("/sousBlockLogo")
+	public String creerPhotoLogo(@RequestParam(name = "image_photo") MultipartFile file, @RequestParam String nom_sousblock)
+			throws Exception {
 		Reponse<SousBlock> reponse = null;
 		Reponse<SousBlock> reponseParLibelle;
 		// recuperer le libelle à partir du nom de la photo
 		String libelle = file.getOriginalFilename();
-		reponseParLibelle = getSousBlockParLibellle(libelle);
+		
+		reponseParLibelle = getSousBlockParNom(nom_sousblock);
 		SousBlock sb = reponseParLibelle.getBody();
 		System.out.println(sb);
 
-		String path = "http://localhost:8080/getPhotoCouvertureSousBlock/"+ sb.getVersion()+"/" + sb.getId();
+		String path = "http://wegetback:8080/getPhotoLogoSousBlock/" + sb.getVersion() + "/" + libelle;
 		System.out.println(path);
 		if (reponseParLibelle.getStatus() == 0) {
-			String dossier = togetImage + "/";
+			String dossier = togetImage + "/" + "photologoSousBlock" + "/";
 			File rep = new File(dossier);
 
 			if (!file.isEmpty()) {
@@ -320,11 +426,11 @@ public class SousBlocksController {
 			}
 			try {
 				// enregistrer le chemin dans la photo
-				sb.setPathPhoto(path);
+				sb.setPathLogo(path);
 				System.out.println(path);
-				file.transferTo(new File(dossier + sb.getId()));
+				file.transferTo(new File(dossier + libelle));
 				List<String> messages = new ArrayList<>();
-				messages.add(String.format("%s (photo ajouter avec succes)", sb.getId()));
+				messages.add(String.format("%s (photo ajouter avec succes)", sb.getNom()));
 				reponse = new Reponse<SousBlock>(0, messages, sousBlocksMetier.modifier(sb));
 
 			} catch (Exception e) {
@@ -339,21 +445,21 @@ public class SousBlocksController {
 		}
 		return jsonMapper.writeValueAsString(reponse);
 	}
-*/
+
 	//////// recuperer une photo de couverture avec pour retour tableau de byte
 	//////// /////////////////////////////////
 
-	@GetMapping(value = "/getPhotoCouvertureSousBlock/{version}/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
-	public byte[] getPhotosCouverture(@PathVariable String version, @PathVariable Long id)
+	@GetMapping(value = "/getPhotoLogoSousBlock/{version}/{libelle}", produces = MediaType.IMAGE_JPEG_VALUE)
+	public byte[] getPhotosCouverture(@PathVariable String version, @PathVariable String libelle)
 			throws FileNotFoundException, IOException {
+
 		
-		 // Reponse<Blocks> personneLibelle = getBlockParLibellle(libelle); 
-		  //Blocks b = personneLibelle.getBody(); 
-		  System.out.println(version); 
-		  String dossier = togetImage+"/"; 
-		  File f = new File(dossier+id); 
-		  byte[] img = IOUtils.toByteArray(new FileInputStream(f));
-		 
-		return img;
+		
+				System.out.println(version);
+				String dossier = togetImage + "/" + "photologoSousBlock" + "/";
+				File f = new File(dossier + libelle);
+				byte[] img = IOUtils.toByteArray(new FileInputStream(f));
+
+				return img;
 	}
 }

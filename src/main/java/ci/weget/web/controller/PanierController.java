@@ -20,7 +20,6 @@ import ci.weget.web.entites.Block;
 import ci.weget.web.entites.Panier;
 import ci.weget.web.entites.Personne;
 import ci.weget.web.entites.Tarif;
-import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IBlocksMetier;
 import ci.weget.web.metier.IMembreMetier;
 import ci.weget.web.metier.IPanierMetier;

@@ -38,11 +38,10 @@ public class WegetWebMetierDaoJpaApplication implements CommandLineRunner {
 	/*
 	 * @Autowired private IBlocksMetier blockMetier;
 	 */
-	@PostConstruct
-	void init() {
-		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+	@Bean
+	public BCryptPasswordEncoder getBCPE() {
+		return new BCryptPasswordEncoder();
 	}
-	
 	public static void main(String[] args) {
 		SpringApplication.run(WegetWebMetierDaoJpaApplication.class, args);
 		/*try {

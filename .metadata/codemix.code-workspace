@@ -1,0 +1,12 @@
+{
+    "folders": [
+        {
+            "path": "D:\\springTools\\3.9.6\\workspace-sts-3.9.6\\weget\\weget-web-metier-dao-jpa\\Servers"
+        }
+    ],
+    "settings": {
+        "javascript.referencesCodeLens.enabled": true,
+        "typescript.implementationsCodeLens.enabled": true,
+        "typescript.referencesCodeLens.enabled": true
+    }
+}

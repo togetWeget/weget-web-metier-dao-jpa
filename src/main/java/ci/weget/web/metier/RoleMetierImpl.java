@@ -62,7 +62,7 @@ public class RoleMetierImpl implements IRoleMetier{
 	@Override
 	public Role getUserRoleByNom(RoleName name) {
 		// TODO Auto-generated method stub
-		return roleRepository.getUserRoleParName(RoleName.ROLE_MEMBRE);
+		return roleRepository.getUserRoleParName(RoleName.MEMBRE);
 	}
 	
 }

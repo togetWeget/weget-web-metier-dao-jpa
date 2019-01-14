@@ -21,6 +21,7 @@ import ci.weget.web.entites.Panier;
 import ci.weget.web.entites.Personne;
 import ci.weget.web.entites.Tarif;
 import ci.weget.web.metier.IBlocksMetier;
+import ci.weget.web.metier.ILigneCommandeMetier;
 import ci.weget.web.metier.IAbonnementMetier;
 import ci.weget.web.metier.IMembreMetier;
 import ci.weget.web.metier.IPanierMetier;
@@ -45,7 +46,7 @@ public class PanierController {
 	@Autowired
 	private IBlocksMetier blocksMetier;
 	@Autowired
-	private IAbonnementMetier detailBlocksMetier;
+	private ILigneCommandeMetier ligneCommandeMetier;
 	@Autowired
 	private ICreeAbonneGratuit creeAbonneGratuit;
 	@Autowired
@@ -163,6 +164,8 @@ public class PanierController {
 		Double total = tarif.getPrix() * post.getQuantite();
 		try {
 			boolean boo = panierMetier.ajoutLignePanier(tarif, block, personne, quantite, total);
+			boolean bool = ligneCommandeMetier.ajoutLigneCommande(block, personne, quantite, total);
+
 			List<String> messages = new ArrayList<>();
 			messages.add(String.format("element ajouter au panier avec succes", true));
 			reponse = new Reponse<Boolean>(0, messages, true);

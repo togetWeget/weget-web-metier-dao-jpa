@@ -170,7 +170,7 @@ public class RegistractionController {
 			throw new RuntimeException("erreur");
 		}
 
-		Role userRole = roleMetier.getUserRoleByNom(RoleName.ROLE_MEMBRE);
+		Role userRole = roleMetier.getUserRoleByNom(RoleName.MEMBRE);
 		signUpRequest.setRoles(Collections.singleton(userRole));
 		Membre registered =  (Membre) membreMetier.creer(signUpRequest);
 		//////////////////////////////////////////////////

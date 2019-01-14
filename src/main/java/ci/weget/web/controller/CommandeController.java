@@ -16,16 +16,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ci.weget.web.entites.Block;
-import ci.weget.web.entites.Membre;
 import ci.weget.web.entites.Commande;
+import ci.weget.web.entites.LigneCommande;
 import ci.weget.web.entites.Panier;
 import ci.weget.web.entites.Personne;
 import ci.weget.web.exception.InvalideTogetException;
 import ci.weget.web.metier.IAbonnementMetier;
 import ci.weget.web.metier.ICommandeMetier;
+import ci.weget.web.metier.ILigneCommandeMetier;
 import ci.weget.web.metier.IPanierMetier;
-
 import ci.weget.web.modeles.Reponse;
 import ci.weget.web.utilitaires.Static;
 
@@ -39,6 +38,8 @@ public class CommandeController {
 	IAbonnementMetier detailBlocksMetier;
 	@Autowired
 	IPanierMetier panierMetier;
+	@Autowired
+	ILigneCommandeMetier ligneCommandeMetier;
 	@Autowired
 	private ObjectMapper jsonMapper;
 
@@ -77,18 +78,16 @@ public class CommandeController {
 		try {
 
 			Commande p = commandeMetier.creerCommande(personne, montant);
-			List<String> messages = new ArrayList<>();
+		  List<LigneCommande>lg=	ligneCommandeMetier.findLigneCommandeParPersonneId(personne.getId());
+			for(LigneCommande ligneC: lg) {
+				ligneC.setCommande(p);
+				ligneCommandeMetier.modifier(ligneC);
+	             }
+		  List<String> messages = new ArrayList<>();
+			
 			messages.add(String.format("%s  à été créer avec succes", p.getId()));
 			reponse = new Reponse<Commande>(0, messages, p);
-			/*if (p.isPaye()==true) {
-				for(Panier pa: paniers) {
-					Block b = pa.getBlock();
-					
-					detailBlocksMetier.addPersonneToBlocks(pers.getLogin(), b.getLibelle());
-				}
 			
-			}*/
-
 		} catch (InvalideTogetException e) {
 
 			reponse = new Reponse<Commande>(1, Static.getErreursForException(e), null);

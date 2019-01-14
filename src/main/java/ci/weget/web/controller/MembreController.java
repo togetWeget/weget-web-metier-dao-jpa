@@ -11,6 +11,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -192,6 +193,7 @@ public class MembreController {
 	}
 
 	// recherche les membres par login
+	
 	@PostMapping("/abonneSpecial")
 	public String abonneSpecial(@RequestBody Personne personne) throws JsonProcessingException {
 		Reponse<Boolean> reponse;
